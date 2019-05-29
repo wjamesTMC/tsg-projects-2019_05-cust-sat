@@ -1,15 +1,25 @@
 ##############################################################################
 #
-# Customer Sat data Analysis Project
-# Bill James / jamesw@csps.com
+# TSG Customer Sat Analysis
+# Bill James / jameswl@csps.com
 #
-# Files:  https://github.com/wjamesTMC/tsg-projects-2019_05-cust-sat.git
+  # Files:  https://github.com/jamesTMC/tsg-projects-cust-satisfaction.git
 #
 ##############################################################################
 
 #
 # Library setups
 #
+
+if (!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+if (!require(plyr)) install.packages("plyr", repos = "http://cran.us.r-project.org")
+if (!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
+if (!require(caret)) install.packages("caret", repos = "http://cran.us.r-project.org")
+if (!require(ggplot2)) install.packages("ggplot2", repos = "http://cran.us.r-project.org")
+if (!require(ggthemes)) install.packages("ggthemes", repos = "http://cran.us.r-project.org")
+if (!require(ggrepel)) install.packages("ggrepel", repos = "http://cran.us.r-project.org")
+if (!require(reshape2)) install.packages("reshape2", repos = "http://cran.us.r-project.org")
+
 
 # Import libraries
 library(tidyverse)
@@ -19,10 +29,8 @@ library(dplyr)
 library(caret)
 library(ggplot2)
 library(ggthemes)
-library(extrafont)
-library(scales)
+library(ggrepel)
 library(reshape2)
-library(expss)
 library(grid)
 library(gridExtra)
 library(lattice)
@@ -31,328 +39,291 @@ library(lattice)
 # Open files and downloads
 #
 
-# Import and Open the data file / Establish the data set
-data_filename <- "Experimental - Data_W.csv"
-dat <- read.csv(data_filename, stringsAsFactors = TRUE)
+# Import and Open the Files - first the data file
+data_filename   <- "Spring 2019 Quarterly Satisfaction Survey Results - Data.csv"
 
-# Take out Timestamp and the comments for now
-wkgdat <- dat %>% select(-Timestamp, -Comments) 
+# Establish the data set 
+dat        <- read.csv(data_filename, stringsAsFactors = FALSE)
+names(dat)
+head(dat)
 
-# Verify the number of unique values of the various factors
-sapply(wkgdat, function(x)length(unique(x)))
+wkgdat <- dat %>% select(-Timestamp, -Other)
+str(wkgdat)
 
-#--------------------------------------------------------------------
+# melt data into wide format and focus on factor 1 (positive experience)
+lgwkgdat <- melt(wkgdat, id.vars = c("positiveExp", "dateSurvey"))
+names(lgwkgdat)
+head(lgwkgdat)
+
+# Import and Open the Files - first the data file
+data_filename   <- "Experimental - Data_W.csv"
+dat             <- read.csv(data_filename, stringsAsFactors = FALSE)
+num_rows        <- nrow(dat)
+num_periods     <- length(unique(dat$Period))
+dat[ c(1,num_rows), ]
+s1 <- dat %>% filter(Period == "1-F18")
+s2 <- dat %>% filter(Period == "2-W19")
+s3 <- dat %>% filter(Period == "3-S19")
+
+s1_1 <- s1 %>% filter(Positive.Contrib == "1-Always")
+nrow(s1_1)
+s2_1 <- s2 %>% filter(Positive.Contrib == "1-Always")
+nrow(s2_1)
+s3_1 <- s3 %>% filter(Positive.Contrib == "1-Always")
+nrow(s3_1)
+
+q_to_q_trends <- data.frame("Rating"      = 1:13,
+                            "Fall 2018"   = 1:13,
+                            "Winter 2019" = 1:13,
+                            "Spring 2019" = 1:13)
+
+q_to_q_trends[1,1] = "1-Always"
+q_to_q_trends[1,2] = nrow(s1_1)
+q_to_q_trends[1,3] = nrow(s2_1)
+q_to_q_trends[1,4] = nrow(s3_1)
+
+for(i in 1:num_rows) {
+  for(j in 1:num_periods) {
+    x <- dat %>% filter(L1C == i & L2C == j & L3C == k)
+      if(nrow(x) != 0) {
+        mat[counter, 1] <- i
+        mat[counter, 2] <- j
+        mat[counter, 3] <- k
+        mat[counter, 4] <- nrow(x)
+        mat[counter, 5] <- max(x$Dur_Time)
+        mat[counter, 6] <- min(x$Dur_Time)
+        mat[counter, 7] <- round(mean(x$Dur_Time), digits=1)
+        mat[counter, 8] <- max(x$Dur_Time) - min(x$Dur_Time)
+        mat[counter, 9] <- Level_codes[k,5]
+        counter <- counter + 1
+      }
+      else {
+        mat[counter, 1] <- i
+        mat[counter, 2] <- j
+        mat[counter, 3] <- k
+        mat[counter, 4] <- 0
+        mat[counter, 5] <- 0
+        mat[counter, 6] <- 0
+        mat[counter, 7] <- 0
+        mat[counter, 8] <- 0
+        mat[counter, 9] <- Level_codes[k,5]
+        counter <- counter + 1
+        return
+      }
+    }
+  }
+}
+
+##################################################################################
 #
-# Create the set of pivot tables for experience factors
+# Practicing with the tidyverse functions
 #
-#--------------------------------------------------------------------
+##################################################################################
 
-# Get the experience factors into a group
-expfactors <- transform(wkgdat[c(1,2,3,4,13)]) 
-summary(expfactors)
+as.tibble(dat)
+dat %>% select(L3N, L3C, Dur_Time, Priority) %>% group_by(L3N) %>% arrange(L3N) %>% head()
 
+df <- dat %>% select(L3N, L3C, Dur_Time, Priority) %>% 
+  arrange(L3N, desc(Dur_Time)) %>% group_by(L3C) %>%
+  summarize(avgdur = mean(Dur_Time), mindur = min(Dur_Time), maxdur = max(Dur_Time))
+df
+
+df %>% top_n(50, Dur_Time) %>% arrange(desc(Dur_Time))
+
+# Birthday probability problem - checking for the stability of the estimate
+same_birthday <- function(n){
+  bdays <- sample(1:365, n, replace=TRUE)
+  any(duplicated(bdays))
+}
+B <- 10^seq(1, 5, len = 100)
+compute_prob <- function(B, n=25){
+  same_day <- replicate(B, same_birthday(n))
+  mean(same_day)
+}
+prob <- sapply(B, compute_prob)
+qplot(log10(B), prob, geom = "line")
+
+# Conditional expressions
+x <- 7
+
+pon <- function(x) {
+  while(x > 0) {
+  cat("x = ",x, "\n")
+  x = x - 1
+  }
+}
+
+pon(x)
+
+x <- 1:10
+
+sf <- function(x) {
+  x = x * 1.25
+}
+
+sfx <- sapply(x, sf)
+sfx
+plot(x, sfx)
+
+pg1 <- dat%>% select(L3C, Dur_Time) %>% group_by(L3C)
+pg2 <- summarize(pg1, count = count(pg1))
+pg2
+
+# These 3 lines would replace the elaborate loop I created to count L3C's
+pg1 <- dat%>% select(L3C) %>% group_by(L3C) 
+pg2 <- summarize(pg1, count = count(pg1))
+plot(pg2$count)
+
+# And this one to replace the loop to show the distribution of durations
+pg1 <- dat%>% select(Dur_Time) %>% group_by(Dur_Time)
+pg2 <- summarize(pg1, count = count(pg1))
+plot(pg2$count)
+
+# And we can make the same ggplot from that data
+ggplot(pg2$count, aes(Dur_Time, freq)) +
+  geom_point() + 
+  theme_economist() +
+  labs(title = "All Events - Duration Time and Frequency", 
+       x = "Duration", 
+       y = "Number of Event Occurrences")
+
+# Putting two plots side by side with grid arrange
+p1 <- ggplot(pg2$count, aes(Dur_Time, freq)) +
+  geom_point() + 
+  theme_economist() +
+  labs(title = "All Events - Duration Time and Frequency", 
+       x = "Duration", 
+       y = "Number of Event Occurrences")
+
+p2 <- ggplot(pg2$count, aes(Dur_Time, freq)) +
+  geom_point() + 
+  theme_economist() +
+  labs(title = "All Events - Duration Time and Frequency", 
+       x = "Duration", 
+       y = "Number of Event Occurrences")
+
+grid.arrange(p1, p2, ncol = 2)
+
+# Doing a group_by to see two things
+pg1 <- dat%>% select(L3N, Dur_Time) %>% group_by(L3N)
+pg2 <- summarize(pg1, count = count(pg1)) 
+head(pg2)
+
+# Doing a group_by to see two things
+pg1 <- dat%>% select(L3N, Dur_Time) %>% group_by(L3N)
+pg2 <- summarize(pg1, count = count(pg1)) %>% .$count
+head(pg2)
+
+# https://cran.r-project.org/web/packages/gridExtra/vignettes/arrangeGrob.html
+# Title and/or annotations
+gs <- lapply(1:9, function(ii) 
+     grobTree(rectGrob(gp=gpar(fill=ii, alpha=0.5)), textGrob(ii)))
+grid.arrange(grobs=gs, ncol=4, 
+             top="top label", bottom="bottom\nlabel", 
+             left="left label", right="right label")
+grid.rect(gp=gpar(fill=NA))
+
+p <- qplot(1,1)
+p2 <- xyplot(1~1)
+r <- rectGrob(gp=gpar(fill="grey90"))
+t <- textGrob("text")
+grid.arrange(t, p, p2, r, ncol=2)
+
+# Complex layouts
+lay <- rbind(c(1,1,1,2,3),
+             c(1,1,1,4,5),
+             c(6,7,8,9,9))
+grid.arrange(grobs = gs, layout_matrix = lay)
+
+hlay <- rbind(c(1,1,NA,2,3),
+              c(1,1,NA,4,NA),
+              c(NA,7,8,9,NA))
+select_grobs <- function(lay) {
+     id <- unique(c(t(lay))) 
+     id[!is.na(id)]
+} 
+grid.arrange(grobs=gs[select_grobs(hlay)], layout_matrix=hlay)
+
+# Nested layouts with arrangeGrob
+g1 <- arrangeGrob(grobs = gs, layout_matrix = t(lay))
+g2 <- arrangeGrob(grobs = gs, layout_matrix = lay)
+grid.arrange(g1, g2, ncol=2)
+
+# Multiple pages layout
+set.seed(123)
+pl <- lapply(1:11, function(.x) 
+     qplot(1:10, rnorm(10), main=paste("plot", .x)))
+ml <- marrangeGrob(pl, nrow=2, ncol=2)
+## non-interactive use, multipage pdf
+## ggsave("multipage.pdf", ml)
+## interactive use; calling `dev.new` multiple times
+ml
+
+# Do function NEED TO LEARN THIS
+dat %>% 
+  group_by(L3N) %>% 
+  do(my_summary(.))
+
+# Case When function
+x <- c(-2, -1, 0, 1, 2)
+case_when(x < 0 ~ "Negative", x > 0 ~ "Positive", TRUE ~ "Zero")
+
+library(dslabs)
+data(murders)
+murders %>% 
+  mutate(group = case_when(
+    abb %in% c("ME", "NH", "VT", "MA", "RI", "CT") ~ "New England",
+    abb %in% c("WA", "OR", "CA") ~ "West Coast",
+    region == "South" ~ "South",
+    TRUE ~ "other")) %>%
+  group_by(group) %>%
+  summarize(rate = sum(total) / sum(population) * 10^5) %>%
+  arrange(rate)
+
+# See this link for a lot of good info on colors and plots
+# http://www.sthda.com/english/wiki/ggplot2-colors-how-to-change-colors-automatically-and-manually
+
+##################################################################################
+
+# Files of the taxonomy, validations, staff names, and staff rankings
+validations     <- "Validations File.csv"
+Level_codes     <- read.csv(validations, stringsAsFactors = FALSE)
+staff_rankings  <- read.csv("Staff_Ranking.csv")
+staff_names     <- read.csv("SD_Staff_List.csv", stringsAsFactors = FALSE)
+
+num_staff       <- nrow(staff_names)
+
+# Create separate datasets for incidents and service requests
+dat_inc         <- dat %>% filter(dat$IRT == 1)
+num_rows_inc    <- nrow(dat_inc)
+dat_svr         <- dat %>% filter(dat$IRT == 2)
+num_rows_svr    <- nrow(dat_svr)
+
+# Establish basic variables from the taxonomy
+num_L1             <- max(Level_codes$L1C)
+num_L2             <- max(Level_codes$L2C)
+num_L3             <- max(Level_codes$L3C)
+total_combinations <- num_L1 * num_L2 * num_L3
+
+
+#*****************************************************************************
 #
-# First experience factor
+# Descriptive Statistics
 #
-
-# Create the pivot
-pc_table <- with(expfactors, table(Surveyed, Positive.Contrib))
-pc_table
-round(prop.table(pc_table), digits = 3)
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(pc_table)
-df <- ddply(df, .(Positive.Contrib),
-            transform, pos = cumsum(Freq))
-
-# Plot
-pc_plot <- ggplot() +
-  geom_bar(aes(x = Positive.Contrib, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = Positive.Contrib, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 4) + 
-  labs(title = "Experience Factor - Positive Contribution")
-pc_plot
-
-#
-# Second experience factor
-#
-
-# Create the pivot
-tr_table <- with(expfactors, table(Surveyed, Timely.Response))
-tr_table
-round(prop.table(tr_table), digits = 3)
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(tr_table)
-df <- ddply(df, .(Timely.Response),
-            transform, pos = cumsum(Freq))
-# Plot
-tr_plot <- ggplot() +
-  geom_bar(aes(x = Timely.Response, y = Freq, fill = Surveyed),
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = Timely.Response, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 4) + 
-  labs(title = "Experience Factor - Timely Response")
-tr_plot
-
-#
-# Third experience factor
-#
-
-# Create the pivot
-ac_table <- with(expfactors, table(Surveyed, Accountability))
-ac_table
-round(prop.table(ac_table), digits = 3)
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(ac_table)
-df <- ddply(df, .(Accountability),
-            transform, pos = cumsum(Freq))
-
-# Plot
-ac_plot <- ggplot() +
-  geom_bar(aes(x = Accountability, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = Accountability, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 4) + 
-  labs(title = "Experience Factor - Accountability")
-ac_plot
-
-#
-# Fourth experience factor
-#
-
-# Create the pivot
-kn_table <- with(expfactors, table(Surveyed, Knowledgeable))
-kn_table
-round(prop.table(kn_table), digits = 3)
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(kn_table)
-df <- ddply(df, .(Knowledgeable),
-            transform, pos = cumsum(Freq))
-
-# Plot
-kn_plot <- ggplot() +
-  geom_bar(aes(x = Knowledgeable, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = Knowledgeable, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 4) + 
-  labs(title = "Experience Factor - Knowledgeable")
-kn_plot
-
-# Arrange the four experience plots in a 2x2 format
-grid.arrange(pc_plot, tr_plot, ac_plot, kn_plot, ncol = 2)
-
-#--------------------------------------------------------------------
-#
-# Plot trend lines for each factor
-#
-#--------------------------------------------------------------------
-
-#--------------------------------------------------------------------
-#
-# Create the set of pivot tables for TSG group ratings
-#
-#--------------------------------------------------------------------
-
-# Get the subgroup data
-grpfactors <- transform(wkgdat[c(5, 6, 7, 8, 9, 10, 11, 12, 13)]) 
-summary(grpfactors)
-
-#
-# Subgroup 1
-#
-
-# Create the pivot
-am_table <- with(grpfactors, table(Surveyed, Acct.Mgrs))
-am_table
-round(prop.table(am_table), digits = 3)
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(am_table)
-df <- ddply(df, .(Acct.Mgrs),
-            transform, pos = cumsum(Freq))
-
-# Plot
-am_plot <- ggplot() +
-  geom_bar(aes(x = Acct.Mgrs, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = Acct.Mgrs, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 3) + 
-  labs(title = "TSG Subgroup - Account Managers")
-am_plot
-
-#
-# Subgroup 2
-#
-
-# Create the pivot
-bmps_table <- with(grpfactors, table(Surveyed, BMPS))
-bmps_table
-round(prop.table(bmps_table), digits = 3)
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(bmps_table)
-df <- ddply(df, .(BMPS),
-            transform, pos = cumsum(Freq))
-
-# Plot
-bmps_plot <- ggplot() +
-  geom_bar(aes(x = BMPS, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = BMPS, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 3) + 
-  labs(title = "TSG Subgroup - B&MPS")
-bmps_plot
-
-
-#
-# Subgroup 3
-#
-
-# Create the pivot
-ba_table <- with(grpfactors, table(Surveyed, Bus.Apps))
-ba_table
-round(prop.table(ba_table), digits = 3)
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(ba_table)
-df <- ddply(df, .(Bus.Apps),
-            transform, pos = cumsum(Freq))
-
-# Plot
-ba_plot <- ggplot() +
-  geom_bar(aes(x = Bus.Apps, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = Bus.Apps, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 3) + 
-  labs(title = "TSG Subgroup - Business Applications")
-ba_plot
-
-#
-# Subgroup 4
-#
-
-# Create the pivot
-es_table <- with(grpfactors, table(Surveyed, Event.Svcs))
-es_table
-round(prop.table(es_table), digits = 3)
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(es_table)
-df <- ddply(df, .(Event.Svcs),
-            transform, pos = cumsum(Freq))
-
-# Plot
-es_plot <- ggplot() +
-  geom_bar(aes(x = Event.Svcs, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = Event.Svcs, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 3) + 
-  labs(title = "TSG Subgroup - Event Services")
-es_plot
-
-#
-# Subgroup 5
-#
-
-# Create the pivot
-ps_table <- with(grpfactors, table(Surveyed, Proj.Supp))
-ps_table
-round(prop.table(ps_table), digits = 3)
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(ps_table)
-df <- ddply(df, .(Proj.Supp),
-            transform, pos = cumsum(Freq))
-
-# Plot
-ps_plot <- ggplot() +
-  geom_bar(aes(x = Proj.Supp, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = Proj.Supp, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 3) + 
-  labs(title = "TSG Subgroup - Project Support")
-ps_plot
-
-#
-# Subgroup 6
-#
-
-# Create the pivot
-sd_table <- with(grpfactors, table(Surveyed, Serv.Desk))
-sd_table
-round(prop.table(sd_table), digits = 3)
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(sd_table)
-df <- ddply(df, .(Serv.Desk),
-            transform, pos = cumsum(Freq))
-
-# Plot
-sd_plot <- ggplot() +
-  geom_bar(aes(x = Serv.Desk, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = Serv.Desk, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 3) + 
-  labs(title = "TSG Subgroup - Service Desk")
-sd_plot
-
-#
-# Subgroup 7
-#
-
-# Create the pivot
-ss_table <- with(grpfactors, table(Surveyed, Studio.Svcs))
-ss_table
-round(prop.table(ss_table), digits = 3)
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(ss_table)
-df <- ddply(df, .(Studio.Svcs),
-            transform, pos = cumsum(Freq))
-
-# Plot
-ss_plot <- ggplot() +
-  geom_bar(aes(x = Studio.Svcs, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = Studio.Svcs, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 3) + 
-  labs(title = "TSG Subgroup - Studio Services")
-ss_plot
+#*****************************************************************************
 
 #
-# Subgroup 8
+# Plot of entire year events and durations
 #
 
-# Create the pivot
-vm_table <- with(grpfactors, table(Surveyed, Vendor.Mgmt))
-vm_table
-round(prop.table(vm_table), digits = 3)
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(vm_table)
-df <- ddply(df, .(Vendor.Mgmt),
-            transform, pos = cumsum(Freq))
-
-# Plot
-vm_plot <- ggplot() +
-  geom_bar(aes(x = Vendor.Mgmt, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = Vendor.Mgmt, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 3) + 
-  labs(title = "TSG Subgroup - Vendor Management")
-vm_plot
-
-#--------------------------------------------------------------------
-#
-# Plot trend lines for each subgroup - very satisfied
-#
-#--------------------------------------------------------------------
-
-
+vdt <- dat$Dur_Time
+df <- as.data.frame(table(vdt))
+ggplot(df, aes(vdt, Freq)) +
+     geom_point() + 
+     theme_economist() +
+     labs(title = "All Events - Duration Time and Frequency", 
+          x = "Duration", 
+          y = "Number of Event Occurrences")
 
 #
 # Resetting to create the 30-day view and start the analysis
@@ -450,6 +421,7 @@ newmat %>%
 # Plot all events against the day of the year 
 dat %>%
      ggplot(aes(DOY, Dur_Time, color = Priority)) +
+     scale_color_gradient(low="red", high="blue") +
      geom_point() + 
      theme_economist() +
      labs(title = "Event Resolutions - Durations over the Year", x = "Day of the Year", y = "Duration (Days)")
@@ -543,6 +515,7 @@ cat("Range of duration       :", round(srs_rng_dur, digits = 1))
 # Plot output
 dat_svr %>%
      ggplot(aes(DOY, Dur_Time, color = Priority)) +
+     scale_color_gradient(low="red", high="blue") +
      geom_point() + scale_y_log10() +
      theme_economist() + 
      labs(title = "Service Request Resolutions - Date vs. Duration (log10 y axis)",
@@ -604,6 +577,7 @@ ggplot(dfn, aes(x = pns, y = pnn)) +
      theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5)) +
      labs(title="Events by Major Category (SW, Inf, Other)",
           x="Major Category", y = "Events")
+
 
 #*****************************************************************************
 #
@@ -1300,8 +1274,7 @@ df_inc_owners <- data.frame("Owner_ID" = 1:x_range_for_plot_max,
                             "MinDur"   = 1:x_range_for_plot_max,
                             "AvgDur"   = 1:x_range_for_plot_max,
                             "MMSpread" = 1:x_range_for_plot_max,
-                            "SD"       = 1:x_range_for_plot_max,
-                            "Owner"    = 1:x_range_for_plot_max)
+                            "SD"       = 1:x_range_for_plot_max)
 
 # Loop through the data file
 counter <- 1
@@ -1315,7 +1288,6 @@ for(i in owners_list$Owner_ID) {
           df_inc_owners[counter, 5] <- round(mean(x$Dur_Time), digits=1)
           df_inc_owners[counter, 6] <- max(x$Dur_Time) - min(x$Dur_Time)
           df_inc_owners[counter, 7] <- round(sd(x$Dur_Time), digits=1)
-          df_inc_owners[counter, 8] <- staff_names[i,1]
           counter <- counter + 1
      }
      else {
@@ -1326,7 +1298,6 @@ for(i in owners_list$Owner_ID) {
           df_inc_owners[counter, 5] <- 0
           df_inc_owners[counter, 6] <- 0
           df_inc_owners[counter, 7] <- 0
-          df_inc_owners[counter, 8] <- staff_names[i,1]
           counter <- counter + 1
           }
 }
@@ -1335,34 +1306,35 @@ for(i in owners_list$Owner_ID) {
 df_inc_owners
 
 # Plot the owners and events
-ggplot(data = df_inc_owners, aes(x=Owner, y=Events)) +
-     geom_bar(fill = "steelblue", stat="identity") +
-     geom_text(aes(Owner, Events, label = Events), 
-               vjust = -0.4, color = "black", size = 3.5) +
+ggplot(data = df_inc_owners, aes(x = Owner_ID, y = Events)) +
+  geom_bar(fill = "steelblue", stat="identity") +
+  geom_text(aes(Owner_ID,
+            Events, label = Events),
+            vjust = -0.4, color = "black", size = 3.5) +
      theme_economist() +
      theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5)) +
      labs(title="Incidents - Events by Owner",
-          x="Owner Name", y = "Incidents")
+          x="Owner ID", y = "Incidents")
 
 # Plot Owners and average duration times
-ggplot(data=df_inc_owners, aes(x=Owner, y=AvgDur)) +
+ggplot(data=df_inc_owners, aes(x=Owner_ID, y=AvgDur)) +
      geom_bar(fill = "steelblue", stat="identity") + 
-     geom_text(aes(Owner, AvgDur, label = AvgDur), 
+     geom_text(aes(Owner_ID, AvgDur, label = AvgDur), 
                vjust = -0.5, color = "black", size = 3.5) +
      theme_economist() +
      theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5)) +
      labs(title="Incidents - Average Duration (Days) by Owner",
-          x="Owner Name", y = "Average Duration")
+          x="Owner ID", y = "Average Duration")
 
 # Plot owners and standard deviations
-ggplot(df_inc_owners, aes(x=Owner, y=SD)) +
+ggplot(df_inc_owners, aes(x=Owner_ID, y=SD)) +
      geom_bar(fill = "steelblue", stat="identity") +
-     geom_text(aes(Owner, SD, label = SD), 
+     geom_text(aes(Owner_ID, SD, label = SD), 
                vjust = -0.5, color = "black", size = 3.5) +
      theme_economist() +
      theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5)) +
      labs(title="Incidents - Standard Deviations by Owner",
-          x="Owner Name", y = "Standard Deviation")
+          x="Owner ID", y = "Standard Deviation")
 
 # Service Requests
 
@@ -1377,8 +1349,7 @@ df_svr_owners <- data.frame("Owner_ID" = 1:x_range_for_plot_max,
                             "MinDur"   = 1:x_range_for_plot_max,
                             "AvgDur"   = 1:x_range_for_plot_max,
                             "MMSpread" = 1:x_range_for_plot_max,
-                            "SD"       = 1:x_range_for_plot_max,
-                            "Owner"    = 1:x_range_for_plot_max)
+                            "SD"       = 1:x_range_for_plot_max)
 
 # Loop through the data file
 counter <- 1
@@ -1392,7 +1363,6 @@ for(i in owners_list$Owner_ID) {
           df_svr_owners[counter, 5] <- round(mean(x$Dur_Time), digits=1)
           df_svr_owners[counter, 6] <- max(x$Dur_Time) - min(x$Dur_Time)
           df_svr_owners[counter, 7] <- round(sd(x$Dur_Time), digits=1)
-          df_svr_owners[counter, 8] <- staff_names[i,1]
           counter <- counter + 1
      }
      else {
@@ -1403,7 +1373,6 @@ for(i in owners_list$Owner_ID) {
           df_svr_owners[counter, 5] <- 0
           df_svr_owners[counter, 6] <- 0
           df_svr_owners[counter, 7] <- 0
-          df_svr_owners[counter, 8] <- staff_names[i,1]
           counter <- counter + 1
           return
      }
@@ -1416,34 +1385,34 @@ df_svr_owners
 df_svr_owners_desc <- df_svr_owners[order(df_svr_owners$Events, decreasing=TRUE),]
 
 # Plot the result
-ggplot(data=df_svr_owners, aes(x=Owner, y=Events)) +
+ggplot(data=df_svr_owners, aes(x=Owner_ID, y=Events)) +
      geom_bar(fill = "steelblue", stat="identity") +
-     geom_text(aes(Owner, Events, label = Events), 
+     geom_text(aes(Owner_ID, Events, label = Events), 
                vjust = -0.5, color = "black", size = 3.5) +
      theme_economist() +
      theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5)) +
      labs(title="Service Requests - Events by Owner",
-          x="Owner Name", y = "Service Requests")
+          x="Owner ID", y = "Service Requests")
 
 # Plot average duration for each owner
-ggplot(data=df_svr_owners, aes(x=Owner, y=AvgDur)) +
+ggplot(data=df_svr_owners, aes(x=Owner_ID, y=AvgDur)) +
      geom_bar(fill = "steelblue", stat="identity") + 
-     geom_text(aes(Owner, AvgDur, label = AvgDur), 
+     geom_text(aes(Owner_ID, AvgDur, label = AvgDur), 
                vjust = -0.5, color = "black", size = 3.5) +
      theme_economist() +
      theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5)) +
      labs(title="Service Requests - Average Duration by Owner",
-          x="Owner Name", y = "Average Duration")
+          x="Owner ID", y = "Average Duration")
 
 # Plot standard deviation for each owner
-ggplot(df_svr_owners, aes(x=Owner, y=SD)) +
+ggplot(df_svr_owners, aes(x=Owner_ID, y=SD)) +
      geom_bar(fill = "steelblue", stat="identity") +
-     geom_text(aes(Owner, SD, label = SD), 
+     geom_text(aes(Owner_ID, SD, label = SD), 
                vjust = -0.5, color = "black", size = 3.5) +
      theme_economist() +
      theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5)) +
      labs(title="Service Requests - Standard Deviations by Owner",
-          x="Owner Name", y = "Standard Deviation")
+          x="Owner ID", y = "Standard Deviation")
 
 # Print out the staff rankings for each owner (done manually at this point)
 staff_rankings
@@ -1487,18 +1456,16 @@ df_inc <- dat_inc %>%
      select(L3C, Owner_ID, Priority, Dur_Time) 
 
 sn_inc <- staff_names %>%
-     select(Owner, Owner_ID)
+     select(Owner_ID)
 
 lc_inc <- Level_codes %>%
      select(L3C, L3N)
 
 # Join the owners to the base data
 df_inc_1 <- join(df_inc, sn_inc, by = "Owner_ID", type = "inner")
-head(df_inc_1, 50)
 
 # Join the names of the categories to the first join
 df_inc_2 <- join(df_inc_1, lc_inc, by = "L3C", type = "left")
-head(df_inc_2, 20)
 
 # Set up the list of owners to go through
 owners_list <- staff_names %>% filter(SD == "Y")
@@ -1506,7 +1473,7 @@ x_range_for_plot_max <- nrow(Level_codes)
 
 # define a dataframe to hold the output
 df_coa <- data.frame("Category"    = 1:x_range_for_plot_max,
-                     "Owner"       = 1:x_range_for_plot_max,
+                     "Owner_ID"    = 1:x_range_for_plot_max,
                      "AvgDur"      = 1:x_range_for_plot_max)
 
 # Loop through the data file
@@ -1516,23 +1483,20 @@ for(i in 1:num_L3) {
           x <- df_inc_2 %>% filter(L3C == i & Owner_ID == j)
           if(nrow(x) != 0) {
                df_coa[counter, 1] <- Level_codes[i,5]
-               df_coa[counter, 2] <- staff_names[j,1]
+               df_coa[counter, 2] <- j
                df_coa[counter, 3] <- round(mean(x$Dur_Time, digits = 2))
                counter <- counter + 1
           }
           else {
                df_coa[counter, 1] <- 0
-               df_coa[counter, 2] <- Level_codes[j,5]
+               df_coa[counter, 2] <- j
                df_coa[counter, 3] <- 0
           }
      }
 }
 
-# Display base output of categories, owners, and durations
-df_coa 
-
 # Reshape the data to display category / owner table
-df_coa_table <- dcast(df_coa, Category~Owner,value.var = "AvgDur")
+df_coa_table <- dcast(df_coa, Category ~ Owner_ID, value.var = "AvgDur")
 df_coa_table
 
 #-----------------------------------------------------------------------
@@ -1542,7 +1506,7 @@ df_coa_table
 #-----------------------------------------------------------------------
 
 # Set up the dataset for incidents only
-dat_inc_predict <- dat_inc %>% select(A_ID, L3C, L3N, Dur_Time, Owner_ID, Owned_By)
+dat_inc_predict <- dat_inc %>% select(A_ID, L3C, L3N, Dur_Time, Owner_ID)
 
 # Remove lines with less than 2 instances (else the aver)
 cat_index <- as.data.frame(table(dat_inc_predict$L3C)) %>%
@@ -1786,3 +1750,15 @@ rmse_results
 #########################################################################
 # End of code
 #########################################################################
+
+# Addendum - results of predictive model with no limit on duration times
+
+# lambdas <- seq(-1, 1, 0.1)
+# See separate document for lambda curve
+
+#   method                              RMSE
+#   <chr>                              <dbl>
+# 1 Simple Average (Mean) Duration      22.7
+# 2 Category Effects Model              21.7
+# 3 Owner Effects Model                 20.8
+# 4 Regularized category Effects Model  21.7
