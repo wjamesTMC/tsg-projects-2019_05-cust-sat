@@ -7,6 +7,13 @@
 #
 ##############################################################################
 
+# Work remaining
+#
+# (1) Auto-convert the raw source file to the format we want (headers, etc.)
+# (2) Build the RMarkdown report generator in slide format with slick graphics
+# (3) End to end testing
+#
+
 #
 # Library setups
 #
@@ -40,7 +47,14 @@ wkgdat <- dat %>% select(Surveyed,	PosContrib,	TimelyResp,	Accountability,
                          Knowledgeable,	AcctMgrs,	BMPS,	BusApps,	EventSvcs,
                          ProjSupp,	ServDesk,	StudSvcs,	VenMgmt)
 
-# Replace missing values
+# Convert experience responses so they will sort properly
+wkgdat[wkgdat == "Always"]    <- "1-Always"
+wkgdat[wkgdat == "Mostly"]    <- "2-Mostly"
+wkgdat[wkgdat == "Sometimes"] <- "3-Sometimes"
+wkgdat[wkgdat == "Rarely"]    <- "4-Rarely"
+wkgdat[wkgdat == "Never"]     <- "5-Never"
+
+# Clean up data and replace missing values
 wkgdat[wkgdat == 0] <- "NR"
 wkgdat[wkgdat == "N/A do not use"] <- "NA/DNU"
 
