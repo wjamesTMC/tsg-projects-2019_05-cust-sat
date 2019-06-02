@@ -10,7 +10,7 @@
 # Work remaining
 #
 # (1) Auto-convert the raw source file to the format we want (headers, etc.)
-# (2) Build the RMarkdown report generator in slide format with slick graphics
+# (2) Build the RMarkdown report generator in slide format
 # (3) End to end testing
 #
 
