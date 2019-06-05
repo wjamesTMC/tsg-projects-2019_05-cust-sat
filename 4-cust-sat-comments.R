@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Customer Sat data Analysis Project
+# Customer Sat data Analysis Project - Comments sectioin
 # Bill James / jamesw@csps.com
 #
 # Files:  https://github.com/wjamesTMC/tsg-projects-2019_05-cust-sat.git
@@ -43,6 +43,9 @@ data_filename <- "CustSatData.csv"
 dat <- read.csv(data_filename, stringsAsFactors = FALSE)
 names(dat)
 
+comments_filename <- "CustSatComments.csv"
+comms <- read.csv(comments_filename, stringsAsFactors = FALSE)
+
 #
 # Clean data file to set vector names
 #
@@ -77,10 +80,11 @@ dat <- rename(dat, replace = c("Is.there.anything.else.you.would.like.to.share."
 # Remove rows below the actual data
 cleandat <- subset(dat, dat[ , 1] != "")
 
-# Take out Timestamp and the comments fields for now
-wkgdat <- cleandat %>% select(Surveyed,	PosContrib,	TimelyResp,	Accountability,
-                         Knowledgeable,	AcctMgrs,	BMPS,	BusApps,	EventSvcs,
-                         ProjSupp,	ServDesk,	StudioSvcs,	VenMgmt)
+# Take out Timestamp field
+wkgdat <- cleandat %>% select(Surveyed,	Comments, PosContrib,	TimelyResp,	
+                              Accountability, Knowledgeable,	AcctMgrs,	
+                              BMPS,	BusApps,	EventSvcs, ProjSupp,	ServDesk,	
+                              StudioSvcs,	VenMgmt)
 
 # Rename ratings so they will sort
 wkgdat[wkgdat == "Always"]            <- "1-Always"
