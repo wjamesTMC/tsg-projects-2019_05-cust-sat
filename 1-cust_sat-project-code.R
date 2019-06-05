@@ -293,6 +293,7 @@ grid.arrange(pc_plot, tr_plot, ac_plot, kn_plot, ncol = 2)
 # Arrange the 4 "Very Satisfied" plots in a 2x2 format
 grid.arrange(pc_trends_plot, tr_trends_plot, ac_trends_plot, kn_trends_plot, ncol = 2)
 
+# Summarize improvements across groups
 cat("Positive Contribution improvement to date:", pc_imp,"%")
 cat("Timely Response improvement to date:      ", tr_imp,"%")
 cat("Accountable improvement to date:          ", ac_imp,"%")
@@ -347,6 +348,10 @@ am_trends_plot <- ggplot() +
 # Arrange the two plots for pasting into deck
 grid.arrange(am_plot, am_trends_plot, ncol = 2)
 
+am_imp <- round(((am_trends[length(am_trends$Surveyed),3] - am_trends[1,3]) / 
+                     am_trends[length(am_trends$Surveyed),3]) * 100, digits = 2)
+cat("Improvement for 'Very Satisfied' over period:", am_imp,"%")
+
 #
 # Subgroup 2
 #
@@ -386,6 +391,10 @@ bmps_trends_plot <- ggplot() +
 # Arrange the two plots for pasting into deck
 grid.arrange(bmps_plot, bmps_trends_plot, ncol = 2)
 
+# Display the % improvement in "Very Satisfied" to date
+bmps_imp <- round(((bmps_trends[length(bmps_trends$Surveyed),3] - bmps_trends[1,3]) / 
+                     bmps_trends[length(bmps_trends$Surveyed),3]) * 100, digits = 2)
+cat("Improvement for 'Very Satisfied' over period:", bmps_imp,"%")
 
 #
 # Subgroup 3
@@ -426,6 +435,11 @@ ba_trends_plot <- ggplot() +
 # Arrange the two plots for pasting into deck
 grid.arrange(ba_plot, ba_trends_plot, ncol = 2)
 
+# Display the % improvement in "Very Satisfied" to date
+ba_imp <- round(((ba_trends[length(ba_trends$Surveyed),3] - ba_trends[1,3]) / 
+                   ba_trends[length(ba_trends$Surveyed),3]) * 100, digits = 2)
+cat("Improvement for 'Very Satisfied' over period:", ba_imp,"%")
+
 #
 # Subgroup 4
 #
@@ -464,6 +478,11 @@ es_trends_plot <- ggplot() +
 
 # Arrange the two plots for pasting into deck
 grid.arrange(es_plot, es_trends_plot, ncol = 2)
+
+# Display the % improvement in "Very Satisfied" to date
+es_imp <- round(((es_trends[length(es_trends$Surveyed),3] - es_trends[1,3]) / 
+                   es_trends[length(es_trends$Surveyed),3]) * 100, digits = 2)
+cat("Improvement for 'Very Satisfied' over period:", es_imp,"%")
 
 #
 # Subgroup 5
@@ -504,6 +523,11 @@ ps_trends_plot <- ggplot() +
 # Arrange the two plots for pasting into deck
 grid.arrange(ps_plot, ps_trends_plot, ncol = 2)
 
+# Display the % improvement in "Very Satisfied" to date
+ps_imp <- round(((ps_trends[length(ps_trends$Surveyed),3] - ps_trends[1,3]) / 
+                   ps_trends[length(ps_trends$Surveyed),3]) * 100, digits = 2)
+cat("Improvement for 'Very Satisfied' over period:", ps_imp,"%")
+
 #
 # Subgroup 6
 #
@@ -542,6 +566,11 @@ sd_trends_plot <- ggplot() +
 
 # Arrange the two plots for pasting into deck
 grid.arrange(sd_plot, sd_trends_plot, ncol = 2)
+
+# Display the % improvement in "Very Satisfied" to date
+sd_imp <- round(((sd_trends[length(sd_trends$Surveyed),3] - sd_trends[1,3]) / 
+                   sd_trends[length(sd_trends$Surveyed),3]) * 100, digits = 2)
+cat("Improvement for 'Very Satisfied' over period:", sd_imp,"%")
 
 #
 # Subgroup 7
@@ -582,6 +611,11 @@ ss_trends_plot <- ggplot() +
 # Arrange the two plots for pasting into deck
 grid.arrange(ss_plot, ss_trends_plot, ncol = 2)
 
+# Display the % improvement in "Very Satisfied" to date
+ss_imp <- round(((ss_trends[length(ss_trends$Surveyed),3] - ss_trends[1,3]) / 
+                   ss_trends[length(ss_trends$Surveyed),3]) * 100, digits = 2)
+cat("Improvement for 'Very Satisfied' over period:", ss_imp,"%")
+
 #
 # Subgroup 8
 #
@@ -621,6 +655,11 @@ vm_trends_plot <- ggplot() +
 # Arrange the two plots for pasting into deck
 grid.arrange(vm_plot, vm_trends_plot, ncol = 2)
 
+# Display the % improvement in "Very Satisfied" to date
+vm_imp <- round(((vm_trends[length(vm_trends$Surveyed),3] - vm_trends[1,3]) / 
+                   vm_trends[length(vm_trends$Surveyed),3]) * 100, digits = 2)
+cat("Improvement for 'Very Satisfied' over period:", vm_imp,"%")
+
 # Arrange the 8 subgroup plots in two 2x2 formatted pieces
 grid.arrange(am_trends_plot,
              bmps_trends_plot,
@@ -634,6 +673,15 @@ grid.arrange(
              ss_trends_plot,
              vm_trends_plot,
              ncol = 2)
+
+cat("Account Managers improvement to date:     ", am_imp,"%")
+cat("BMPS improvement to date:                 ", bmps_imp,"%")
+cat("Business Applications improvement to date:", ba_imp,"%")
+cat("Event Services improvement to date:       ", es_imp,"%")
+cat("Project Support improvement to date:      ", ps_imp,"%")
+cat("Service Desk improvement to date:         ", sd_imp,"%")
+cat("Studio Services improvement to date:      ", ss_imp,"%")
+cat("Vendor Management improvement to date:    ", vm_imp,"%")
 
 #--------------------------------------------------------------------
 #
