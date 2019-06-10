@@ -51,36 +51,24 @@ comms <- read.csv(comments_filename, stringsAsFactors = FALSE)
 #
 
 # Rename vectors from survey questions to variable names
-dat <- rename(dat, replace = c("Tell.us.about.your.experience.working.with.us..TSG.makes.a.positive.contribution.to.my.work." = "PosContrib"))
-
-dat <- rename(dat, replace = c("Tell.us.about.your.experience.working.with.us..TSG.responds.to.my.requests.in.a.timely.manner." = "TimelyResp"))
-
-dat <- rename(dat, replace = c("Tell.us.about.your.experience.working.with.us..TSG.takes.accountability.for.my.requests." = "Accountability"))
-
-dat <- rename(dat, replace = c("Tell.us.about.your.experience.working.with.us..TSG.staff.are.knowledgable.." = "Knowledgeable"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Account.manager.support." = "AcctMgrs"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Audio.and.Video.Production.Services." = "BMPS"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Business.applications.support..M.files..Salesforce..Enterprise..etc..." = "BusApps"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Event.services." = "EventSvcs"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Project.support." = "ProjSupp"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Service.Desk." = "ServDesk"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Studio.services." = "StudioSvcs"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Vendor.management.services." = "VenMgmt"))
-
-dat <- rename(dat, replace = c("Is.there.anything.else.you.would.like.to.share." = "Comments"))
+dat <- rename(dat, replace = c("Tell.us.about.your.experience.working.with.us..TSG.makes.a.positive.contribution.to.my.work." = "PosContrib",
+                               "Tell.us.about.your.experience.working.with.us..TSG.responds.to.my.requests.in.a.timely.manner." = "TimelyResp",
+                               "Tell.us.about.your.experience.working.with.us..TSG.takes.accountability.for.my.requests." = "Accountability",
+                               "Tell.us.about.your.experience.working.with.us..TSG.staff.are.knowledgable.." = "Knowledgeable",
+                               "Please.rate.your.satisfaction.with.our.services...Account.manager.support." = "AcctMgrs",
+                               "Please.rate.your.satisfaction.with.our.services...Audio.and.Video.Production.Services." = "BMPS",
+                               "Please.rate.your.satisfaction.with.our.services...Business.applications.support..M.files..Salesforce..Enterprise..etc..." = "BusApps",
+                               "Please.rate.your.satisfaction.with.our.services...Event.services." = "EventSvcs",
+                               "Please.rate.your.satisfaction.with.our.services...Project.support." = "ProjSupp",
+                               "Please.rate.your.satisfaction.with.our.services...Service.Desk." = "ServDesk",
+                               "Please.rate.your.satisfaction.with.our.services...Studio.services." = "StudioSvcs",
+                               "Please.rate.your.satisfaction.with.our.services...Vendor.management.services." = "VenMgmt",
+                               "Is.there.anything.else.you.would.like.to.share." = "Comments"))
 
 # Remove rows below the actual data
 cleandat <- subset(dat, dat[ , 1] != "")
 
-# Take out Timestamp field
+# Select the desired columns
 wkgdat <- cleandat %>% select(Surveyed,	Comments, PosContrib,	TimelyResp,	
                               Accountability, Knowledgeable,	AcctMgrs,	
                               BMPS,	BusApps,	EventSvcs, ProjSupp,	ServDesk,	
@@ -105,12 +93,72 @@ wkgdat[wkgdat == "N/A do not use"]    <- "NA/DNU"
 
 # Verify the number of unique values of the various factors
 sapply(wkgdat, function(x)length(unique(x)))
+dim(wkgdat) # should be 129 14
 
 #--------------------------------------------------------------------
 #
-# Create the set of pivot tables for Experience Attributes
+# Vocabulary analysis - Cumulative
 #
 #--------------------------------------------------------------------
+
+#
+# Positive vocabularly elements
+#
+pct <- 0
+for(i in 1:length(comms$Positive)) {
+  x <- str_detect(wkgdat$Comments, comms$Positive[i])
+  pct <- pct + length(x[x == TRUE])
+}
+pct
+cat("Positive comment ratio is:", pct / length(comms$Positive))
+
+#
+# Negative vocabularly elements
+#
+nct <- 0
+for(i in 1:length(comms$Negative)) {
+  x <- str_detect(wkgdat$Comments, comms$Negative[i])
+  nct <- nct + length(x[x == TRUE])
+}
+nct
+cat("Negative comment ratio is:", nct / length(comms$Negative))
+
+#--------------------------------------------------------------------
+#
+# Vocabulary analysis - by Survey
+#
+#--------------------------------------------------------------------
+
+names(wkgdat)
+wkgdat$Surveyed
+dat01F18 <- wkgdat %>% filter(Surveyed == "01-F18")
+
+q_dat <- unique(wkgdat$Surveyed)
+
+#
+# Positive vocabularly elements
+#
+pct <- 0
+for(i in 1:length(comms$Positive)) {
+  x <- str_detect(wkgdat$Comments, comms$Positive[i])
+  pct <- pct + length(x[x == TRUE])
+}
+pct
+cat("Positive comment ratio is:", pct / length(comms$Positive))
+
+#
+# Negative vocabularly elements
+#
+nct <- 0
+for(i in 1:length(comms$Negative)) {
+  x <- str_detect(wkgdat$Comments, comms$Negative[i])
+  nct <- nct + length(x[x == TRUE])
+}
+nct
+cat("Negative comment ratio is:", nct / length(comms$Negative))
+
+
+
 
 # Get the Experience Attributes into a group
 expfactors <- transform(wkgdat[c(1,2,3,4,5)]) 

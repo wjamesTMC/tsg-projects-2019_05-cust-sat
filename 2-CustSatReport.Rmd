@@ -52,32 +52,19 @@ names(dat)
 # Clean data file to set vector names
 #
 
-# Strip Rename vectors from survey questions to variable names
-dat <- rename(dat, replace = c("Tell.us.about.your.experience.working.with.us..TSG.makes.a.positive.contribution.to.my.work." = "PosContrib"))
-
-dat <- rename(dat, replace = c("Tell.us.about.your.experience.working.with.us..TSG.responds.to.my.requests.in.a.timely.manner." = "TimelyResp"))
-
-dat <- rename(dat, replace = c("Tell.us.about.your.experience.working.with.us..TSG.takes.accountability.for.my.requests." = "Accountability"))
-
-dat <- rename(dat, replace = c("Tell.us.about.your.experience.working.with.us..TSG.staff.are.knowledgable.." = "Knowledgeable"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Account.manager.support." = "AcctMgrs"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Audio.and.Video.Production.Services." = "BMPS"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Business.applications.support..M.files..Salesforce..Enterprise..etc..." = "BusApps"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Event.services." = "EventSvcs"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Project.support." = "ProjSupp"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Service.Desk." = "ServDesk"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Studio.services." = "StudioSvcs"))
-
-dat <- rename(dat, replace = c("Please.rate.your.satisfaction.with.our.services...Vendor.management.services." = "VenMgmt"))
-
-dat <- rename(dat, replace = c("Is.there.anything.else.you.would.like.to.share." = "Comments"))
+dat <- rename(dat, replace = c("Tell.us.about.your.experience.working.with.us..TSG.makes.a.positive.contribution.to.my.work." = "PosContrib",
+                               "Tell.us.about.your.experience.working.with.us..TSG.responds.to.my.requests.in.a.timely.manner." = "TimelyResp",
+                               "Tell.us.about.your.experience.working.with.us..TSG.takes.accountability.for.my.requests." = "Accountability",
+                               "Tell.us.about.your.experience.working.with.us..TSG.staff.are.knowledgable.." = "Knowledgeable",
+                               "Please.rate.your.satisfaction.with.our.services...Account.manager.support." = "AcctMgrs",
+                               "Please.rate.your.satisfaction.with.our.services...Audio.and.Video.Production.Services." = "BMPS",
+                               "Please.rate.your.satisfaction.with.our.services...Business.applications.support..M.files..Salesforce..Enterprise..etc..." = "BusApps",
+                               "Please.rate.your.satisfaction.with.our.services...Event.services." = "EventSvcs",
+                               "Please.rate.your.satisfaction.with.our.services...Project.support." = "ProjSupp",
+                               "Please.rate.your.satisfaction.with.our.services...Service.Desk." = "ServDesk",
+                               "Please.rate.your.satisfaction.with.our.services...Studio.services." = "StudioSvcs",
+                               "Please.rate.your.satisfaction.with.our.services...Vendor.management.services." = "VenMgmt",
+                               "Is.there.anything.else.you.would.like.to.share." = "Comments"))
 
 # Remove rows below the actual data
 cleandat <- subset(dat, dat[ , 1] != "")
