@@ -102,7 +102,7 @@ dim(wkgdat) # should be 129 14
 #--------------------------------------------------------------------
 
 #
-# Positive vocabularly elements
+# Positive vocabulary elements
 #
 pct <- 0
 for(i in 1:length(comms$Positive)) {
@@ -113,7 +113,7 @@ pct
 cat("Positive comment ratio is:", pct / length(comms$Positive))
 
 #
-# Negative vocabularly elements
+# Negative vocabulary elements
 #
 nct <- 0
 for(i in 1:length(comms$Negative)) {
@@ -136,7 +136,7 @@ dat01F18 <- wkgdat %>% filter(Surveyed == "01-F18")
 q_dat <- unique(wkgdat$Surveyed)
 
 #
-# Positive vocabularly elements
+# Positive vocabulary elements
 #
 pct <- 0
 for(i in 1:length(comms$Positive)) {
@@ -147,7 +147,7 @@ pct
 cat("Positive comment ratio is:", pct / length(comms$Positive))
 
 #
-# Negative vocabularly elements
+# Negative vocabulary elements
 #
 nct <- 0
 for(i in 1:length(comms$Negative)) {
