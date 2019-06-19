@@ -152,7 +152,7 @@ pc_trends_plot_pas <- ggplot() +
   geom_text(data = pc_table_perc, aes(x = Survey, y = PAS, label = PAS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Positive Contribution", subtitle = "% Always (% Cum Responses)")
+  labs(title = "Positive Contribution", subtitle = "% Always (All Resps)")
 
 # Plot stacked bar and "Always" results for current survey
 pc_trends_plot_pcs <- ggplot() +
@@ -161,7 +161,7 @@ pc_trends_plot_pcs <- ggplot() +
   geom_text(data = pc_table_perc, aes(x = Survey, y = PCS, label = PCS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Positive Contribution", subtitle = "% Always (Specific Survey)")
+  labs(title = "Positive Contribution", subtitle = "% Always (Group Resps)")
 
 # Arrange and display the two plots for pasting into deck
 grid.arrange(pc_plot, pc_trends_plot_pcs, pc_trends_plot_pas, ncol = 3)
@@ -220,7 +220,7 @@ tr_trends_plot_pas <- ggplot() +
   geom_text(data = tr_table_perc, aes(x = Survey, y = PAS, label = PAS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Timely Response", subtitle = "% Always (% Cum Responses)")
+  labs(title = "Timely Response", subtitle = "% Always (All Resps)")
 
 # Plot stacked bar and "Always" results for current survey
 tr_trends_plot_pcs <- ggplot() +
@@ -229,7 +229,7 @@ tr_trends_plot_pcs <- ggplot() +
   geom_text(data = tr_table_perc, aes(x = Survey, y = PCS, label = PCS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Timely Response", subtitle = "% Always (Specific Survey)")
+  labs(title = "Timely Response", subtitle = "% Always (Group Resps)")
 
 # Arrange the two plots for pasting into deck
 grid.arrange(tr_plot, tr_trends_plot_pcs, tr_trends_plot_pas, ncol = 3)
@@ -288,7 +288,7 @@ ac_trends_plot_pas <- ggplot() +
   geom_text(data = ac_table_perc, aes(x = Survey, y = PAS, label = PAS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Accountability", subtitle = "% Always (% Cum Responses)")
+  labs(title = "Accountability", subtitle = "% Always (All Resps)")
 
 # Plot stacked bar and "Always" results for current survey
 ac_trends_plot_pcs <- ggplot() +
@@ -297,7 +297,7 @@ ac_trends_plot_pcs <- ggplot() +
   geom_text(data = ac_table_perc, aes(x = Survey, y = PCS, label = PCS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Accountability", subtitle = "% Always (Specific Survey)")
+  labs(title = "Accountability", subtitle = "% Always (Group Resps)")
 
 # Arrange the two plots for pasting into deck
 grid.arrange(ac_plot, ac_trends_plot_pcs, ac_trends_plot_pas, ncol = 3)
@@ -356,7 +356,7 @@ kn_trends_plot_pas <- ggplot() +
   geom_text(data = kn_table_perc, aes(x = Survey, y = PAS, label = PAS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Knowledgeable", subtitle = "% Always (% Cum Responses)")
+  labs(title = "Knowledgeable", subtitle = "% Always (All Resps)")
 
 # Plot stacked bar and "Always" results for current survey
 kn_trends_plot_pcs <- ggplot() +
@@ -365,7 +365,7 @@ kn_trends_plot_pcs <- ggplot() +
   geom_text(data = kn_table_perc, aes(x = Survey, y = PCS, label = PCS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Knowledgeable", subtitle = "% Always (Specific Survey)")
+  labs(title = "Knowledgeable", subtitle = "% Always (Group Resps)")
 
 # Arrange the two plots for pasting into deck
 grid.arrange(kn_plot, kn_trends_plot_pcs, kn_trends_plot_pas, ncol = 3)
@@ -455,7 +455,7 @@ am_trends_plot_pas <- ggplot() +
   geom_text(data = am_table_perc, aes(x = Survey, y = PAS, label = PAS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Account Managers", subtitle = "% Very Sat (% Cum Responses)")
+  labs(title = "Account Managers", subtitle = "% Very Sat (All Resps)")
 
 # Plot stacked bar and "Always" results for current survey
 am_trends_plot_pcs <- ggplot() +
@@ -464,7 +464,7 @@ am_trends_plot_pcs <- ggplot() +
   geom_text(data = am_table_perc, aes(x = Survey, y = PCS, label = PCS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Account Managers", subtitle = "% Very Sat (Specific Survey)")
+  labs(title = "Account Managers", subtitle = "% Very Sat (Group Resps)")
 
 # Arrange the two plots for pasting into deck
 grid.arrange(am_plot, am_trends_plot_pcs, am_trends_plot_pas, ncol = 3)
@@ -522,7 +522,7 @@ bmps_trends_plot_pas <- ggplot() +
   geom_text(data = bmps_table_perc, aes(x = Survey, y = PAS, label = PAS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = "% Very Sat (% Cum Responses)")
+  labs(title = "B&MPS", subtitle = "% Very Sat (All Resps)")
 
 # Plot stacked bar for the group results
 bmps_trends_plot_pcs <- ggplot() +
@@ -531,7 +531,7 @@ bmps_trends_plot_pcs <- ggplot() +
   geom_text(data = bmps_table_perc, aes(x = Survey, y = PCS, label = PCS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = "% Very Sat (Specific Survey)")
+  labs(title = "B&MPS", subtitle = "% Very Sat (Group Resps)")
 
 # Arrange the two plots for pasting into deck
 grid.arrange(bmps_plot, bmps_trends_plot_pcs, bmps_trends_plot_pas, ncol = 3)
@@ -590,7 +590,7 @@ ba_trends_plot_pas <- ggplot() +
   geom_text(data = ba_table_perc, aes(x = Survey, y = PAS, label = PAS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Busness Applications", subtitle = "% Very Sat (% Cum Responses)")
+  labs(title = "Busness Applications", subtitle = "% Very Sat (All Resps)")
 
 # Plot stacked bar for the group results
 ba_trends_plot_pcs <- ggplot() +
@@ -599,7 +599,7 @@ ba_trends_plot_pcs <- ggplot() +
   geom_text(data = ba_table_perc, aes(x = Survey, y = PCS, label = PCS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Business Applications", subtitle = "% Very Sat (Specific Survey)")
+  labs(title = "Business Applications", subtitle = "% Very Sat (Group Resps)")
 
 # Arrange the two plots for pasting into deck
 grid.arrange(ba_plot, ba_trends_plot_pcs, ba_trends_plot_pas, ncol = 3)
@@ -658,7 +658,7 @@ es_trends_plot_pas <- ggplot() +
   geom_text(data = es_table_perc, aes(x = Survey, y = PAS, label = PAS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Event Services", subtitle = "% Very Sat (% Cum Responses)")
+  labs(title = "Event Services", subtitle = "% Very Sat (All Resps)")
 
 # Plot stacked bar for the group results
 es_trends_plot_pcs <- ggplot() +
@@ -667,7 +667,7 @@ es_trends_plot_pcs <- ggplot() +
   geom_text(data = es_table_perc, aes(x = Survey, y = PCS, label = PCS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Event Services", subtitle = "% Very Sat (Specific Survey)")
+  labs(title = "Event Services", subtitle = "% Very Sat (Group Resps)")
 
 # Arrange the two plots for pasting into deck
 grid.arrange(es_plot, es_trends_plot_pcs, es_trends_plot_pas, ncol = 3)
@@ -726,7 +726,7 @@ ps_trends_plot_pas <- ggplot() +
   geom_text(data = ps_table_perc, aes(x = Survey, y = PAS, label = PAS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Project Services", subtitle = "% Very Sat (% Cum Responses)")
+  labs(title = "Project Services", subtitle = "% Very Sat (All Resps)")
 
 # Plot stacked bar for the group results
 ps_trends_plot_pcs <- ggplot() +
@@ -735,7 +735,7 @@ ps_trends_plot_pcs <- ggplot() +
   geom_text(data = ps_table_perc, aes(x = Survey, y = PCS, label = PCS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Project Services", subtitle = "% Very Sat (Specific Survey)")
+  labs(title = "Project Services", subtitle = "% Very Sat (Group Resps)")
 
 # Arrange the two plots for pasting into deck
 grid.arrange(ps_plot, ps_trends_plot_pcs, ps_trends_plot_pas, ncol = 3)
@@ -774,39 +774,39 @@ sd_plot <- ggplot() +
   labs(title = "Service Desk", subtitle = "All Attributes / All Surveys")
 
 # Calc the percentage of "Always" responses
-ba_table_perc <- data.frame(Survey   = 1:length(unique(wkgdat$Surveyed)),
+sd_table_perc <- data.frame(Survey   = 1:length(unique(wkgdat$Surveyed)),
                             Very_Sat = 1:length(unique(wkgdat$Surveyed)),
                             PAS      = 1:length(unique(wkgdat$Surveyed)),
                             PCS      = 1:length(unique(wkgdat$Surveyed)))
 
 # Run through the data and summarize each survey; log number and %'s of "Always'
 for(i in 1:length(unique(wkgdat$Surveyed))) {
-  ba_table_perc[i,1] <- unique(wkgdat$Surveyed)[i]
-  ba_table_perc[i,2] <- ba_table[i,1]
-  ba_table_perc[i,3] <- round((ba_table[i,1] / nrow(wkgdat)), digits = 3) * 100
-  ba_table_perc[i,4] <- round((ba_table[i,1] / sum(ba_table[i, 1:ncol(ba_table)])), digits = 3) * 100
+  sd_table_perc[i,1] <- unique(wkgdat$Surveyed)[i]
+  sd_table_perc[i,2] <- sd_table[i,1]
+  sd_table_perc[i,3] <- round((sd_table[i,1] / nrow(wkgdat)), digits = 3) * 100
+  sd_table_perc[i,4] <- round((sd_table[i,1] / sum(sd_table[i, 1:ncol(sd_table)])), digits = 3) * 100
 }
 
 # Plot stacked bar and "Always" results for all surveys
-ba_trends_plot_pas <- ggplot() +
+sd_trends_plot_pas <- ggplot() +
   geom_bar(aes(x = Survey, y = PAS, fill = Survey),
-           data = ba_table_perc, stat = "identity") +
-  geom_text(data = ba_table_perc, aes(x = Survey, y = PAS, label = PAS), 
+           data = sd_table_perc, stat = "identity") +
+  geom_text(data = sd_table_perc, aes(x = Survey, y = PAS, label = PAS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Busness Applications", subtitle = "% Very Sat (% Cum Responses)")
+  labs(title = "Service Desk", subtitle = "% Very Sat (All Resps)")
 
 # Plot stacked bar for the group results
-ba_trends_plot_pcs <- ggplot() +
+sd_trends_plot_pcs <- ggplot() +
   geom_bar(aes(x = Survey, y = PCS, fill = Survey),
-           data = ba_table_perc, stat = "identity") +
-  geom_text(data = ba_table_perc, aes(x = Survey, y = PCS, label = PCS), 
+           data = sd_table_perc, stat = "identity") +
+  geom_text(data = sd_table_perc, aes(x = Survey, y = PCS, label = PCS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Business Applications", subtitle = "% Very Sat (Specific Survey)")
+  labs(title = "Service Desk", subtitle = "% Very Sat (Group Resps)")
 
 # Arrange the two plots for pasting into deck
-grid.arrange(ba_plot, ba_trends_plot_pcs, ba_trends_plot_pas, ncol = 3)
+grid.arrange(sd_plot, sd_trends_plot_pcs, sd_trends_plot_pas, ncol = 3)
 
 # Display the % improvement in "Very Satisfied" to date
 sd_imp <- round(((sd_trends[length(sd_trends$Surveyed),3] - sd_trends[1,3]) / 
@@ -839,42 +839,42 @@ ss_plot <- ggplot() +
             vjust = 1.5, color = "black", size = 3) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   theme(legend.position = "none") +
-  labs(title = "TSG Subgroup", subtitle = "All Attributes / All Surveys")
+  labs(title = "Studio Services", subtitle = "All Attributes / All Surveys")
 
 # Calc the percentage of "Always" responses
-ba_table_perc <- data.frame(Survey   = 1:length(unique(wkgdat$Surveyed)),
+ss_table_perc <- data.frame(Survey   = 1:length(unique(wkgdat$Surveyed)),
                             Very_Sat = 1:length(unique(wkgdat$Surveyed)),
                             PAS      = 1:length(unique(wkgdat$Surveyed)),
                             PCS      = 1:length(unique(wkgdat$Surveyed)))
 
 # Run through the data and summarize each survey; log number and %'s of "Always'
 for(i in 1:length(unique(wkgdat$Surveyed))) {
-  ba_table_perc[i,1] <- unique(wkgdat$Surveyed)[i]
-  ba_table_perc[i,2] <- ba_table[i,1]
-  ba_table_perc[i,3] <- round((ba_table[i,1] / nrow(wkgdat)), digits = 3) * 100
-  ba_table_perc[i,4] <- round((ba_table[i,1] / sum(ba_table[i, 1:ncol(ba_table)])), digits = 3) * 100
+  ss_table_perc[i,1] <- unique(wkgdat$Surveyed)[i]
+  ss_table_perc[i,2] <- ss_table[i,1]
+  ss_table_perc[i,3] <- round((ss_table[i,1] / nrow(wkgdat)), digits = 3) * 100
+  ss_table_perc[i,4] <- round((ss_table[i,1] / sum(ss_table[i, 1:ncol(ss_table)])), digits = 3) * 100
 }
 
 # Plot stacked bar and "Always" results for all surveys
-ba_trends_plot_pas <- ggplot() +
+ss_trends_plot_pas <- ggplot() +
   geom_bar(aes(x = Survey, y = PAS, fill = Survey),
-           data = ba_table_perc, stat = "identity") +
-  geom_text(data = ba_table_perc, aes(x = Survey, y = PAS, label = PAS), 
+           data = ss_table_perc, stat = "identity") +
+  geom_text(data = ss_table_perc, aes(x = Survey, y = PAS, label = PAS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Busness Applications", subtitle = "% Very Sat (% Cum Responses)")
+  labs(title = "Studio Services", subtitle = "% Very Sat (All Resps)")
 
 # Plot stacked bar for the group results
-ba_trends_plot_pcs <- ggplot() +
+ss_trends_plot_pcs <- ggplot() +
   geom_bar(aes(x = Survey, y = PCS, fill = Survey),
-           data = ba_table_perc, stat = "identity") +
-  geom_text(data = ba_table_perc, aes(x = Survey, y = PCS, label = PCS), 
+           data = ss_table_perc, stat = "identity") +
+  geom_text(data = ss_table_perc, aes(x = Survey, y = PCS, label = PCS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Business Applications", subtitle = "% Very Sat (Specific Survey)")
+  labs(title = "Studio Services", subtitle = "% Very Sat (Group Resps)")
 
 # Arrange the two plots for pasting into deck
-grid.arrange(ba_plot, ba_trends_plot_pcs, ba_trends_plot_pas, ncol = 3)
+grid.arrange(ss_plot, ss_trends_plot_pcs, ss_trends_plot_pas, ncol = 3)
 
 # Display the % improvement in "Very Satisfied" to date
 ss_imp <- round(((ss_trends[length(ss_trends$Surveyed),3] - ss_trends[1,3]) / 
@@ -910,58 +910,70 @@ vm_plot <- ggplot() +
   labs(title = "Vendor Management", subtitle = "All Attributes / All Surveys")
 
 # Calc the percentage of "Always" responses
-ba_table_perc <- data.frame(Survey   = 1:length(unique(wkgdat$Surveyed)),
+vm_table_perc <- data.frame(Survey   = 1:length(unique(wkgdat$Surveyed)),
                             Very_Sat = 1:length(unique(wkgdat$Surveyed)),
                             PAS      = 1:length(unique(wkgdat$Surveyed)),
                             PCS      = 1:length(unique(wkgdat$Surveyed)))
 
 # Run through the data and summarize each survey; log number and %'s of "Always'
 for(i in 1:length(unique(wkgdat$Surveyed))) {
-  ba_table_perc[i,1] <- unique(wkgdat$Surveyed)[i]
-  ba_table_perc[i,2] <- ba_table[i,1]
-  ba_table_perc[i,3] <- round((ba_table[i,1] / nrow(wkgdat)), digits = 3) * 100
-  ba_table_perc[i,4] <- round((ba_table[i,1] / sum(ba_table[i, 1:ncol(ba_table)])), digits = 3) * 100
+  vm_table_perc[i,1] <- unique(wkgdat$Surveyed)[i]
+  vm_table_perc[i,2] <- vm_table[i,1]
+  vm_table_perc[i,3] <- round((vm_table[i,1] / nrow(wkgdat)), digits = 3) * 100
+  vm_table_perc[i,4] <- round((vm_table[i,1] / sum(vm_table[i, 1:ncol(vm_table)])), digits = 3) * 100
 }
 
 # Plot stacked bar and "Always" results for all surveys
-ba_trends_plot_pas <- ggplot() +
+vm_trends_plot_pas <- ggplot() +
   geom_bar(aes(x = Survey, y = PAS, fill = Survey),
-           data = ba_table_perc, stat = "identity") +
-  geom_text(data = ba_table_perc, aes(x = Survey, y = PAS, label = PAS), 
+           data = vm_table_perc, stat = "identity") +
+  geom_text(data = vm_table_perc, aes(x = Survey, y = PAS, label = PAS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Busness Applications", subtitle = "% Very Sat (% Cum Responses)")
+  labs(title = "Vendor Management", subtitle = "% Very Sat (All Resps)")
 
 # Plot stacked bar for the group results
-ba_trends_plot_pcs <- ggplot() +
+vm_trends_plot_pcs <- ggplot() +
   geom_bar(aes(x = Survey, y = PCS, fill = Survey),
-           data = ba_table_perc, stat = "identity") +
-  geom_text(data = ba_table_perc, aes(x = Survey, y = PCS, label = PCS), 
+           data = vm_table_perc, stat = "identity") +
+  geom_text(data = vm_table_perc, aes(x = Survey, y = PCS, label = PCS), 
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
-  labs(title = "Business Applications", subtitle = "% Very Sat (Specific Survey)")
+  labs(title = "Vendor Management", subtitle = "% Very Sat (Group Resps)")
 
 # Arrange the two plots for pasting into deck
-grid.arrange(ba_plot, ba_trends_plot_pcs, ba_trends_plot_pas, ncol = 3)
+grid.arrange(vm_plot, vm_trends_plot_pcs, vm_trends_plot_pas, ncol = 3)
 
 # Display the % improvement in "Very Satisfied" to date
 vm_imp <- round(((vm_trends[length(vm_trends$Surveyed),3] - vm_trends[1,3]) / 
                    vm_trends[length(vm_trends$Surveyed),3]) * 100, digits = 2)
 cat("Improvement for 'Very Satisfied' over period:", vm_imp,"%")
 
-# Arrange the 8 subgroup plots in two 2x2 formatted pieces
-grid.arrange(am_trends_plot,
-             bmps_trends_plot,
-             ba_trends_plot,
-             es_trends_plot,
-             ncol = 2)
+# Arrange the 8 subgroup plots in two 2x2 formatted pieces - within Group
+grid.arrange(
+  am_trends_plot_pcs,
+  bmps_trends_plot_pcs,
+  ba_trends_plot_pcs,
+  es_trends_plot_pcs, ncol = 2)
 
 grid.arrange(
-             ps_trends_plot,
-             sd_trends_plot,
-             ss_trends_plot,
-             vm_trends_plot,
-             ncol = 2)
+  ps_trends_plot_pcs,
+  sd_trends_plot_pcs,
+  ss_trends_plot_pcs,
+  vm_trends_plot_pcs, ncol = 2)
+
+# Arrange the 8 subgroup plots in two 2x2 formatted pieces - within Group
+grid.arrange(
+  am_trends_plot_pcs,
+  bmps_trends_plot_pcs,
+  ba_trends_plot_pcs,
+  es_trends_plot_pcs, ncol = 2)
+
+grid.arrange(
+  ps_trends_plot_pcs,
+  sd_trends_plot_pcs,
+  ss_trends_plot_pcs,
+  vm_trends_plot_pcs, ncol = 2)
 
 cat("Account Managers improvement to date:     ", am_imp,"%")
 cat("BMPS improvement to date:                 ", bmps_imp,"%")
