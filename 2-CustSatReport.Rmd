@@ -1,7 +1,7 @@
 ---
 title: "Client Satisfaction Report"
-subtitle: "Fall 2018 / Winter 2019 / Spring 2019"
-date: "May 2019"
+subtitle: "Responses View"
+date: "June 2019"
 output:
   word_document:
     reference_docx: draftstyles.docx
@@ -9,6 +9,12 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, out.width='90%')
+pagebreak <- function() {
+  if(knitr::is_latex_output())
+    return("\\newpage")
+  else
+    return('<div style="page-break-before: always;" />')
+}
 ```
 
 ```{r File open and setup, include=FALSE}
@@ -95,6 +101,12 @@ wkgdat[wkgdat == "N/A do not use"]    <- "NA/DNU"
 sapply(wkgdat, function(x)length(unique(x)))
 ```
 
+`r pagebreak()`
+
+# Experience Attribute 1: Makes a Positive Contribution
+
+### Data Summary - All Surveys
+
 ```{r Exp Attribute 1 - Pos Contribution, echo=FALSE}
 #--------------------------------------------------------------------
 #
@@ -110,10 +122,13 @@ expfactors <- transform(wkgdat[c(1,2,3,4,5)])
 # Experience Attribute 1
 #
 
-# Create the pivot
+# Create the data table and display
 pc_table <- with(expfactors, table(Surveyed, PosContrib))
-# round(prop.table(pc_table), digits = 3)
 
+kable(pc_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+
+# Calc the number of "Always" responses
 pc_trends <- with(expfactors, table(PosContrib, Surveyed))
 pc_trends <- as.data.frame(pc_trends)
 pc_trends <- pc_trends %>% filter(PosContrib == "1-Always") 
@@ -140,34 +155,36 @@ pc_trends_plot <- ggplot() +
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
   labs(title = "Positive Contribution", subtitle = "Always")
-```
 
-## Experience Attribute: Positive Contribution
-
-```{r Positive Contribution Plot, echo=FALSE}
 # Arrange the two plots for pasting into deck
 grid.arrange(pc_plot, pc_trends_plot, ncol = 2)
 
 # Display the % improvement in "Always" to date
 pc_imp <- round(((pc_trends[length(pc_trends$Surveyed),3] - pc_trends[1,3]) / 
                    pc_trends[length(pc_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Always' over period:", pc_imp,"%")
 
 ```
 
-## Experience Attribute: Timely Response
+### Improvement for the rating of Always over the period is `r pc_imp`%
 
-```{r Exp Attribute 2 - Timely Response, include=FALSE}
+`r pagebreak()`
+
+## Experience Attribute 2: Timely Response
+
+### Data Summary - All Surveys
+
+```{r Exp Attribute 2 - Timely Response, echo=FALSE}
 #
 # Experience Attribute 2
 #
 
-# Create the pivot
+# Create the pivot and display
 tr_table <- with(expfactors, table(Surveyed, TimelyResp))
-tr_table
-str(tr_table)
-round(prop.table(tr_table), digits = 3)
 
+kable(tr_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+
+# Calc the number of "Always" responses
 tr_trends <- with(expfactors, table(TimelyResp, Surveyed))
 tr_trends <- as.data.frame(tr_trends)
 tr_trends <- tr_trends %>% filter(TimelyResp == "1-Always") 
@@ -194,31 +211,36 @@ tr_trends_plot <- ggplot() +
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
   labs(title = "Timely Response", subtitle = "Always")
-```
 
-```{r Timely Response Plot, echo=FALSE}
 # Arrange the two plots for pasting into deck
 grid.arrange(tr_plot, tr_trends_plot, ncol = 2)
 
 # Display the % improvement in "Always" to date
 tr_imp <- round(((tr_trends[length(tr_trends$Surveyed),3] - tr_trends[1,3]) / 
                    tr_trends[length(tr_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Always' over period:", tr_imp,"%")
 
 ```
 
-## Experience Attribute: Accountability
+### Improvement for the rating of Always over the period is `r tr_imp`%
 
-```{r Exp Attribute 3 - Accontable, include=FALSE}
+`r pagebreak()`
+
+## Experience Attribute 3: Accountability
+
+### Data Summary - All Surveys
+
+```{r Exp Attribute 3 - Accontable, echo=FALSE}
 #
 # Experience Attribute 3
 #
 
 # Create the pivot
 ac_table <- with(expfactors, table(Surveyed, Accountability))
-ac_table
-round(prop.table(ac_table), digits = 3)
 
+kable(ac_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+
+# Calc the number of "Always" responses
 ac_trends <- with(expfactors, table(Accountability, Surveyed))
 ac_trends <- as.data.frame(ac_trends)
 ac_trends <- ac_trends %>% filter(Accountability == "1-Always") 
@@ -245,31 +267,35 @@ ac_trends_plot <- ggplot() +
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
   labs(title = "Accountability", subtitle = "Always")
-```
 
-```{r Accountaility Plot, echo=FALSE}
 # Arrange the two plots for pasting into deck
 grid.arrange(ac_plot, ac_trends_plot, ncol = 2)
 
 # Display the % improvement in "Always" to date
 ac_imp <- round(((ac_trends[length(ac_trends$Surveyed),3] - ac_trends[1,3]) / 
                    ac_trends[length(ac_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Always' over period:", ac_imp,"%")
 
 ```
 
-## Experience Attribute: Knowledgeable
+### Improvement for the rating of Always over the period is `r ac_imp`%
 
-```{r Experience Attribute 4 - Knowledgeable, include=FALSE}
+`r pagebreak()`
+
+## Experience Attribute 4: Knowledgeable
+
+### Data Summary - All Surveys
+
+```{r Experience Attribute 4 - Knowledgeable, echo=FALSE}
 #
 # Experience Attribute 4
 #
 
 # Create the pivot
 kn_table <- with(expfactors, table(Surveyed, Knowledgeable))
-kn_table
-round(prop.table(kn_table), digits = 3)
+kable(kn_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
+# Calc the number of "Always" responses
 kn_trends <- with(expfactors, table(Knowledgeable, Surveyed))
 kn_trends <- as.data.frame(kn_trends)
 kn_trends <- kn_trends %>% filter(Knowledgeable == "1-Always") 
@@ -296,31 +322,36 @@ kn_trends_plot <- ggplot() +
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
   labs(title = "Knowledgeable", subtitle = "Always")
-```
 
-```{r Knowledgeable Plot, echo=FALSE}
 # Arrange the two plots for pasting into deck
 grid.arrange(kn_plot, kn_trends_plot, ncol = 2)
 
 # Display the % improvement in "Always" to date
 kn_imp <- round(((kn_trends[length(kn_trends$Surveyed),3] - kn_trends[1,3]) / 
                    kn_trends[length(kn_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Always' over period:", kn_imp,"%")
 ```
+
+### Improvement for the rating of Always over the period is `r kn_imp`%
+
+`r pagebreak()`
 
 ## Experience Attributes Summary
 
-```{r}
+```{r Experience Attributes Summary 1, echo=FALSE}
+# Arrange the four experience plots in a 2x2 format
+grid.arrange(pc_plot, tr_plot, ac_plot, kn_plot, ncol = 2)
+
 # Arrange the 4 "Very Satisfied" plots in a 2x2 format
 grid.arrange(pc_trends_plot, tr_trends_plot, ac_trends_plot, kn_trends_plot, ncol = 2)
-
-# Summarize improvements across groups
-cat("Positive Contribution improvement to date:", pc_imp,"%")
-cat("Timely Response improvement to date:      ", tr_imp,"%")
-cat("Accountable improvement to date:          ", ac_imp,"%")
-cat("Knowledgeable improvement to date:        ", kn_imp,"%")
-
 ```
+
+### Experience Attributes - Improvement Over Period of Surveys
+**Positive Contribution: `r pc_imp`%**  
+**Timely Response      : `r tr_imp`%**  
+**Is Accountable       : `r ac_imp`%**  
+**Knowledgeable Staff  : `r kn_imp`%**  
+
+`r pagebreak()`
 
 ```{r Setup for Group Performance, include=FALSE}
 #--------------------------------------------------------------------
@@ -336,16 +367,20 @@ summary(grpfactors)
 
 ## Group Performance: Account Managers
 
-```{r Group: , include=FALSE}
+### Data Summary - All Surveys
+
+```{r Group:, echo=FALSE}
 #
 # Subgroup 1
 #
 
-# Create the pivot
+# Create the pivot and disply
 am_table <- with(grpfactors, table(Surveyed, AcctMgrs))
-am_table
-round(prop.table(am_table), digits = 3)
 
+kable(am_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+
+# Calc the number of "Very Satisfied" responses
 am_trends <- with(grpfactors, table(AcctMgrs, Surveyed))
 am_trends <- as.data.frame(am_trends)
 am_trends <- am_trends %>% filter(AcctMgrs == "1-Very Satisfied")
@@ -372,30 +407,34 @@ am_trends_plot <- ggplot() +
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
   labs(title = "Account Managers", subtitle = "Very Satisfied")
-```
 
-```{r Group Plot 1, echo=FALSE}
 # Arrange the two plots for pasting into deck
 grid.arrange(am_plot, am_trends_plot, ncol = 2)
 
 am_imp <- round(((am_trends[length(am_trends$Surveyed),3] - am_trends[1,3]) / 
                      am_trends[length(am_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", am_imp,"%")
 
 ```
 
+### Improvement for the rating of Very Satisfied over the period is `r am_imp`%
+
+`r pagebreak()`
+
 ## Group Performance: B&MPS
 
-```{r Group: BMPS, include=FALSE}
+### Data Summary - All Surveys
+
+```{r Group: BMPS, echo=FALSE}
 #
 # Subgroup 2
 #
 
-# Create the pivot
+# Create the pivot and display
 bmps_table <- with(grpfactors, table(Surveyed, BMPS))
-bmps_table
-round(prop.table(bmps_table), digits = 3)
+kable(bmps_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
+# Calc the number of "Very Satisfied" responses
 bmps_trends <- with(grpfactors, table(BMPS, Surveyed))
 bmps_trends <- as.data.frame(bmps_trends)
 bmps_trends <- bmps_trends %>% filter(BMPS == "1-Very Satisfied")
@@ -422,31 +461,36 @@ bmps_trends_plot <- ggplot() +
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
   labs(title = "BMPS", subtitle = "Very Satisfied")
-```
 
-```{r Group Plot 2, echo=FALSE}
 # Arrange the two plots for pasting into deck
 grid.arrange(bmps_plot, bmps_trends_plot, ncol = 2)
 
 # Display the % improvement in "Very Satisfied" to date
 bmps_imp <- round(((bmps_trends[length(bmps_trends$Surveyed),3] - bmps_trends[1,3]) / 
                      bmps_trends[length(bmps_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", bmps_imp,"%")
 
 ```
 
+### Improvement for the rating of Very Satisfied over the period is `r bmps_imp`%
+
+`r pagebreak()`
+
 ## Group Performance: Business Applications
 
-```{r Group: Business Applications, include=FALSE}
+### Data Summary - All Surveys
+
+```{r Group: Business Applications, echo=FALSE}
 #
 # Subgroup 3
 #
 
-# Create the pivot
+# Create the pivot and display
 ba_table <- with(grpfactors, table(Surveyed, BusApps))
-ba_table
-round(prop.table(ba_table), digits = 3)
 
+kable(ba_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+
+# Calc the number of "Very Satisfied" responses
 ba_trends <- with(grpfactors, table(BusApps, Surveyed))
 ba_trends <- as.data.frame(ba_trends)
 ba_trends <- ba_trends %>% filter(BusApps == "1-Very Satisfied")
@@ -456,7 +500,7 @@ df <- as.data.frame(ba_table)
 df <- ddply(df, .(BusApps),
             transform, pos = cumsum(Freq))
 
-# Plot stacked bar and "Very Satisfied" detail
+# Calc the number of "Very Satisfied" responses
 ba_plot <- ggplot() +
   geom_bar(aes(x = BusApps, y = Freq, fill = Surveyed), 
            position = position_stack(reverse = TRUE), data = df, stat = "identity") +
@@ -473,31 +517,35 @@ ba_trends_plot <- ggplot() +
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
   labs(title = "Business Applications", subtitle = "Very Satisfied")
-```
 
-```{r Group Plot 3, echo=FALSE}
 # Arrange the two plots for pasting into deck
 grid.arrange(ba_plot, ba_trends_plot, ncol = 2)
 
 # Display the % improvement in "Very Satisfied" to date
 ba_imp <- round(((ba_trends[length(ba_trends$Surveyed),3] - ba_trends[1,3]) / 
                    ba_trends[length(ba_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", ba_imp,"%")
 
 ```
 
+### Improvement for the rating of Very Satisfied over the period is `r ba_imp`%
+
+`r pagebreak()`
+
 ## Group Performance: Event Services
 
-```{r Group: Event Services, include=FALSE}
+### Data Summary - All Surveys
+
+```{r Group: Event Services, echo=FALSE}
 #
 # Subgroup 4
 #
 
-# Create the pivot
+# Create the pivot and display
 es_table <- with(grpfactors, table(Surveyed, EventSvcs))
-es_table
-round(prop.table(es_table), digits = 3)
+kable(es_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
+# Calc the number of "Very Satisfied" responses
 es_trends <- with(grpfactors, table(EventSvcs, Surveyed))
 es_trends <- as.data.frame(es_trends)
 es_trends <- es_trends %>% filter(EventSvcs == "1-Very Satisfied")
@@ -524,31 +572,36 @@ es_trends_plot <- ggplot() +
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
   labs(title = "Event Services", subtitle = "Very Satisfied")
-```
 
-```{r Group Plot 4, echo=FALSE}
 # Arrange the two plots for pasting into deck
 grid.arrange(es_plot, es_trends_plot, ncol = 2)
 
 # Display the % improvement in "Very Satisfied" to date
 es_imp <- round(((es_trends[length(es_trends$Surveyed),3] - es_trends[1,3]) / 
                    es_trends[length(es_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", es_imp,"%")
 
 ```
 
+### Improvement for the rating of Very Satisfied over the period is `r es_imp`%
+
+`r pagebreak()`
+
 ## Group Performance: Project Support
 
-```{r Group: Project Support, include=FALSE}
+### Data Summary - All Surveys
+
+```{r Group: Project Support, echo=FALSE}
 #
 # Subgroup 5
 #
 
-# Create the pivot
+# Create the pivot and display
 ps_table <- with(grpfactors, table(Surveyed, ProjSupp))
-ps_table
-round(prop.table(ps_table), digits = 3)
 
+kable(ps_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+
+# Calc the number of "Very Satisfied" responses
 ps_trends <- with(grpfactors, table(ProjSupp, Surveyed))
 ps_trends <- as.data.frame(ps_trends)
 ps_trends <- ps_trends %>% filter(ProjSupp == "1-Very Satisfied")
@@ -575,31 +628,36 @@ ps_trends_plot <- ggplot() +
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
   labs(title = "Project Support", subtitle = "Very Satisfied")
-```
 
-```{r Group Plot 5, echo=FALSE}
 # Arrange the two plots for pasting into deck
 grid.arrange(ps_plot, ps_trends_plot, ncol = 2)
 
 # Display the % improvement in "Very Satisfied" to date
 ps_imp <- round(((ps_trends[length(ps_trends$Surveyed),3] - ps_trends[1,3]) / 
                    ps_trends[length(ps_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", ps_imp,"%")
 
 ```
 
+### Improvement for the rating of Very Satisfied over the period is `r ps_imp`%
+
+`r pagebreak()`
+
 ## Group Performance: Service Desk
 
-```{r Group: Service Desk, include=FALSE}
+### Data Summary - All Surveys
+
+```{r Group: Service Desk, echo=FALSE}
 #
 # Subgroup 6
 #
 
-# Create the pivot
+# Create the pivot and display
 sd_table <- with(grpfactors, table(Surveyed, ServDesk))
-sd_table
-round(prop.table(sd_table), digits = 3)
 
+kable(sd_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+
+# Calc the number of "Very Satisfied" responses
 sd_trends <- with(grpfactors, table(ServDesk, Surveyed))
 sd_trends <- as.data.frame(sd_trends)
 sd_trends <- sd_trends %>% filter(ServDesk == "1-Very Satisfied")
@@ -626,31 +684,36 @@ sd_trends_plot <- ggplot() +
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
   labs(title = "Service Desk", subtitle = "Very Satisfied")
-```
 
-```{r Group Plot 6, echo=FALSE}
 # Arrange the two plots for pasting into deck
 grid.arrange(sd_plot, sd_trends_plot, ncol = 2)
 
 # Display the % improvement in "Very Satisfied" to date
 sd_imp <- round(((sd_trends[length(sd_trends$Surveyed),3] - sd_trends[1,3]) / 
                    sd_trends[length(sd_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", sd_imp,"%")
 
 ```
 
+### Improvement for the rating of Very Satisfied over the period is `r sd_imp`%
+
+`r pagebreak()`
+
 ## Group Performance: Studio Services
 
-```{r Group: Studio Services, include=FALSE}
+### Data Summary - All Surveys
+
+```{r Group: Studio Services, echo=FALSE}
 #
 # Subgroup 7
 #
 
-# Create the pivot
+# Create the pivot and display
 ss_table <- with(grpfactors, table(Surveyed, StudioSvcs))
-ss_table
-round(prop.table(ss_table), digits = 3)
 
+kable(ss_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+
+# Calc the number of "Very Satisfied" responses
 ss_trends <- with(grpfactors, table(StudioSvcs, Surveyed))
 ss_trends <- as.data.frame(ss_trends)
 ss_trends <- ss_trends %>% filter(StudioSvcs == "1-Very Satisfied")
@@ -677,31 +740,36 @@ ss_trends_plot <- ggplot() +
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
   labs(title = "Studio Services", subtitle = "Very Satisfied")
-```
 
-```{r Group Plot 7, echo=FALSE}
 # Arrange the two plots for pasting into deck
 grid.arrange(ss_plot, ss_trends_plot, ncol = 2)
 
 # Display the % improvement in "Very Satisfied" to date
 ss_imp <- round(((ss_trends[length(ss_trends$Surveyed),3] - ss_trends[1,3]) / 
                    ss_trends[length(ss_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", ss_imp,"%")
 
 ```
 
+### Improvement for the rating of Very Satisfied over the period is `r ss_imp`%
+
+`r pagebreak()`
+
 ## Group Performance: Vendor Management
 
-```{r Group: Vendor Management , include=FALSE}
+### Data Summary - All Surveys
+
+```{r Group: Vendor Management, echo=FALSE}
 #
 # Subgroup 8
 #
 
-# Create the pivot
+# Create the pivot and display
 vm_table <- with(grpfactors, table(Surveyed, VenMgmt))
-vm_table
-round(prop.table(vm_table), digits = 3)
 
+kable(vm_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+
+# Calc the number of "Very Satisfied" responses
 vm_trends <- with(grpfactors, table(VenMgmt, Surveyed))
 vm_trends <- as.data.frame(vm_trends)
 vm_trends <- vm_trends %>% filter(VenMgmt == "1-Very Satisfied")
@@ -728,18 +796,19 @@ vm_trends_plot <- ggplot() +
             vjust = 1.5, color = "black", size = 5) + 
   theme(legend.position = "none") +
   labs(title = "Vendor Mgmt", subtitle = "Very Satisfied")
-```
 
-```{r Group Plot 8, echo=FALSE}
 # Arrange the two plots for pasting into deck
 grid.arrange(vm_plot, vm_trends_plot, ncol = 2)
 
 # Display the % improvement in "Very Satisfied" to date
 vm_imp <- round(((vm_trends[length(vm_trends$Surveyed),3] - vm_trends[1,3]) / 
                    vm_trends[length(vm_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", vm_imp,"%")
 
 ```
+
+### Improvement for the rating of Very Satisfied over the period is `r vm_imp`%
+
+`r pagebreak()`
 
 ## Group Performance Summary
 
@@ -756,15 +825,16 @@ grid.arrange(ps_trends_plot,
              ss_trends_plot,
              vm_trends_plot,
              ncol = 2)
+```
 
-
-cat("Account Managers improvement to date:     ", am_imp,"%")
-cat("BMPS improvement to date:                 ", bmps_imp,"%")
-cat("Business Applications improvement to date:", ba_imp,"%")
-cat("Event Services improvement to date:       ", es_imp,"%")
-cat("Project Support improvement to date:      ", ps_imp,"%")
-cat("Service Desk improvement to date:         ", sd_imp,"%")
-cat("Studio Services improvement to date:      ", ss_imp,"%")
-cat("Vendor Management improvement to date:    ", vm_imp,"%")
-
+### Group Performance - Improvement Over Period of Surveys
+**Account Managers:     `r am_imp`%**  
+**BMPS:                 `r bmps_imp`%**  
+**Business Applications:`r ba_imp`%**  
+**Event Services:       `r es_imp`%**  
+**Project Support:      `r ps_imp`%**  
+**Service Desk:         `r sd_imp`%**  
+**Studio Services:      `r ss_imp`%**  
+**Vendor Management:    `r vm_imp`%**  
+[End of Report]
 ```
