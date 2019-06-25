@@ -27,6 +27,8 @@ library(grid)
 library(gridExtra)
 library(lattice)
 library(janitor)
+library(rmarkdown)
+library(kableExtra)
 
 #--------------------------------------------------------------------
 #
@@ -39,7 +41,7 @@ library(janitor)
 #
 
 # Import and Open the data file / Establish the data set
-data_filename <- "CustSatData.csv"
+data_filename <- "CustSatDataT.csv"
 dat <- read.csv(data_filename, stringsAsFactors = FALSE)
 
 #
@@ -111,7 +113,8 @@ expfactors <- transform(wkgdat[c(1,2,3,4,5)])
 pc_table <- with(expfactors, table(Surveyed, PosContrib))
 
 cat("Data Summary - All Surveys")
-pc_table
+kable(pc_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to a dataframe and set the frequency position
 df <- as.data.frame(pc_table)
@@ -177,11 +180,12 @@ cat("Improvement for 'Always' over period:", pc_imp,"%")
 # Experience Attribute 2
 #
 
-# Create the data table and display and display
+# Create the data table and display
 tr_table <- with(expfactors, table(Surveyed, TimelyResp))
 
 cat("Data Summary - All Surveys")
-tr_table
+kable(tr_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(tr_table)
@@ -251,7 +255,8 @@ cat("Improvement for 'Always' over period:", tr_imp,"%")
 ac_table <- with(expfactors, table(Surveyed, Accountability))
 
 cat("Data Summary - All Surveys")
-ac_table
+kable(ac_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(ac_table)
@@ -321,7 +326,8 @@ cat("Improvement for 'Always' over period:", ac_imp,"%")
 kn_table <- with(expfactors, table(Surveyed, Knowledgeable))
 
 cat("Data Summary - All Surveys")
-kn_table
+kable(kn_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(kn_table)
@@ -427,7 +433,8 @@ grpfactors <- transform(wkgdat[c(1, 6, 7, 8, 9, 10, 11, 12, 13)])
 am_table <- with(grpfactors, table(Surveyed, AcctMgrs))
 
 cat("Data Summary - All Surveys")
-am_table
+kable(am_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(am_table)
@@ -496,7 +503,8 @@ cat("Improvement for 'Very Satisfied' over period:", am_imp,"%")
 bmps_table <- with(grpfactors, table(Surveyed, BMPS))
 
 cat("Data Summary - All Surveys")
-bmps_table
+kable(bmps_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(bmps_table)
@@ -566,7 +574,8 @@ cat("Improvement for 'Very Satisfied' over period:", bmps_imp,"%")
 ba_table <- with(grpfactors, table(Surveyed, BusApps))
 
 cat("Data Summary - All Surveys")
-ba_table
+kable(ba_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(ba_table)
@@ -636,7 +645,8 @@ cat("Improvement for 'Very Satisfied' over period:", ba_imp,"%")
 es_table <- with(grpfactors, table(Surveyed, EventSvcs))
 
 cat("Data Summary - All Surveys")
-es_table
+kable(es_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(es_table)
@@ -706,7 +716,8 @@ cat("Improvement for 'Very Satisfied' over period:", es_imp,"%")
 ps_table <- with(grpfactors, table(Surveyed, ProjSupp))
 
 cat("Data Summary - All Surveys")
-ps_table
+kable(ps_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(ps_table)
@@ -776,7 +787,8 @@ cat("Improvement for 'Very Satisfied' over period:", ps_imp,"%")
 sd_table <- with(grpfactors, table(Surveyed, ServDesk))
 
 cat("Data Summary - All Surveys")
-sd_table
+kable(sd_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(sd_table)
@@ -846,7 +858,8 @@ cat("Improvement for 'Very Satisfied' over period:", sd_imp,"%")
 ss_table <- with(grpfactors, table(Surveyed, StudioSvcs))
 
 cat("Data Summary - All Surveys")
-ss_table
+kable(ss_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(ss_table)
@@ -916,7 +929,8 @@ cat("Improvement for 'Very Satisfied' over period:", ss_imp,"%")
 vm_table <- with(grpfactors, table(Surveyed, VenMgmt))
 
 cat("Data Summary - All Surveys")
-vm_table
+kable(vm_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(vm_table)

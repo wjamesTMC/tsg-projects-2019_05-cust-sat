@@ -39,7 +39,7 @@ library(janitor)
 #
 
 # Import and Open the data file / Establish the data set
-data_filename <- "CustSatData.csv"
+data_filename <- "CustSatDataT.csv"
 dat <- read.csv(data_filename, stringsAsFactors = FALSE)
 names(dat)
 
@@ -76,10 +76,15 @@ wkgdat[wkgdat == "Sometimes"]         <- "3-Sometimes"
 wkgdat[wkgdat == "Rarely"]            <- "4-Rarely"
 wkgdat[wkgdat == "Never"]             <- "5-Never"
 
-# Change the survey date format so it will display better
-wkgdat[wkgdat == "01 - Fall 2018"]    <- "01-F18"
-wkgdat[wkgdat == "02 - Winter 2019"]  <- "02-W19"
-wkgdat[wkgdat == "03 - Spring 2019"]  <- "03-S19"
+# Change survey names to shorter form
+for(i in 1:length(unique(wkgdat$Surveyed))) {
+  sssq <- str_sub(unique(wkgdat$Surveyed)[i],  6,  6)
+  sssy <- str_sub(unique(wkgdat$Surveyed)[i], -2, -1)
+  survey_name <- paste(as.character(0), as.character(i),
+                       "-", sssq, as.character(sssy))
+  survey_name <- str_replace_all(survey_name, " ", "")
+  wkgdat[wkgdat == unique(wkgdat$Surveyed)[i]] <- survey_name
+}
 
 # Replace missing values (zeros) with NR and shorten "do not use"
 wkgdat[wkgdat == 0]                   <- "NR"
@@ -103,11 +108,19 @@ summary(expfactors)
 # Experience Attribute 1
 #
 
-# Create the pivot
+# Create the data table and display
 pc_table <- with(expfactors, table(Surveyed, PosContrib))
-pc_table
-round(prop.table(pc_table), digits = 3)
 
+cat("Data Summary - All Surveys")
+kable(pc_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+
+# Convert to a dataframe and set the frequency position
+df <- as.data.frame(pc_table)
+df <- ddply(df, .(PosContrib),
+            transform, pos = cumsum(Freq))
+
+# Calc the number of "Always" responses
 pc_trends <- with(expfactors, table(PosContrib, Surveyed))
 pc_trends <- as.data.frame(pc_trends)
 pc_trends <- pc_trends %>% filter(PosContrib == "1-Always") 
@@ -147,20 +160,22 @@ cat("Improvement for 'Always' over period:", pc_imp,"%")
 # Experience Attribute 2
 #
 
-# Create the pivot
+# Create the data table and display
 tr_table <- with(expfactors, table(Surveyed, TimelyResp))
-tr_table
-str(tr_table)
-round(prop.table(tr_table), digits = 3)
 
-tr_trends <- with(expfactors, table(TimelyResp, Surveyed))
-tr_trends <- as.data.frame(tr_trends)
-tr_trends <- tr_trends %>% filter(TimelyResp == "1-Always") 
+cat("Data Summary - All Surveys")
+kable(tr_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(tr_table)
 df <- ddply(df, .(TimelyResp),
             transform, pos = cumsum(Freq))
+
+# Calc the number of "Always" responses
+tr_trends <- with(expfactors, table(TimelyResp, Surveyed))
+tr_trends <- as.data.frame(tr_trends)
+tr_trends <- tr_trends %>% filter(TimelyResp == "1-Always") 
 
 # Plot stacked bar and "Very Satisfied" detail
 tr_plot <- ggplot() +
@@ -192,19 +207,21 @@ cat("Improvement for 'Always' over period:", tr_imp,"%")
 # Experience Attribute 3
 #
 
-# Create the pivot
+# Create the data table and display
 ac_table <- with(expfactors, table(Surveyed, Accountability))
-ac_table
-round(prop.table(ac_table), digits = 3)
 
-ac_trends <- with(expfactors, table(Accountability, Surveyed))
-ac_trends <- as.data.frame(ac_trends)
-ac_trends <- ac_trends %>% filter(Accountability == "1-Always") 
+kable(ac_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(ac_table)
 df <- ddply(df, .(Accountability),
             transform, pos = cumsum(Freq))
+
+# Calc the number of "Always" responses
+ac_trends <- with(expfactors, table(Accountability, Surveyed))
+ac_trends <- as.data.frame(ac_trends)
+ac_trends <- ac_trends %>% filter(Accountability == "1-Always") 
 
 # Plot stacked bar and "Very Satisfied" detail
 ac_plot <- ggplot() +
@@ -236,19 +253,22 @@ cat("Improvement for 'Always' over period:", ac_imp,"%")
 # Experience Attribute 4
 #
 
-# Create the pivot
+# Create the data table and display
 kn_table <- with(expfactors, table(Surveyed, Knowledgeable))
-kn_table
-round(prop.table(kn_table), digits = 3)
 
-kn_trends <- with(expfactors, table(Knowledgeable, Surveyed))
-kn_trends <- as.data.frame(kn_trends)
-kn_trends <- kn_trends %>% filter(Knowledgeable == "1-Always") 
+cat("Data Summary - All Surveys")
+kable(kn_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(kn_table)
 df <- ddply(df, .(Knowledgeable),
             transform, pos = cumsum(Freq))
+
+# Calc the number of "Always" responses
+kn_trends <- with(expfactors, table(Knowledgeable, Surveyed))
+kn_trends <- as.data.frame(kn_trends)
+kn_trends <- kn_trends %>% filter(Knowledgeable == "1-Always") 
 
 # Plot stacked bar and "Very Satisfied" detail
 kn_plot <- ggplot() +
@@ -302,19 +322,21 @@ summary(grpfactors)
 # Subgroup 1
 #
 
-# Create the pivot
+# # Create the data table and display
 am_table <- with(grpfactors, table(Surveyed, AcctMgrs))
-am_table
-round(prop.table(am_table), digits = 3)
 
-am_trends <- with(grpfactors, table(AcctMgrs, Surveyed))
-am_trends <- as.data.frame(am_trends)
-am_trends <- am_trends %>% filter(AcctMgrs == "1-Very Satisfied")
+kable(am_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(am_table)
 df <- ddply(df, .(AcctMgrs),
             transform, pos = cumsum(Freq))
+
+# Calc the number of "Always" responses
+am_trends <- with(grpfactors, table(AcctMgrs, Surveyed))
+am_trends <- as.data.frame(am_trends)
+am_trends <- am_trends %>% filter(AcctMgrs == "1-Very Satisfied")
 
 # Plot stacked bar and "Very Satisfied" detail
 am_plot <- ggplot() +
@@ -345,19 +367,21 @@ cat("Improvement for 'Very Satisfied' over period:", am_imp,"%")
 # Subgroup 2
 #
 
-# Create the pivot
+# # Create the data table and display
 bmps_table <- with(grpfactors, table(Surveyed, BMPS))
-bmps_table
-round(prop.table(bmps_table), digits = 3)
 
-bmps_trends <- with(grpfactors, table(BMPS, Surveyed))
-bmps_trends <- as.data.frame(bmps_trends)
-bmps_trends <- bmps_trends %>% filter(BMPS == "1-Very Satisfied")
+kable(bmps_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(bmps_table)
 df <- ddply(df, .(BMPS),
             transform, pos = cumsum(Freq))
+
+# Calc the number of "Always" responses
+bmps_trends <- with(grpfactors, table(BMPS, Surveyed))
+bmps_trends <- as.data.frame(bmps_trends)
+bmps_trends <- bmps_trends %>% filter(BMPS == "1-Very Satisfied")
 
 # Plot stacked bar and "Very Satisfied" detail
 bmps_plot <- ggplot() +
@@ -389,19 +413,21 @@ cat("Improvement for 'Very Satisfied' over period:", bmps_imp,"%")
 # Subgroup 3
 #
 
-# Create the pivot
+# # Create the data table and display
 ba_table <- with(grpfactors, table(Surveyed, BusApps))
-ba_table
-round(prop.table(ba_table), digits = 3)
 
-ba_trends <- with(grpfactors, table(BusApps, Surveyed))
-ba_trends <- as.data.frame(ba_trends)
-ba_trends <- ba_trends %>% filter(BusApps == "1-Very Satisfied")
+kable(ba_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(ba_table)
 df <- ddply(df, .(BusApps),
             transform, pos = cumsum(Freq))
+
+# Calc the number of "Always" responses
+ba_trends <- with(grpfactors, table(BusApps, Surveyed))
+ba_trends <- as.data.frame(ba_trends)
+ba_trends <- ba_trends %>% filter(BusApps == "1-Very Satisfied")
 
 # Plot stacked bar and "Very Satisfied" detail
 ba_plot <- ggplot() +
@@ -433,19 +459,22 @@ cat("Improvement for 'Very Satisfied' over period:", ba_imp,"%")
 # Subgroup 4
 #
 
-# Create the pivot
+# # Create the data table and display
 es_table <- with(grpfactors, table(Surveyed, EventSvcs))
-es_table
-round(prop.table(es_table), digits = 3)
 
-es_trends <- with(grpfactors, table(EventSvcs, Surveyed))
-es_trends <- as.data.frame(es_trends)
-es_trends <- es_trends %>% filter(EventSvcs == "1-Very Satisfied")
+cat("Data Summary - All Surveys")
+kable(es_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(es_table)
 df <- ddply(df, .(EventSvcs),
             transform, pos = cumsum(Freq))
+
+# Calc the number of "Always" responses
+es_trends <- with(grpfactors, table(EventSvcs, Surveyed))
+es_trends <- as.data.frame(es_trends)
+es_trends <- es_trends %>% filter(EventSvcs == "1-Very Satisfied")
 
 # Plot stacked bar and "Very Satisfied" detail
 es_plot <- ggplot() +
@@ -477,19 +506,22 @@ cat("Improvement for 'Very Satisfied' over period:", es_imp,"%")
 # Subgroup 5
 #
 
-# Create the pivot
+# Create the data table and display
 ps_table <- with(grpfactors, table(Surveyed, ProjSupp))
-ps_table
-round(prop.table(ps_table), digits = 3)
 
-ps_trends <- with(grpfactors, table(ProjSupp, Surveyed))
-ps_trends <- as.data.frame(ps_trends)
-ps_trends <- ps_trends %>% filter(ProjSupp == "1-Very Satisfied")
+cat("Data Summary - All Surveys")
+kable(ps_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(ps_table)
 df <- ddply(df, .(ProjSupp),
             transform, pos = cumsum(Freq))
+
+# Calc the number of "Always" responses
+ps_trends <- with(grpfactors, table(ProjSupp, Surveyed))
+ps_trends <- as.data.frame(ps_trends)
+ps_trends <- ps_trends %>% filter(ProjSupp == "1-Very Satisfied")
 
 # Plot stacked bar and "Very Satisfied" detail
 ps_plot <- ggplot() +
@@ -521,19 +553,22 @@ cat("Improvement for 'Very Satisfied' over period:", ps_imp,"%")
 # Subgroup 6
 #
 
-# Create the pivot
+# Create the data table and display
 sd_table <- with(grpfactors, table(Surveyed, ServDesk))
-sd_table
-round(prop.table(sd_table), digits = 3)
 
-sd_trends <- with(grpfactors, table(ServDesk, Surveyed))
-sd_trends <- as.data.frame(sd_trends)
-sd_trends <- sd_trends %>% filter(ServDesk == "1-Very Satisfied")
+cat("Data Summary - All Surveys")
+kable(sd_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(sd_table)
 df <- ddply(df, .(ServDesk),
             transform, pos = cumsum(Freq))
+
+# Calc the number of "Always" responses
+sd_trends <- with(grpfactors, table(ServDesk, Surveyed))
+sd_trends <- as.data.frame(sd_trends)
+sd_trends <- sd_trends %>% filter(ServDesk == "1-Very Satisfied")
 
 # Plot stacked bar and "Very Satisfied" detail
 sd_plot <- ggplot() +
@@ -565,19 +600,22 @@ cat("Improvement for 'Very Satisfied' over period:", sd_imp,"%")
 # Subgroup 7
 #
 
-# Create the pivot
+# Create the data table and display
 ss_table <- with(grpfactors, table(Surveyed, StudioSvcs))
-ss_table
-round(prop.table(ss_table), digits = 3)
 
-ss_trends <- with(grpfactors, table(StudioSvcs, Surveyed))
-ss_trends <- as.data.frame(ss_trends)
-ss_trends <- ss_trends %>% filter(StudioSvcs == "1-Very Satisfied")
+cat("Data Summary - All Surveys")
+kable(ss_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(ss_table)
 df <- ddply(df, .(StudioSvcs),
             transform, pos = cumsum(Freq))
+
+# Calc the number of "Always" responses
+ss_trends <- with(grpfactors, table(StudioSvcs, Surveyed))
+ss_trends <- as.data.frame(ss_trends)
+ss_trends <- ss_trends %>% filter(StudioSvcs == "1-Very Satisfied")
 
 # Plot stacked bar and "Very Satisfied" detail
 ss_plot <- ggplot() +
@@ -609,19 +647,22 @@ cat("Improvement for 'Very Satisfied' over period:", ss_imp,"%")
 # Subgroup 8
 #
 
-# Create the pivot
+# Create the data table and display
 vm_table <- with(grpfactors, table(Surveyed, VenMgmt))
-vm_table
-round(prop.table(vm_table), digits = 3)
 
-vm_trends <- with(grpfactors, table(VenMgmt, Surveyed))
-vm_trends <- as.data.frame(vm_trends)
-vm_trends <- vm_trends %>% filter(VenMgmt == "1-Very Satisfied")
+cat("Data Summary - All Surveys")
+kable(vm_table) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 # Convert to dataframe and set frequency position
 df <- as.data.frame(vm_table)
 df <- ddply(df, .(VenMgmt),
             transform, pos = cumsum(Freq))
+
+# Calc the number of "Always" responses
+vm_trends <- with(grpfactors, table(VenMgmt, Surveyed))
+vm_trends <- as.data.frame(vm_trends)
+vm_trends <- vm_trends %>% filter(VenMgmt == "1-Very Satisfied")
 
 # Plot stacked bar and "Very Satisfied" detail
 vm_plot <- ggplot() +
