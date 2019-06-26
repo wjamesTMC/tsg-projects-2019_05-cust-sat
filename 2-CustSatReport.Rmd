@@ -50,7 +50,7 @@ library(janitor)
 #
 
 # Import and Open the data file / Establish the data set
-data_filename <- "CustSatData.csv"
+data_filename <- "CustSatDataT.csv"
 dat <- read.csv(data_filename, stringsAsFactors = FALSE)
 names(dat)
 
@@ -87,10 +87,15 @@ wkgdat[wkgdat == "Sometimes"]         <- "3-Sometimes"
 wkgdat[wkgdat == "Rarely"]            <- "4-Rarely"
 wkgdat[wkgdat == "Never"]             <- "5-Never"
 
-# Change the survey date format so it will display better
-wkgdat[wkgdat == "01 - Fall 2018"]    <- "01-F18"
-wkgdat[wkgdat == "02 - Winter 2019"]  <- "02-W19"
-wkgdat[wkgdat == "03 - Spring 2019"]  <- "03-S19"
+# Change survey names to shorter form
+for(i in 1:length(unique(wkgdat$Surveyed))) {
+  sssq <- str_sub(unique(wkgdat$Surveyed)[i],  6,  6)
+  sssy <- str_sub(unique(wkgdat$Surveyed)[i], -2, -1)
+  survey_name <- paste(as.character(0), as.character(i),
+                       "-", sssq, as.character(sssy))
+  survey_name <- str_replace_all(survey_name, " ", "")
+  wkgdat[wkgdat == unique(wkgdat$Surveyed)[i]] <- survey_name
+}
 
 # Replace missing values (zeros) with NR and shorten "do not use"
 wkgdat[wkgdat == 0]                   <- "NR"
