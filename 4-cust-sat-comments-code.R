@@ -27,6 +27,9 @@ library(grid)
 library(gridExtra)
 library(lattice)
 library(janitor)
+library(rmarkdown)
+library(kableExtra)
+library(stringi)
 
 #--------------------------------------------------------------------
 #
@@ -39,12 +42,12 @@ library(janitor)
 #
 
 # Import and Open the data file / Establish the data set
-data_filename <- "CustSatData.csv"
-dat <- read.csv(data_filename, stringsAsFactors = FALSE)
+data_filename <- "CustSatDataT.csv"
+dat           <- read.csv(data_filename, stringsAsFactors = FALSE)
 names(dat)
 
 comments_filename <- "CustSatComments.csv"
-comms <- read.csv(comments_filename, stringsAsFactors = FALSE)
+comms             <- read.csv(comments_filename, stringsAsFactors = FALSE)
 
 #
 # Clean data file to set vector names
@@ -105,83 +108,117 @@ sapply(wkgdat, function(x)length(unique(x)))
 #
 #--------------------------------------------------------------------
 
+# Build dataframe
+survey_df   <- data.frame(Survey         = survey_name,
+                          Pos_vocab_Word = comms$Positive,
+                          Count_pos_word = 1:length(comms$Positive),
+                          Neg_vocab_word = comms$Negative,
+                          Count_neg_word = 1:length(comms$Negative))
+
 #
 # Positive vocabulary elements
 #
 
-count_pos_vocab <- data.frame(Vocabulary_Word = 1:length(comms$Positive),
-                              Count           = 1:length(comms$Positive))
-                              
 pct <- 0
 for(i in 1:length(comms$Positive)) {
   x <- str_detect(wkgdat$Comments, comms$Positive[i])
-  count_pos_vocab[i, 1] <- comms$Positive[i]
-  count_pos_vocab[i, 2] <- length(x[x == TRUE])
+  survey_df[i, 3] <- length(x[x == TRUE])
   pct <- pct + length(x[x == TRUE])
 }
 
-cat("Number of positive comments is:", pct)
-cat("Positive comment ratio is:     ", pct / length(comms$Positive))
-cat("Summary of positive vocabulary word counts / occurrences")
-kable(count_pos_vocab) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
-
 #
-# Negative vocabulary elements
+# Negative vocabulay elements
 #
-
-count_neg_vocab <- data.frame(Vocabulary_Word = 1:length(comms$Negative),
-                              Count           = 1:length(comms$Negative))
 
 nct <- 0
 for(i in 1:length(comms$Negative)) {
   x <- str_detect(wkgdat$Comments, comms$Negative[i])
-  count_neg_vocab[i, 1] <- comms$Negative[i]
-  count_neg_vocab[i, 2] <- length(x[x == TRUE])
+  survey_df[i, 5] <- length(x[x == TRUE])
   nct <- nct + length(x[x == TRUE])
 }
 
-cat("Number of negative comments is:", nct)
-cat("Negative comment ratio is     :", nct / length(comms$Negative))
-cat("Summary of negative vocabulary word counts / occurrences")
-kable(count_neg_vocab) %>%
+# Create a filename and write out the results
+filename <- paste("cum_survey_data",".csv")
+filename <- stri_replace_all_fixed(filename, " ", "")
+write.csv(survey_df, file = filename)
+
+cat("Vocabulary word counts / occurrences")
+kable(survey_df) %>%
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+
+cat("Number of survey responses is :", nrow(wkgdat), "\n")
+cat("Number of positive comments is:", pct, "\n")
+cat("Positive comment ratio is     :", pct / nrow(wkgdat), "\n")
+cat("Number of negative comments is:", nct, "\n")
+cat("Negative comment ratio is     :", nct / nrow(wkgdat), "\n")
 
 #--------------------------------------------------------------------
 #
 # Vocabulary analysis - by Survey
-#
+# 
 #--------------------------------------------------------------------
 
-names(wkgdat)
-wkgdat$Surveyed
-dat01F18 <- wkgdat %>% filter(Surveyed == "01-F18")
+# Set the number of surveys 
+survey_num <- length(unique(wkgdat$Surveyed))
 
-q_dat <- unique(wkgdat$Surveyed)
+# Loop to examine each survey and assign values to a dataframe
+for(i in 1:survey_num) {
+  
+  # Build dataframe
+  survey_df   <- data.frame(Survey         = survey_name,
+                            Pos_vocab_Word = comms$Positive,
+                            Count_pos_word = 1:length(comms$Positive),
+                            Neg_vocab_word = comms$Negative,
+                            Count_neg_word = 1:length(comms$Negative))
+  
+  # Assign survey name to the dataframe
+  survey_df[ ,1] = unique(wkgdat$Surveyed)[i]
+  
+  #
+  # Positive vocabulary elements
+  #
+  
+  # Set the specific survey data
+  survey_dat  <- wkgdat %>% filter(Surveyed == unique(wkgdat$Surveyed)[i])
+  
+  # Lopp to count the occurrences of positive words
+  pct <- 0
+  for(j in 1:length(comms$Positive)) {
+     x <- str_detect(survey_dat$Comments, comms$Positive[j])
+     survey_df[j, 3] <- length(x[x == TRUE])
+     pct <- pct + length(x[x == TRUE])
+  }
 
-#
-# Positive vocabulary elements
-#
-pct <- 0
-for(i in 1:length(comms$Positive)) {
-  x <- str_detect(wkgdat$Comments, comms$Positive[i])
-  pct <- pct + length(x[x == TRUE])
+  #
+  # Negative vocabulary elements
+  #
+
+  # Lopp to count the occurrences of negative words
+  nct <- 0
+  for(j in 1:length(comms$Negative)) {
+    x <- str_detect(survey_dat$Comments, comms$Negative[j])
+    survey_df[j, 5] <- length(x[x == TRUE])
+    nct <- nct + length(x[x == TRUE])
+  }
+
+  # Create the unique filename by survey and write out the results
+  filename <- paste(survey_df[i,1],".csv")
+  filename <- stri_replace_all_fixed(filename, " ", "")
+  write.csv(survey_df, file = filename)
+  
+  #
+  # Print results of individual surveys
+  #
+  
+  cat("Number of rows in the survey is                :", nrow(survey_df), "\n")
+  
+  cat("Number of positive comments in",survey_name,"is:", pct, "\n")
+  cat("Ratio of positive comments to responses is     :", pct / nrow(survey_dat), "\n")
+  
+  cat("Number of negative comments in",survey_name,"is:", nct, "\n")
+  cat("Ratio of negative comments to responses is     :", nct / nrow(survey_dat), "\n")
+  
 }
-pct
-cat("Positive comment ratio is:", pct / length(comms$Positive))
-
-#
-# Negative vocabulary elements
-#
-nct <- 0
-for(i in 1:length(comms$Negative)) {
-  x <- str_detect(wkgdat$Comments, comms$Negative[i])
-  nct <- nct + length(x[x == TRUE])
-}
-nct
-cat("Negative comment ratio is:", nct / length(comms$Negative))
-
-
 
 
 #--------------------------------------------------------------------

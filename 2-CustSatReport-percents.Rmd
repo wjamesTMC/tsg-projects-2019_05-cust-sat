@@ -38,6 +38,8 @@ library(grid)
 library(gridExtra)
 library(lattice)
 library(janitor)
+library(rmarkdown)
+library(kableExtra)
 
 #--------------------------------------------------------------------
 #
