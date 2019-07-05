@@ -42,12 +42,20 @@ library(stringi)
 #
 
 # Import and Open the data file / Establish the data set
-data_filename <- "CustSatDataT.csv"
+data_filename <- "CustSatData.csv"
 dat           <- read.csv(data_filename, stringsAsFactors = FALSE)
 names(dat)
 
-comments_filename <- "CustSatComments.csv"
+comments_filename <- "pos-neg-vocabulary.csv"
 comms             <- read.csv(comments_filename, stringsAsFactors = FALSE)
+pos_vocab         <- comms %>% filter(Tone == "P")
+neg_vocab         <- comms %>% filter(Tone == "N")
+
+if(nrow(pos_vocab) > nrow(neg_vocab)) {
+  df_length <- nrow(pos_vocab) 
+} else {
+    df_length <- nrow(neg_vocab)
+    }
 
 #
 # Clean data file to set vector names
@@ -102,55 +110,91 @@ wkgdat[wkgdat == "N/A do not use"]    <- "NA/DNU"
 # Verify the number of unique values of the various factors
 sapply(wkgdat, function(x)length(unique(x)))
 
+# Calc the number of comments
+num_comments <- length(unique(wkgdat$Comments))
+
 #--------------------------------------------------------------------
 #
 # Vocabulary analysis - Cumulative
 #
 #--------------------------------------------------------------------
 
-# Build dataframe
-survey_df   <- data.frame(Survey         = survey_name,
-                          Pos_vocab_Word = comms$Positive,
-                          Count_pos_word = 1:length(comms$Positive),
-                          Neg_vocab_word = comms$Negative,
-                          Count_neg_word = 1:length(comms$Negative))
 
 #
 # Positive vocabulary elements
 #
 
+# Build dataframe for positives
+pos_df   <- data.frame(Word  = pos_vocab$Term,
+                       Count = 1:df_length,
+                       Type  = "P")
+
+# Loop to identify positive words in the comments field
 pct <- 0
-for(i in 1:length(comms$Positive)) {
-  x <- str_detect(wkgdat$Comments, comms$Positive[i])
-  survey_df[i, 3] <- length(x[x == TRUE])
+for(i in 1:df_length) {
+  x <- str_detect(wkgdat$Comments, pos_vocab$Term[i])
+  pos_df[i, 2] <- length(x[x == TRUE])
   pct <- pct + length(x[x == TRUE])
 }
+
+# Remove words with zero counts
+pos_df  <- pos_df %>% filter(Count != 0)
+
+# Sort from high to low
+pos_df <- arrange(pos_df, desc(Count), Word)
+
+# Append to the cumulative dataframe
+cum_count_df <- rbind(cum_count_df, pos_df)
 
 #
 # Negative vocabulay elements
 #
 
+# Build dataframe for negatives
+neg_df   <- data.frame(Word  = neg_vocab$Term,
+                       Count = 1:df_length,
+                       Type  = "N")
+
+
+# Loop to identify negative words in the comments field
 nct <- 0
-for(i in 1:length(comms$Negative)) {
-  x <- str_detect(wkgdat$Comments, comms$Negative[i])
-  survey_df[i, 5] <- length(x[x == TRUE])
+for(i in 1:df_length) {
+  x <- str_detect(wkgdat$Comments, neg_vocab$Term[i])
+  neg_df[i, 2] <- length(x[x == TRUE])
   nct <- nct + length(x[x == TRUE])
 }
+
+# Remove words with zero counts
+neg_df   <- neg_df %>% filter(Count != 0)
+
+# Sort from high to low
+neg_df <- arrange(neg_df, desc(Count), Word)
+
+# Create datafrane and append negatives
+cum_count_df <- pos_df
+cum_count_df <- rbind(cum_count_df, neg_df)
+
+# Determine overall positive and negative indexes (pos / neg words / comments
+pos_index <- sum(pos_df$Count) / num_comments
+neg_index <- sum(neg_df$Count) / num_comments
 
 # Create a filename and write out the results
 filename <- paste("cum_survey_data",".csv")
 filename <- stri_replace_all_fixed(filename, " ", "")
-write.csv(survey_df, file = filename)
+write.csv(cum_count_df, file = filename)
 
+cat("Number of survey responses      :", nrow(wkgdat), "\n")
+cat("Number of survey comments       :", num_comments, "\n")
+cat("Comments to responses ratio     :", num_comments / nrow(wkgdat), "\n")
+cat("Number of positive words        :", pct, "\n")
+cat("Positive words to comments ratio:", pos_index, "\n")
+cat("Number of negative words        :", nct, "\n")
+cat("Negative words to comments ratio:", neg_index, "\n")
+
+# Display results and statistics
 cat("Vocabulary word counts / occurrences")
-kable(survey_df) %>%
+kable(cum_count_df) %>%
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
-
-cat("Number of survey responses is :", nrow(wkgdat), "\n")
-cat("Number of positive comments is:", pct, "\n")
-cat("Positive comment ratio is     :", pct / nrow(wkgdat), "\n")
-cat("Number of negative comments is:", nct, "\n")
-cat("Negative comment ratio is     :", nct / nrow(wkgdat), "\n")
 
 #--------------------------------------------------------------------
 #
@@ -164,62 +208,91 @@ survey_num <- length(unique(wkgdat$Surveyed))
 # Loop to examine each survey and assign values to a dataframe
 for(i in 1:survey_num) {
   
-  # Build dataframe
-  survey_df   <- data.frame(Survey         = survey_name,
-                            Pos_vocab_Word = comms$Positive,
-                            Count_pos_word = 1:length(comms$Positive),
-                            Neg_vocab_word = comms$Negative,
-                            Count_neg_word = 1:length(comms$Negative))
-  
-  # Assign survey name to the dataframe
-  survey_df[ ,1] = unique(wkgdat$Surveyed)[i]
-  
   #
   # Positive vocabulary elements
   #
   
+  # Build dataframe
+  sur_pos_df <- data.frame(Survey = unique(wkgdat$Surveyed)[i],
+                           Word   = pos_vocab$Term,
+                           Count  = 0,
+                           Type   = "P")
+  
   # Set the specific survey data
   survey_dat  <- wkgdat %>% filter(Surveyed == unique(wkgdat$Surveyed)[i])
+  survey_comments <- length(unique(survey_dat$Comments))
   
-  # Lopp to count the occurrences of positive words
+  # Loop to count the occurrences of positive words
   pct <- 0
-  for(j in 1:length(comms$Positive)) {
-     x <- str_detect(survey_dat$Comments, comms$Positive[j])
-     survey_df[j, 3] <- length(x[x == TRUE])
+  for(j in 1:df_length) {
+     x <- str_detect(survey_dat$Comments, pos_vocab$Term[j])
+     sur_pos_df[j, 3] <- length(x[x == TRUE])
      pct <- pct + length(x[x == TRUE])
   }
 
+  # Remove words with zero counts
+  sur_pos_df  <- sur_pos_df %>% filter(Count != 0)
+  
+  # Sort from high to low
+  sur_pos_df <- arrange(sur_pos_df, desc(Count), Word)
+  sur_pos_df
+  
   #
   # Negative vocabulary elements
   #
 
-  # Lopp to count the occurrences of negative words
+  # Build dataframe
+  sur_neg_df <- data.frame(Survey = unique(wkgdat$Surveyed)[i],
+                           Word   = neg_vocab$Term,
+                           Count  = 0,
+                           Type   = "N")
+  
+  # Loop to count the occurrences of negative words
   nct <- 0
-  for(j in 1:length(comms$Negative)) {
-    x <- str_detect(survey_dat$Comments, comms$Negative[j])
-    survey_df[j, 5] <- length(x[x == TRUE])
+  for(j in 1:df_length) {
+    x <- str_detect(survey_dat$Comments, neg_vocab$Term[j])
+    sur_neg_df[j, 3] <- length(x[x == TRUE])
     nct <- nct + length(x[x == TRUE])
   }
 
+  # Remove words with zero counts
+  sur_neg_df  <- sur_neg_df %>% filter(Count != 0)
+  
+  # Sort from high to low
+  sur_neg_df <- arrange(sur_neg_df, desc(Count), Word)
+  sur_neg_df
+  
+  # Create combined dataframe
+  sur_cum_df <- sur_pos_df
+  
+  # Append to the cumulative dataframe
+  sur_cum_df <- rbind(sur_cum_df, sur_neg_df)
+  
   # Create the unique filename by survey and write out the results
-  filename <- paste(survey_df[i,1],".csv")
+  filename <- paste(sur_cum_df[i,1],".csv")
   filename <- stri_replace_all_fixed(filename, " ", "")
-  write.csv(survey_df, file = filename)
+  write.csv(sur_cum_df, file = filename)
   
   #
   # Print results of individual surveys
   #
   
-  cat("Number of rows in the survey is                :", nrow(survey_df), "\n")
+  kable(sur_cum_df) %>%
+    kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
   
-  cat("Number of positive comments in",survey_name,"is:", pct, "\n")
-  cat("Ratio of positive comments to responses is     :", pct / nrow(survey_dat), "\n")
-  
-  cat("Number of negative comments in",survey_name,"is:", nct, "\n")
-  cat("Ratio of negative comments to responses is     :", nct / nrow(survey_dat), "\n")
+  # Display results and statistics
+  survey_name <- unique(wkgdat$Surveyed)[i]
+  cat("Results for", survey_name, "\n")
+  cat("Number of responses             :", nrow(survey_dat), "\n")
+  cat("Number of comments              :", survey_comments, "\n")
+  cat("Comments to responses ratio     :", round(survey_comments / nrow(survey_dat), digits = 2), "\n")
+  cat("Number of positive words        :", pct, "\n")
+  cat("Positive words to comments ratio:", round(pct / survey_comments, digits = 2), "\n")
+  cat("Number of negative words        :", nct, "\n")
+  cat("Negative words to comments ratio:", round(nct / survey_comments, digits = 2), "\n")
+  cat("\n")
   
 }
-
 
 #--------------------------------------------------------------------
 #

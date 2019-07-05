@@ -1,56 +1,96 @@
-"","Survey","Pos_vocab_Word","Count_pos_word","Neg_vocab_word","Count_neg_word"
-"1","05-F19","above and beyond",1,"again and again",3
-"2","05-F19","appreciate",4,"appears",1
-"3","05-F19","awesome",2,"back and forth",3
-"4","05-F19","capable",1,"bandwidth",1
-"5","05-F19","cheerfully",1,"challenge",6
-"6","05-F19","congrats",0,"could conduct",1
-"7","05-F19","congratulations",0,"could have gotten",1
-"8","05-F19","courteous",3,"create excessive",1
-"9","05-F19","courteousness",0,"did not know what they were doing",3
-"10","05-F19","courtiousness",0,"didn't",2
-"11","05-F19","devoted",2,"difficulty",1
-"12","05-F19","effective",3,"disconnect",4
-"13","05-F19","empathetic",2,"doesn't",2
-"14","05-F19","excellent",2,"ended up",3
-"15","05-F19","excellent attitude",1,"Enterprise",9
-"16","05-F19","exceptional",1,"excessively",1
-"17","05-F19","extra mile",1,"expected time",0
-"18","05-F19","fantastic",1,"get up to speed",1
-"19","05-F19","follow-through",1,"glitchy",1
-"20","05-F19","friendly",5,"gone down",0
-"21","05-F19","generous",1,"hard time",1
-"22","05-F19","goes out of their way",1,"haven't been able to",3
-"23","05-F19","gracious",5,"impacted",1
-"24","05-F19","graciously",2,"inconvenienced",1
-"25","05-F19","great",16,"inconvenient",0
-"26","05-F19","help",37,"inexperience",1
-"27","05-F19","highlight",5,"inferior",1
-"28","05-F19","joyful",2,"issues",7
-"29","05-F19","kind",2,"little vague",1
-"30","05-F19","knowledgeable",6,"many days",3
-"31","05-F19","love",3,"need to get better",3
-"32","05-F19","love working with",3,"needs work",0
-"33","05-F19","loving",1,"negatively",2
-"34","05-F19","outstanding",3,"not consistently",1
-"35","05-F19","patient",5,"not yet",1
-"36","05-F19","perseverance",1,"on hold",1
-"37","05-F19","pleasant",3,"out of date",0
-"38","05-F19","pleasure",1,"problematic",2
-"39","05-F19","professional",3,"problems",6
-"40","05-F19","prompt",2,"really need",2
-"41","05-F19","quick to respond",3,"should strive",1
-"42","05-F19","responsive",9,"slow",4
-"43","05-F19","satisfied",1,"take too long",1
-"44","05-F19","shining star",3,"taken months",1
-"45","05-F19","skilled",2,"takes many days",3
-"46","05-F19","solution-oriented",1,"takes too long",0
-"47","05-F19","super",0,"too busy",1
-"48","05-F19","thank you",0,"too many days",0
-"49","05-F19","thanks",0,"unhelpful",3
-"50","05-F19","thorough",1,"unnecessarily",2
-"51","05-F19","very good",2,"vague",1
-"52","05-F19","warm",1,"wasn't efficient",0
-"53","05-F19","willing",6,"well-intentioned",1
-"54","05-F19","willing to help",5,"would have been nice",1
-"55","05-F19","wonderful",8,"would like to know",0
+"","Word","Count","Type"
+"1","help",24,"P"
+"2","great",9,"P"
+"3","responsive",6,"P"
+"4","wonderful",5,"P"
+"5","friendly",4,"P"
+"6","appreciate",3,"P"
+"7","knowledgeable",3,"P"
+"8","patient",3,"P"
+"9","professional",3,"P"
+"10","willing",3,"P"
+"11","courteous",2,"P"
+"12","devoted",2,"P"
+"13","effective",2,"P"
+"14","excellent",2,"P"
+"15","gracious",2,"P"
+"16","highlight",2,"P"
+"17","kind",2,"P"
+"18","love",2,"P"
+"19","love working with",2,"P"
+"20","outstanding",2,"P"
+"21","pleasant",2,"P"
+"22","prompt",2,"P"
+"23","skilled",2,"P"
+"24","very good",2,"P"
+"25","willing to help",2,"P"
+"26","above and beyond",1,"P"
+"27","awesome",1,"P"
+"28","capable",1,"P"
+"29","cheerfully",1,"P"
+"30","empathetic",1,"P"
+"31","excellent attitude",1,"P"
+"32","exceptional",1,"P"
+"33","extra mile",1,"P"
+"34","fantastic",1,"P"
+"35","follow-through",1,"P"
+"36","generous",1,"P"
+"37","goes out of their way",1,"P"
+"38","graciously",1,"P"
+"39","joyful",1,"P"
+"40","loving",1,"P"
+"41","perseverance",1,"P"
+"42","pleasure",1,"P"
+"43","quick to respond",1,"P"
+"44","satisfied",1,"P"
+"45","shining star",1,"P"
+"46","solution-oriented",1,"P"
+"47","thorough",1,"P"
+"48","warm",1,"P"
+"49","Enterprise",5,"N"
+"50","problems",4,"N"
+"51","challenge",3,"N"
+"52","issues",3,"N"
+"53","didn't",2,"N"
+"54","doesn't",2,"N"
+"55","negatively",2,"N"
+"56","really need",2,"N"
+"57","slow",2,"N"
+"58","unnecessarily",2,"N"
+"59","again and again",1,"N"
+"60","appears",1,"N"
+"61","back and forth",1,"N"
+"62","bandwidth",1,"N"
+"63","could conduct",1,"N"
+"64","could have gotten",1,"N"
+"65","create excessive",1,"N"
+"66","did not know what they were doing",1,"N"
+"67","difficulty",1,"N"
+"68","disconnect",1,"N"
+"69","ended up",1,"N"
+"70","excessively",1,"N"
+"71","get up to speed",1,"N"
+"72","glitchy",1,"N"
+"73","hard time",1,"N"
+"74","haven't been able to",1,"N"
+"75","impacted",1,"N"
+"76","inconvenienced",1,"N"
+"77","inexperience",1,"N"
+"78","inferior",1,"N"
+"79","little vague",1,"N"
+"80","many days",1,"N"
+"81","need to get better",1,"N"
+"82","not consistently",1,"N"
+"83","not yet",1,"N"
+"84","on hold",1,"N"
+"85","problematic",1,"N"
+"86","should strive",1,"N"
+"87","take too long",1,"N"
+"88","taken months",1,"N"
+"89","takes many days",1,"N"
+"90","too busy",1,"N"
+"91","unhelpful",1,"N"
+"92","unresolved",1,"N"
+"93","vague",1,"N"
+"94","well-intentioned",1,"N"
+"95","would have been nice",1,"N"

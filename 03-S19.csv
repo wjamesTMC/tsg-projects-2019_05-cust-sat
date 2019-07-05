@@ -1,56 +1,50 @@
-"","Survey","Pos_vocab_Word","Count_pos_word","Neg_vocab_word","Count_neg_word"
-"1","03-S19","above and beyond",0,"again and again",0
-"2","03-S19","appreciate",2,"appears",0
-"3","03-S19","awesome",0,"back and forth",0
-"4","03-S19","capable",1,"bandwidth",1
-"5","03-S19","cheerfully",0,"challenge",0
-"6","03-S19","congrats",0,"could conduct",0
-"7","03-S19","congratulations",0,"could have gotten",0
-"8","03-S19","courteous",0,"create excessive",1
-"9","03-S19","courteousness",0,"did not know what they were doing",0
-"10","03-S19","courtiousness",0,"didn't",0
-"11","03-S19","devoted",1,"difficulty",0
-"12","03-S19","effective",1,"disconnect",0
-"13","03-S19","empathetic",0,"doesn't",2
-"14","03-S19","excellent",1,"ended up",0
-"15","03-S19","excellent attitude",1,"Enterprise",1
-"16","03-S19","exceptional",0,"excessively",0
-"17","03-S19","extra mile",0,"expected time",0
-"18","03-S19","fantastic",0,"get up to speed",0
-"19","03-S19","follow-through",1,"glitchy",1
-"20","03-S19","friendly",3,"gone down",0
-"21","03-S19","generous",1,"hard time",0
-"22","03-S19","goes out of their way",1,"haven't been able to",1
-"23","03-S19","gracious",1,"impacted",1
-"24","03-S19","graciously",1,"inconvenienced",0
-"25","03-S19","great",5,"inconvenient",0
-"26","03-S19","help",11,"inexperience",1
-"27","03-S19","highlight",0,"inferior",1
-"28","03-S19","joyful",0,"issues",1
-"29","03-S19","kind",1,"little vague",0
-"30","03-S19","knowledgeable",0,"many days",0
-"31","03-S19","love",0,"need to get better",1
-"32","03-S19","love working with",0,"needs work",0
-"33","03-S19","loving",1,"negatively",1
-"34","03-S19","outstanding",2,"not consistently",0
-"35","03-S19","patient",2,"not yet",0
-"36","03-S19","perseverance",1,"on hold",0
-"37","03-S19","pleasant",0,"out of date",0
-"38","03-S19","pleasure",0,"problematic",1
-"39","03-S19","professional",1,"problems",2
-"40","03-S19","prompt",2,"really need",1
-"41","03-S19","quick to respond",0,"should strive",0
-"42","03-S19","responsive",3,"slow",1
-"43","03-S19","satisfied",0,"take too long",1
-"44","03-S19","shining star",0,"taken months",1
-"45","03-S19","skilled",2,"takes many days",0
-"46","03-S19","solution-oriented",1,"takes too long",0
-"47","03-S19","super",0,"too busy",0
-"48","03-S19","thank you",0,"too many days",0
-"49","03-S19","thanks",0,"unhelpful",0
-"50","03-S19","thorough",1,"unnecessarily",0
-"51","03-S19","very good",1,"vague",0
-"52","03-S19","warm",1,"wasn't efficient",0
-"53","03-S19","willing",2,"well-intentioned",1
-"54","03-S19","willing to help",1,"would have been nice",0
-"55","03-S19","wonderful",2,"would like to know",0
+"","Survey","Word","Count","Type"
+"1","03-S19","help",11,"P"
+"2","03-S19","great",5,"P"
+"3","03-S19","friendly",3,"P"
+"4","03-S19","responsive",3,"P"
+"5","03-S19","appreciate",2,"P"
+"6","03-S19","outstanding",2,"P"
+"7","03-S19","patient",2,"P"
+"8","03-S19","prompt",2,"P"
+"9","03-S19","skilled",2,"P"
+"10","03-S19","willing",2,"P"
+"11","03-S19","wonderful",2,"P"
+"12","03-S19","capable",1,"P"
+"13","03-S19","devoted",1,"P"
+"14","03-S19","effective",1,"P"
+"15","03-S19","excellent",1,"P"
+"16","03-S19","excellent attitude",1,"P"
+"17","03-S19","follow-through",1,"P"
+"18","03-S19","generous",1,"P"
+"19","03-S19","goes out of their way",1,"P"
+"20","03-S19","gracious",1,"P"
+"21","03-S19","graciously",1,"P"
+"22","03-S19","kind",1,"P"
+"23","03-S19","loving",1,"P"
+"24","03-S19","perseverance",1,"P"
+"25","03-S19","professional",1,"P"
+"26","03-S19","solution-oriented",1,"P"
+"27","03-S19","thorough",1,"P"
+"28","03-S19","very good",1,"P"
+"29","03-S19","warm",1,"P"
+"30","03-S19","willing to help",1,"P"
+"31","03-S19","doesn't",2,"N"
+"32","03-S19","problems",2,"N"
+"33","03-S19","bandwidth",1,"N"
+"34","03-S19","create excessive",1,"N"
+"35","03-S19","Enterprise",1,"N"
+"36","03-S19","glitchy",1,"N"
+"37","03-S19","haven't been able to",1,"N"
+"38","03-S19","impacted",1,"N"
+"39","03-S19","inexperience",1,"N"
+"40","03-S19","inferior",1,"N"
+"41","03-S19","issues",1,"N"
+"42","03-S19","need to get better",1,"N"
+"43","03-S19","negatively",1,"N"
+"44","03-S19","problematic",1,"N"
+"45","03-S19","really need",1,"N"
+"46","03-S19","slow",1,"N"
+"47","03-S19","take too long",1,"N"
+"48","03-S19","taken months",1,"N"
+"49","03-S19","well-intentioned",1,"N"
