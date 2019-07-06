@@ -22,6 +22,7 @@ library(ggthemes)
 library(extrafont)
 library(scales)
 library(reshape2)
+library(stringi)
 library(expss)
 library(grid)
 library(gridExtra)
@@ -29,7 +30,6 @@ library(lattice)
 library(janitor)
 library(rmarkdown)
 library(kableExtra)
-library(stringi)
 
 #--------------------------------------------------------------------
 #
@@ -41,16 +41,16 @@ library(stringi)
 # Download and open survey file
 #
 
-# Import and Open the data file / Establish the data set
+# Import and Open the data file / Establish the data sets
 data_filename <- "CustSatData.csv"
 dat           <- read.csv(data_filename, stringsAsFactors = FALSE)
-names(dat)
 
 comments_filename <- "pos-neg-vocabulary.csv"
 comms             <- read.csv(comments_filename, stringsAsFactors = FALSE)
 pos_vocab         <- comms %>% filter(Tone == "P")
 neg_vocab         <- comms %>% filter(Tone == "N")
 
+# Establish the max dataframe size for later
 if(nrow(pos_vocab) > nrow(neg_vocab)) {
   df_length <- nrow(pos_vocab) 
 } else {
@@ -118,7 +118,6 @@ num_comments <- length(unique(wkgdat$Comments))
 # Vocabulary analysis - Cumulative
 #
 #--------------------------------------------------------------------
-
 
 #
 # Positive vocabulary elements
@@ -193,8 +192,9 @@ cat("Negative words to comments ratio:", neg_index, "\n")
 
 # Display results and statistics
 cat("Vocabulary word counts / occurrences")
-kable(cum_count_df) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+# kable(cum_count_df) %>%
+#   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+cum_count_df
 
 #--------------------------------------------------------------------
 #
@@ -204,6 +204,16 @@ kable(cum_count_df) %>%
 
 # Set the number of surveys 
 survey_num <- length(unique(wkgdat$Surveyed))
+
+# Dataframe to collect all the data and calculations
+survey_inf <- data.frame(Survey        = survey_num,
+                         num_resps     = survey_num,
+                         num_comments  = survey_num,
+                         c_to_r_ratio  = survey_num,
+                         num_pos_words = survey_num,
+                         pw_to_c_ratio = survey_num,
+                         num_neg_words = survey_num,
+                         nw_to_c_ratio = survey_num)
 
 # Loop to examine each survey and assign values to a dataframe
 for(i in 1:survey_num) {
@@ -277,22 +287,82 @@ for(i in 1:survey_num) {
   # Print results of individual surveys
   #
   
-  kable(sur_cum_df) %>%
-    kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+  #kable(sur_cum_df) %>%
+  #  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
   
+  # Populate summary dataframe
+  survey_inf[i, 1] <- unique(wkgdat$Surveyed)[i]
+  survey_inf[i, 2] <- nrow(survey_dat)
+  survey_inf[i, 3] <- survey_comments
+  survey_inf[i, 4] <- round(survey_comments / nrow(survey_dat), digits = 2)
+  survey_inf[i, 5] <- pct
+  survey_inf[i, 6] <- round(pct / survey_comments, digits = 2)
+  survey_inf[i, 7] <- nct
+  survey_inf[i, 8] <- round(nct / survey_comments, digits = 2)
+    
   # Display results and statistics
-  survey_name <- unique(wkgdat$Surveyed)[i]
-  cat("Results for", survey_name, "\n")
-  cat("Number of responses             :", nrow(survey_dat), "\n")
-  cat("Number of comments              :", survey_comments, "\n")
-  cat("Comments to responses ratio     :", round(survey_comments / nrow(survey_dat), digits = 2), "\n")
-  cat("Number of positive words        :", pct, "\n")
-  cat("Positive words to comments ratio:", round(pct / survey_comments, digits = 2), "\n")
-  cat("Number of negative words        :", nct, "\n")
-  cat("Negative words to comments ratio:", round(nct / survey_comments, digits = 2), "\n")
+  cat("Results for", survey_inf[i, 1], "\n")
+  cat("Number of responses             :", survey_inf[i, 2], "\n")
+  cat("Number of comments              :", survey_inf[i, 3], "\n")
+  cat("Comments to responses ratio     :", survey_inf[i, 4], "\n")
+  cat("Number of positive words        :", survey_inf[i, 5], "\n")
+  cat("Positive words to comments ratio:", survey_inf[i, 6], "\n")
+  cat("Number of negative words        :", survey_inf[i, 7], "\n")
+  cat("Negative words to comments ratio:", survey_inf[i, 8], "\n")
   cat("\n")
   
 }
+
+survey_inf
+
+#--------------------------------------------------------------------
+#
+# Build graphics from summary dataframe
+#
+#--------------------------------------------------------------------
+
+# Number of coments and responses by survey
+ggplot() +
+  geom_line(data=survey_inf, aes(x=Survey, y=num_resps, color = "Responses"), group=1, size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments"), group=1, size=2) +
+  scale_colour_manual("", 
+                      breaks = c("Responses", "Comments"),
+                      values = c("#0072B2", "#E69F00")) +
+  labs(title = "Number of Comments and Responses", subtitle = "Number By Survey") + ylab("Number")
+
+# Ratio of comments to responses
+ggplot() +
+  geom_line(data=survey_inf, aes(x=Survey, y=c_to_r_ratio, color = "green", group=1), size=2) +
+  theme(legend.position = "none") +
+  labs(title = "Ratio of Comments to Responses", subtitle = "Percentage By Survey") + ylab("% Comments") 
+
+# Positive words vs. comments
+ggplot() +
+  geom_line(data=survey_inf, aes(x=Survey, y=num_pos_words, color = "Positive Words", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
+  scale_colour_manual("", 
+                      breaks = c("Positive Words", "Comments"),
+                      values = c("#0072B2", "#E69F00")) +
+  labs(title = "Positive Words vs. Comments", subtitle = "Number By Survey") + ylab("Occurences")
+
+# Negative words vs. comments
+ggplot() +
+  geom_line(data=survey_inf, aes(x=Survey, y=num_neg_words, color = "Negative Words", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
+  scale_colour_manual("", 
+                      breaks = c("Negative Words", "Comments"),
+                      values = c("#0072B2", "#E69F00")) +
+  labs(title = "Negative Words vs. Comments", subtitle = "Number By Survey") + ylab("Occurences")
+
+# Positive and negative words to comments ratios
+ggplot() +
+  geom_line(data=survey_inf, aes(x=Survey, y=pw_to_c_ratio, color = "Positive", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=nw_to_c_ratio, color = "Negative", group=1), size=2) +
+  scale_colour_manual("", 
+                      breaks = c("Positive", "Negative"),
+                      values = c("#0072B2", "#E69F00")) +
+  labs(title = "Positive / Negative Words Per Comment", subtitle = "Number Occurrences by Survey") +
+  ylab("No. Words per Comment") 
 
 #--------------------------------------------------------------------
 #
