@@ -1,6 +1,6 @@
 ---
 title: "Client Satisfaction Report"
-subtitle: "Percents View"
+subtitle: "Part 2 of 3: Percents View"
 date: "June 2019"
 output:
   word_document:
@@ -52,7 +52,7 @@ library(kableExtra)
 #
 
 # Import and Open the data file / Establish the data set
-data_filename <- "CustSatDataT.csv"
+data_filename <- "0_Input_CustSatDataT.csv"
 dat <- read.csv(data_filename, stringsAsFactors = FALSE)
 
 #

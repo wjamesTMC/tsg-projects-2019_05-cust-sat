@@ -1,12 +1,55 @@
-##############################################################################
-#
-# Customer Sat data Analysis Project - Comments sectioin
-# Bill James / jamesw@csps.com
-#
-# Files:  https://github.com/wjamesTMC/tsg-projects-2019_05-cust-sat.git
-#
-##############################################################################
+---
+title: "Client Satisfaction Report"
+subtitle: "Part 3 of 3: Analysis of Customer Sat Comments"
+date: "July 2019"
+output: "html_document"
+---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, out.width='90%')
+pagebreak <- function() {
+  if(knitr::is_latex_output())
+    return("\\newpage")
+  else
+    return('<div style="page-break-before: always;" />')
+}
+```
+
+### Overview
+
+This report analyzes the occurrences of positive and negative vocabulary words in the comments field of the TSG customer satisfaction surveys. 
+
+While an examination of the words used by responders is not completely precise, it can provide some useful insight into how responders are thinking and what troubles (or delights) them most. For example, the word "help" could be construed as positive or negative (e.g., "was a big help" vs. "no help at all") but a manual review of all the comments suggests that it is always used in a positive context, and therefore was made a "positive" word. Totaling the number of occurrences of positives and negatives and looking at various ratos can provide some sense of how happy responders are (and with what). 
+
+In contrast, it is also possible to generate (automatically) a word cloud of *all* the words used in the comments (excluding common words such as "a", the", "in" and so forth). This provides a high level (and different) view which provides some additional insightslike the name of a help desk person who has been particularly helpful and therefore called out (e.g., "Sean"). However, word clouds do not differentiate between positive and negative, and some words (like "Service Desk") are left in that are less useful in trying to establish an overall tone.
+
+Working with the comments confirmed the value of constructing a specific vocabularly to run against the comment fields.
+
+This report includes graphs to help visualize the relative number of occurrences per comment, and to compare the various proportions / ratios of positives and negatives. The graphs and charts provide some insight into trends, but with only three surveys to work with, these trends have to be looked on as tentative.
+
+### Approach
+
+Positive / negative vocabularly words were selected by reading through the comments manually, examining the context, and selecting those that would, in as many cases as possible, be unambiguous. The code reads each comment, and tabulates the number of occurrences of each word on the list - cumulatively, and by individual survey.
+
+Graphs then chart the total positive and negative occurrences, and compares these totals in various ways to establish a sense of tone, and then compares positive and negative totals with each other to see if both are going up, down, or trending differently.
+
+As a side note, the word "Enterprise" (referring to the business application) appears to be rather negatively perceived by survey responders, and was given its own entry in the negative vocabularly list.
+
+### Findings
+
+With only three surveys taken to date, it is difficult to be certain about trends, but it *appears* that the following conclusions could be reached:
+
+* The number of comments is increasing with each survey
+* The number of positive vocabularly occurrences is increasing with each survey
+* The number of positive vocabularly occurrences is increasing faster than the increase in comments
+* The number of negative vocabularly occurrences is decreasing with each survey, but slowly
+* The number of negative vocuabulary occurrences is noticeably less than the number of positive occurrences
+
+In short, the positives are going up and the negatives are going down. This could be a fact, but also could be coincidental.
+
+`r pagebreak()`
+
+```{r File open and setup, echo=FALSE}
 #
 # Library setups
 #
@@ -42,10 +85,10 @@ library(kableExtra)
 #
 
 # Import and Open the data file / Establish the data sets
-data_filename <- "CustSatData.csv"
+data_filename <- "0_Input_CustSatData.csv"
 dat           <- read.csv(data_filename, stringsAsFactors = FALSE)
 
-comments_filename <- "pos-neg-vocabulary.csv"
+comments_filename <- "0_Input_pos-neg-vocabulary.csv"
 comms             <- read.csv(comments_filename, stringsAsFactors = FALSE)
 pos_vocab         <- comms %>% filter(Tone == "P")
 neg_vocab         <- comms %>% filter(Tone == "N")
@@ -108,10 +151,19 @@ wkgdat[wkgdat == ""]                  <- "NR"
 wkgdat[wkgdat == "N/A do not use"]    <- "NA/DNU"
 
 # Verify the number of unique values of the various factors
-sapply(wkgdat, function(x)length(unique(x)))
+# sapply(wkgdat, function(x)length(unique(x)))
 
 # Calc the number of comments
 num_comments <- length(unique(wkgdat$Comments))
+```
+
+### Cumulative View
+
+This section looks at the cumulative picture and summarizes the statistics and vocabularly occurrences (positive and negative) across all surveys to date. 
+
+The Top 10 Postive and Negative words are shown below. See the Appendix for a complete list of word occurrences and counts.
+
+```{r Cumulative Statistics, echo=FALSE, comment=NA}
 
 #--------------------------------------------------------------------
 #
@@ -142,10 +194,10 @@ pos_df  <- pos_df %>% filter(Count != 0)
 # Sort from high to low
 pos_df <- arrange(pos_df, desc(Count), Word)
 
-# Append to the cumulative dataframe
-cum_count_df <- rbind(cum_count_df, pos_df)
+cat("Top 10 Positive Words")
+pos_df[1:10, ]
 
-#
+# 
 # Negative vocabulay elements
 #
 
@@ -169,6 +221,9 @@ neg_df   <- neg_df %>% filter(Count != 0)
 # Sort from high to low
 neg_df <- arrange(neg_df, desc(Count), Word)
 
+cat("Top 10 Negative Words")
+neg_df[1:10, ]
+
 # Create datafrane and append negatives
 cum_count_df <- pos_df
 cum_count_df <- rbind(cum_count_df, neg_df)
@@ -178,30 +233,34 @@ pos_index <- sum(pos_df$Count) / num_comments
 neg_index <- sum(neg_df$Count) / num_comments
 
 # Create a filename and write out the results
-filename <- paste("cum_survey_data",".csv")
-filename <- stri_replace_all_fixed(filename, " ", "")
-write.csv(cum_count_df, file = filename)
+# filename <- paste("0_Output_cum_survey_data",".csv")
+# filename <- stri_replace_all_fixed(filename, " ", "")
+# write.csv(cum_count_df, file = filename)
+```
 
-cat("Number of survey responses      :", nrow(wkgdat), "\n")
-cat("Number of survey comments       :", num_comments, "\n")
-cat("Comments to responses ratio     :", num_comments / nrow(wkgdat), "\n")
-cat("Number of positive words        :", pct, "\n")
-cat("Positive words to comments ratio:", pos_index, "\n")
-cat("Number of negative words        :", nct, "\n")
-cat("Negative words to comments ratio:", neg_index, "\n")
+**Summary**
 
-# Display results and statistics
-cat("Vocabulary word counts / occurrences")
-# kable(cum_count_df) %>%
-#   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
-cum_count_df
+* Number of survey responses      : `r nrow(wkgdat)`
+* Number of survey comments       : `r num_comments`
+* Comments to responses ratio     : `r round(num_comments / nrow(wkgdat), digits = 2)`
+* Number of positive words        : `r pct`
+* Positive words to comments ratio: `r pos_index`
+* Number of negative words        : `r nct`
+* Negative words to comments ratio: `r neg_index`
 
+A second appendix includes a word cloud version of the entire comments set.
+
+`r pagebreak()`
+### Individual Survey View
+
+This section looks at the positive and negative vocabularly tabulations by individual surveys. Explanations of the various statistics are given below.
+
+```{r Analysis by Survey, echo=FALSE, comment=NA}
 #--------------------------------------------------------------------
 #
 # Vocabulary analysis - by Survey
 # 
 #--------------------------------------------------------------------
-
 # Set the number of surveys 
 survey_num <- length(unique(wkgdat$Surveyed))
 
@@ -214,6 +273,7 @@ survey_inf <- data.frame(Survey        = survey_num,
                          pw_to_c_ratio = survey_num,
                          num_neg_words = survey_num,
                          nw_to_c_ratio = survey_num)
+
 
 # Loop to examine each survey and assign values to a dataframe
 for(i in 1:survey_num) {
@@ -279,16 +339,16 @@ for(i in 1:survey_num) {
   sur_cum_df <- rbind(sur_cum_df, sur_neg_df)
   
   # Create the unique filename by survey and write out the results
-  filename <- paste(sur_cum_df[i,1],".csv")
-  filename <- stri_replace_all_fixed(filename, " ", "")
-  write.csv(sur_cum_df, file = filename)
+  # filename <- paste("0_Output_", sur_cum_df[i,1],".csv")
+  # filename <- stri_replace_all_fixed(filename, " ", "")
+  # write.csv(sur_cum_df, file = filename)
   
   #
   # Print results of individual surveys
   #
   
-  #kable(sur_cum_df) %>%
-  #  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+  kable(sur_cum_df) %>%
+    kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
   
   # Populate summary dataframe
   survey_inf[i, 1] <- unique(wkgdat$Surveyed)[i]
@@ -301,20 +361,38 @@ for(i in 1:survey_num) {
   survey_inf[i, 8] <- round(nct / survey_comments, digits = 2)
     
   # Display results and statistics
-  cat("Results for", survey_inf[i, 1], "\n")
-  cat("Number of responses             :", survey_inf[i, 2], "\n")
-  cat("Number of comments              :", survey_inf[i, 3], "\n")
-  cat("Comments to responses ratio     :", survey_inf[i, 4], "\n")
-  cat("Number of positive words        :", survey_inf[i, 5], "\n")
-  cat("Positive words to comments ratio:", survey_inf[i, 6], "\n")
-  cat("Number of negative words        :", survey_inf[i, 7], "\n")
-  cat("Negative words to comments ratio:", survey_inf[i, 8], "\n")
-  cat("\n")
-  
+  cat("Results for", survey_inf[i, 1], "\n")  
+  cat("Number of responses             :", survey_inf[i, 2], "\n")  
+  cat("Number of comments              :", survey_inf[i, 3], "\n")  
+  cat("Comments to responses ratio     :", survey_inf[i, 4], "\n")  
+  cat("Number of positive words        :", survey_inf[i, 5], "\n")  
+  cat("Positive words to comments ratio:", survey_inf[i, 6], "\n")  
+  cat("Number of negative words        :", survey_inf[i, 7], "\n")  
+  cat("Negative words to comments ratio:", survey_inf[i, 8], "\n")  
+  cat("\n")  
 }
+```
 
-survey_inf
+**Overall Summary of Individual Survey Statistics**
 
+Translation of field names:
+
+* num_resp = number of responses
+* num_comments = the number of comments in the survey
+* c_to_r_ratio = the number of comments divided by the number of responses
+* num_pos_words = the number of positive words found in the survey
+* pw_to_c_ratio = the number of positive words divided by the number of comments
+* num_neg_words = the number of negative words found in the survey
+* nw_to_c_ratio = the number of negative words divided by the number of comments
+
+```{r Summary Table, echo=FALSE}
+kable(survey_inf) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+```
+
+Graphical representations of the summary statistics by Survey are shown below.
+
+```{r Graphics, echo=FALSE, fig.width=10,fig.height=5}
 #--------------------------------------------------------------------
 #
 # Build graphics from summary dataframe
@@ -322,52 +400,93 @@ survey_inf
 #--------------------------------------------------------------------
 
 # Number of coments and responses by survey
-ggplot() +
+num_c_and_r <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=num_resps, color = "Responses"), group=1, size=2) +
   geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments"), group=1, size=2) +
   scale_colour_manual("", 
                       breaks = c("Responses", "Comments"),
-                      values = c("#0072B2", "#E69F00")) +
-  labs(title = "Number of Comments and Responses", subtitle = "Number By Survey") + ylab("Number")
+                      values = c("#0072B2", "#CC0000")) +
+  labs(title = "Count of Comments and Responses", subtitle = "Numbers of each by Survey") + ylab("Number")
 
 # Ratio of comments to responses
-ggplot() +
-  geom_line(data=survey_inf, aes(x=Survey, y=c_to_r_ratio, color = "green", group=1), size=2) +
-  theme(legend.position = "none") +
-  labs(title = "Ratio of Comments to Responses", subtitle = "Percentage By Survey") + ylab("% Comments") 
+ratio_c_to_r <- ggplot() +
+  geom_line(data=survey_inf, aes(x=Survey, y=c_to_r_ratio, color = "Ratios", group=1), size=2) +
+  scale_colour_manual("", breaks = c("Ratios"), values = c("#000099")) +
+  labs(title = "Ratio of Comments to Responses", subtitle = "Ratio By Survey") + ylab("Proportion of Comments")  
+
+# Arrange the two plots for pasting into deck
+grid.arrange(num_c_and_r, ratio_c_to_r, ncol = 2)
 
 # Positive words vs. comments
-ggplot() +
+pw_vs_c <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=num_pos_words, color = "Positive Words", group=1), size=2) +
   geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
   scale_colour_manual("", 
                       breaks = c("Positive Words", "Comments"),
-                      values = c("#0072B2", "#E69F00")) +
-  labs(title = "Positive Words vs. Comments", subtitle = "Number By Survey") + ylab("Occurences")
+                      values = c("#0072B2", "#CC0000")) +
+  labs(title = "Positive Words Compared to Comments", subtitle = "Number of each by Survey") + ylab("Number of Each")
 
 # Negative words vs. comments
-ggplot() +
+nw_vs_c <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=num_neg_words, color = "Negative Words", group=1), size=2) +
   geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
   scale_colour_manual("", 
                       breaks = c("Negative Words", "Comments"),
-                      values = c("#0072B2", "#E69F00")) +
-  labs(title = "Negative Words vs. Comments", subtitle = "Number By Survey") + ylab("Occurences")
+                      values = c("#0072B2", "#CC0000")) +
+  labs(title = "Negative Words Compared to Comments", subtitle = "Number of each by Survey") + ylab("Number of Each")
+
+# Arrange the two plots for pasting into deck
+grid.arrange(pw_vs_c, nw_vs_c, ncol = 2)
 
 # Positive and negative words to comments ratios
-ggplot() +
+p_vs_n <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=pw_to_c_ratio, color = "Positive", group=1), size=2) +
   geom_line(data=survey_inf, aes(x=Survey, y=nw_to_c_ratio, color = "Negative", group=1), size=2) +
   scale_colour_manual("", 
                       breaks = c("Positive", "Negative"),
-                      values = c("#0072B2", "#E69F00")) +
-  labs(title = "Positive / Negative Words Per Comment", subtitle = "Number Occurrences by Survey") +
-  ylab("No. Words per Comment") 
+                      values = c("#0072B2", "#CC0000")) +
+  labs(title = "Ratios of Positive & Negative Words to Comments", subtitle = "Ratio Comparisons by Survey") +
+  ylab("# Words / # Comments")  
 
+# Arrange the two plots for pasting into deck
+grid.arrange(p_vs_n, ncol = 2)
+```
+
+`r pagebreak()`
+
+### Appendix - Summary of Positive Vocabularly Words
+
+**Positive Vocabulary word counts / occurrences**
+
+```{r Display Positive Results, echo=FALSE}
+kable(pos_df) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+```
+
+`r pagebreak()`
+
+### Appendix - Summary of Negative Vocabularly Words
+
+**Negative Vocabulary word counts / occurrences**
+
+```{r Display Negative Results, echo=FALSE}
+kable(neg_df) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+```
+
+`r pagebreak()`
+
+### Appendix - A Word Cloud Version of All Comments
+
+This word cloud was created using one of the available tools on the internet (in this case, https://wordart.com) and then feeding the entire comments set into the application. Common words were automatically removed (in, the, a, at, etc.).
+
+![Word Cloud of All Survey Comments](3-CustSatReport-Comments.png)
+
+```{r echo=FALSE}
 #--------------------------------------------------------------------
 #
 # End
 #
 #--------------------------------------------------------------------
-
+```
 
