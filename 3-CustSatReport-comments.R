@@ -42,20 +42,13 @@ library(kableExtra)
 #
 
 # Import and Open the data file / Establish the data sets
-data_filename <- "0_Input_CustSatData.csv"
-dat           <- read.csv(data_filename, stringsAsFactors = FALSE)
+data_filename  <- "0_Input_CustSatData.csv"
+dat            <- read.csv(data_filename, stringsAsFactors = FALSE)
 
-comments_filename <- "0_Input_pos-neg-vocabulary.csv"
-comms             <- read.csv(comments_filename, stringsAsFactors = FALSE)
-pos_vocab         <- comms %>% filter(Tone == "P")
-neg_vocab         <- comms %>% filter(Tone == "N")
-
-# Establish the max dataframe size for later
-if(nrow(pos_vocab) > nrow(neg_vocab)) {
-  df_length <- nrow(pos_vocab) 
-} else {
-    df_length <- nrow(neg_vocab)
-    }
+vocab_filename <- "0_Input_Vocabulary.csv"
+comms          <- read.csv(vocab_filename, stringsAsFactors = FALSE)
+pos_vocab      <- comms %>% filter(Tone == "P")
+neg_vocab      <- comms %>% filter(Tone == "N")
 
 #
 # Clean data file to set vector names
@@ -125,12 +118,12 @@ num_comments <- length(unique(wkgdat$Comments))
 
 # Build dataframe for positives
 pos_df   <- data.frame(Word  = pos_vocab$Term,
-                       Count = 1:df_length,
+                       Count = 1:nrow(pos_vocab),
                        Type  = "P")
 
 # Loop to identify positive words in the comments field
 pct <- 0
-for(i in 1:df_length) {
+for(i in 1:nrow(pos_vocab)) {
   x <- str_detect(wkgdat$Comments, pos_vocab$Term[i])
   pos_df[i, 2] <- length(x[x == TRUE])
   pct <- pct + length(x[x == TRUE])
@@ -150,13 +143,13 @@ pos_df[1:10, ]
 
 # Build dataframe for negatives
 neg_df   <- data.frame(Word  = neg_vocab$Term,
-                       Count = 1:df_length,
+                       Count = 1:nrow(neg_vocab),
                        Type  = "N")
 
 
 # Loop to identify negative words in the comments field
 nct <- 0
-for(i in 1:df_length) {
+for(i in 1:nrow(neg_vocab)) {
   x <- str_detect(wkgdat$Comments, neg_vocab$Term[i])
   neg_df[i, 2] <- length(x[x == TRUE])
   nct <- nct + length(x[x == TRUE])
@@ -241,7 +234,7 @@ for(i in 1:survey_num) {
   
   # Loop to count the occurrences of positive words
   pct <- 0
-  for(j in 1:df_length) {
+  for(j in 1:nrow(pos_vocab)) {
      x <- str_detect(survey_dat$Comments, pos_vocab$Term[j])
      sur_pos_df[j, 3] <- length(x[x == TRUE])
      pct <- pct + length(x[x == TRUE])
@@ -266,7 +259,7 @@ for(i in 1:survey_num) {
   
   # Loop to count the occurrences of negative words
   nct <- 0
-  for(j in 1:df_length) {
+  for(j in 1:nrow(neg_vocab)) {
     x <- str_detect(survey_dat$Comments, neg_vocab$Term[j])
     sur_neg_df[j, 3] <- length(x[x == TRUE])
     nct <- nct + length(x[x == TRUE])
