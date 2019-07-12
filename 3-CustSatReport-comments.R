@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Customer Sat data Analysis Project - Comments sectioin
+# Customer Sat data Analysis Project - Comments section
 # Bill James / jamesw@csps.com
 #
 # Files:  https://github.com/wjamesTMC/tsg-projects-2019_05-cust-sat.git
@@ -89,8 +89,7 @@ wkgdat[wkgdat == "Never"]             <- "5-Never"
 for(i in 1:length(unique(wkgdat$Surveyed))) {
   sssq <- str_sub(unique(wkgdat$Surveyed)[i],  6,  6)
   sssy <- str_sub(unique(wkgdat$Surveyed)[i], -2, -1)
-  survey_name <- paste(as.character(0), as.character(i),
-                       "-", sssq, as.character(sssy))
+  survey_name <- paste(as.character(0), as.character(i), "-", sssq, as.character(sssy))
   survey_name <- str_replace_all(survey_name, " ", "")
   wkgdat[wkgdat == unique(wkgdat$Surveyed)[i]] <- survey_name
 }

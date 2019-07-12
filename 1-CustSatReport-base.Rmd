@@ -52,7 +52,7 @@ library(kableExtra)
 #
 
 # Import and Open the data file / Establish the data set
-data_filename <- "0_Input_CustSatDataT.csv"
+data_filename <- "0_Input_CustSatData.csv"
 dat <- read.csv(data_filename, stringsAsFactors = FALSE)
 names(dat)
 
