@@ -1,0 +1,29 @@
+RowNo,InputID,Comments,Sentiment
+1,1,Better service desk help needed for remote employees.,pos
+2,2,Everyone I've worked with is friendly and prompt. Recently I've worked with Sean Austin and he's been great very patient and solution-oriented. The problem is always resolved.,pos
+3,3,For Vendor management I believe this is an area that we need to get better at for TMC Reading Room. It's been 3 months and we haven't been able to get the necessary changes done at QuickBooks and a month and haven't been able to reconnect the RR's Gift Card program. Everything is in the process but thank goodness for the flexibility of our customers while we work out these issues.,pos
+4,4,I just began TSG this past week so I don't feel I have enough experience with the training assignments to give accurate feedback for this survey. The one training assignment I completed this week was well designed.,pos
+5,5,I mainly use the Service Desk and am always grateful for their loving and prompt support! Sean has helped me many many many times and is always patient kind and effective! Lisa and Maurice have been a wonderful support as well. The one thing I have heard from other staff members in my department is that Enterprise is a pain point in their work. They feel Enterprise requires extra work and time (i.e. calling TSG) to enter it nearly every single time they need to access the program and that the program is slow inefficient outdated and hard to use. I have not had to use this program but it comes up regularly in department discussions.,neg
+6,6,1) Everyone at the help desk Lisa Maurice Sean and Kami have always followed through on getting things up and running as they are supposed to. Some of them have swung by on their lunch breaks to check in and be sure that an attempted fix has been successful. Dave Palefsky Paul and Vad always get the job done and usually with incredibly great humor. I rarely see Ben or John but they gets things fixed too.,pos
+7,7,In other cases certain TSG-related things have taken months or more to respond or we've been told TSG doesn't have the bandwidth to do the job presently.,neg
+8,8,1) We are still hoping TSG can find some software that will allow us to lock down our public Mac so that visitors can reach all the CS websites but not have access to anything else. We use parental controls but they have been too glitchy thus far.,neu
+9,9,2) In the case of our joint project with OPA to develop touch sales tablets the original plan called for TSG to do the design (web design). We were told they don't have the bandwidth and it was given back to me (Jonathan) to do.,neg
+10,10,TSG does a great job. Sometimes it is clear they need another staffer.,pos
+11,11,Mostly deal with Service Desk staff- very devoted and professional. If it's possible to notice trends of problems and how they're solved that might be useful in troubleshooting. Their perseverance and responsiveness is greatly appreciated!,pos
+12,12,neutral answers are because I do not receive these services in my position (changed to NA do not use in order to clean up data - MAL),neg
+13,13,No further comment.,neu
+14,14,Prompt responses wonderfully skilled generous and thorough in answering questions always provides a resolution. Thank you!,pos
+15,15,Salesforce is inferior and less responsive to our needs than our previous vendor.,neg
+16,16,Thanks for being such a great team willing to help in any way you can and when we've changed our thought as to what we wanted to do you all just graciously changed right with us. Thank you. Thank you. There is no column for outstanding or I would have marked it. Lois Herr,pos
+17,17,The service desk goes out of their way to be helpful.,pos
+18,18,The Service Desk is always so helpful!,pos
+19,19,They are always willing and capable to help - and always with a smile!,pos
+20,20,TSG is always helpful and efficient,pos
+21,21,Usually very good on deadline when I need help.,pos
+22,22,We need scheduling software and we need it adapted to our needs. I know that can be problematic with possible upgrades but this is definitely an area we should put manpower into or even money on!,neg
+23,23,We really really really need some powerful scheduling software to organize and track the many moving pieces of every-day schedules for our Plaza Activities staff. In one case it took me an entire day to plan the next day's schedule for everyone something that could have been accomplished in a few minutes with help from appropriate software.,pos
+24,24,Regarding Project support the main individual I've worked with is Joey Jiang. She seems well-intentioned and friendly however she's often difficult to understand occasionally may give the impression that she understands details when it doesn't seem that she does frequently schedules unnecessary meetings and similarly doesn't make the best use of meeting participants' time. The aforementioned observations sometimes cause a project due date to be delayed and/or the quality of the deliverable to be negatively impacted.,neg
+25,25,Whomever it was who helped me back in February (Sean?) when I was away from my office and needed tech support to retrieve an important e-mail was outstanding in the level of service he gave me. He was not only skilled and efficient but so warm and friendly--important qualities when someone is in a stressful situation that tech problems seem to create. Thank you TSG!,pos
+,,Count Pos,16
+,,Count Neg,7
+,,Count Neutral,2

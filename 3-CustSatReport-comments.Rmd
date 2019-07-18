@@ -85,8 +85,8 @@ library(kableExtra)
 #
 
 # Import and Open the data file / Establish the data sets
-data_filename <- "0_Input_CustSatData.csv"
-dat           <- read.csv(data_filename, stringsAsFactors = FALSE)
+data_filename  <- "0_Input_CustSatData.csv"
+dat            <- read.csv(data_filename, stringsAsFactors = FALSE)
 
 vocab_filename <- "0_Input_Vocabulary.csv"
 comms          <- read.csv(vocab_filename, stringsAsFactors = FALSE)
@@ -132,8 +132,7 @@ wkgdat[wkgdat == "Never"]             <- "5-Never"
 for(i in 1:length(unique(wkgdat$Surveyed))) {
   sssq <- str_sub(unique(wkgdat$Surveyed)[i],  6,  6)
   sssy <- str_sub(unique(wkgdat$Surveyed)[i], -2, -1)
-  survey_name <- paste(as.character(0), as.character(i),
-                       "-", sssq, as.character(sssy))
+  survey_name <- paste(as.character(0), as.character(i), "-", sssq, as.character(sssy))
   survey_name <- str_replace_all(survey_name, " ", "")
   wkgdat[wkgdat == unique(wkgdat$Surveyed)[i]] <- survey_name
 }
@@ -229,17 +228,18 @@ neg_index <- sum(neg_df$Count) / num_comments
 # filename <- paste("0_Output_cum_survey_data",".csv")
 # filename <- stri_replace_all_fixed(filename, " ", "")
 # write.csv(cum_count_df, file = filename)
+
+cat("Summary Statistics for All Surveys", "\n",
+    "Number of survey responses      :", nrow(wkgdat), "\n",
+    "Number of survey comments       :", num_comments, "\n",
+    "Comments to responses ratio     :", num_comments / nrow(wkgdat), "\n",
+    "Number of positive words        :", pct, "\n",
+    "Positive words to comments ratio:", pos_index, "\n",
+    "Number of negative words        :", nct, "\n",
+    "Negative words to comments ratio:", neg_index, "\n")
+cat("\n")
+
 ```
-
-**Summary**
-
-* Number of survey responses      : `r nrow(wkgdat)`
-* Number of survey comments       : `r num_comments`
-* Comments to responses ratio     : `r round(num_comments / nrow(wkgdat), digits = 2)`
-* Number of positive words        : `r pct`
-* Positive words to comments ratio: `r pos_index`
-* Number of negative words        : `r nct`
-* Negative words to comments ratio: `r neg_index`
 
 A second appendix includes a word cloud version of the entire comments set.
 
@@ -287,7 +287,7 @@ for(i in 1:survey_num) {
   
   # Loop to count the occurrences of positive words
   pct <- 0
-  for(j in 1:df_length) {
+  for(j in 1:nrow(pos_vocab)) {
      x <- str_detect(survey_dat$Comments, pos_vocab$Term[j])
      sur_pos_df[j, 3] <- length(x[x == TRUE])
      pct <- pct + length(x[x == TRUE])
@@ -312,7 +312,7 @@ for(i in 1:survey_num) {
   
   # Loop to count the occurrences of negative words
   nct <- 0
-  for(j in 1:df_length) {
+  for(j in 1:nrow(neg_vocab)) {
     x <- str_detect(survey_dat$Comments, neg_vocab$Term[j])
     sur_neg_df[j, 3] <- length(x[x == TRUE])
     nct <- nct + length(x[x == TRUE])
@@ -414,6 +414,7 @@ grid.arrange(num_c_and_r, ratio_c_to_r, ncol = 2)
 pw_vs_c <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=num_pos_words, color = "Positive Words", group=1), size=2) +
   geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
+  scale_y_continuous(limits=c(10, 60)) +
   scale_colour_manual("", 
                       breaks = c("Positive Words", "Comments"),
                       values = c("#0072B2", "#CC0000")) +
@@ -423,6 +424,7 @@ pw_vs_c <- ggplot() +
 nw_vs_c <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=num_neg_words, color = "Negative Words", group=1), size=2) +
   geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
+  scale_y_continuous(limits=c(10, 60)) +
   scale_colour_manual("", 
                       breaks = c("Negative Words", "Comments"),
                       values = c("#0072B2", "#CC0000")) +

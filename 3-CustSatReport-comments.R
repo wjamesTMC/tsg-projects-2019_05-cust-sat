@@ -176,13 +176,13 @@ filename <- paste("0_Output_cum_survey_data",".csv")
 filename <- stri_replace_all_fixed(filename, " ", "")
 write.csv(cum_count_df, file = filename)
 
-cat("Number of survey responses      :", nrow(wkgdat), "\n")
-cat("Number of survey comments       :", num_comments, "\n")
-cat("Comments to responses ratio     :", num_comments / nrow(wkgdat), "\n")
-cat("Number of positive words        :", pct, "\n")
-cat("Positive words to comments ratio:", pos_index, "\n")
-cat("Number of negative words        :", nct, "\n")
-cat("Negative words to comments ratio:", neg_index, "\n")
+cat("Number of survey responses      :", nrow(wkgdat), "\n",
+    "Number of survey comments       :", num_comments, "\n",
+    "Comments to responses ratio     :", num_comments / nrow(wkgdat), "\n",
+    "Number of positive words        :", pct, "\n",
+    "Positive words to comments ratio:", pos_index, "\n",
+    "Number of negative words        :", nct, "\n",
+    "Negative words to comments ratio:", neg_index, "\n")
 
 # Display results and statistics
 cat("Vocabulary word counts / occurrences")
@@ -342,6 +342,7 @@ grid.arrange(num_c_and_r, ratio_c_to_r, ncol = 2)
 pw_vs_c <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=num_pos_words, color = "Positive Words", group=1), size=2) +
   geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
+  scale_y_continuous(limits=c(10, 60)) +
   scale_colour_manual("", 
                       breaks = c("Positive Words", "Comments"),
                       values = c("#0072B2", "#CC0000")) +
@@ -351,6 +352,7 @@ pw_vs_c <- ggplot() +
 nw_vs_c <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=num_neg_words, color = "Negative Words", group=1), size=2) +
   geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
+  scale_y_continuous(limits=c(10, 60)) +
   scale_colour_manual("", 
                       breaks = c("Negative Words", "Comments"),
                       values = c("#0072B2", "#CC0000")) +
