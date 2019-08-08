@@ -1,7 +1,7 @@
 ---
 title: "Client Satisfaction Report"
 subtitle: "Part 3 of 3: Analysis of Customer Sat Comments"
-date: "July 2019"
+date: "August 2019 (Surveys 1-4)"
 output: "html_document"
 ---
 
@@ -17,27 +17,24 @@ pagebreak <- function() {
 
 ### Overview
 
-This report analyzes the occurrences of positive and negative vocabulary words in the comments field of the TSG customer satisfaction surveys. 
+This report analyzes the occurrences of positive and negative vocabulary words in the comments field of the TSG customer satisfaction surveys. The statistics are for four surveys, taken as follows:
 
-While an examination of the words used by responders is not completely precise, it can provide some useful insight into how responders are thinking and what troubles (or delights) them most. For example, the word "help" could be construed as positive or negative (e.g., "was a big help" vs. "no help at all") but a manual review of all the comments suggests that it is always used in a positive context, and therefore was made a "positive" word. Totaling the number of occurrences of positives and negatives and looking at various ratos can provide some sense of how happy responders are (and with what). 
+* Fall 2018
+* Winter 2019
+* Spring 2019
+* Summer 2019
 
-In contrast, it is also possible to generate (automatically) a word cloud of *all* the words used in the comments (excluding common words such as "a", the", "in" and so forth). This provides a high level (and different) view which provides some additional insightslike the name of a help desk person who has been particularly helpful and therefore called out (e.g., "Sean"). However, word clouds do not differentiate between positive and negative, and some words (like "Service Desk") are left in that are less useful in trying to establish an overall tone.
+Note that each survey was distributed to a unique 25% of the organization, and therefore does not follow the principle of random selection. The surveys provide some sense of the organization's opinions.
 
-Working with the comments confirmed the value of constructing a specific vocabularly to run against the comment fields.
-
-This report includes graphs to help visualize the relative number of occurrences per comment, and to compare the various proportions / ratios of positives and negatives. The graphs and charts provide some insight into trends, but with only three surveys to work with, these trends have to be looked on as tentative.
-
-### Approach
+Words used by responders can provide some useful insight into how responders are thinking and what troubles (or delights) them most. Totaling the number of occurrences of positives and negatives and looking at various ratos can provide some sense of how happy responders are (and with what). 
 
 Positive / negative vocabularly words were selected by reading through the comments manually, examining the context, and selecting those that would, in as many cases as possible, be unambiguous. The code reads each comment, and tabulates the number of occurrences of each word on the list - cumulatively, and by individual survey.
 
-Graphs then chart the total positive and negative occurrences, and compares these totals in various ways to establish a sense of tone, and then compares positive and negative totals with each other to see if both are going up, down, or trending differently.
+This report includes graphs to help visualize the relative number of occurrences per comment, and to compare the various proportions / ratios of positives and negatives. The graphs and charts provide some insight into trends, but with only three surveys to work with, these trends have to be looked on as tentative.
 
-As a side note, the word "Enterprise" (referring to the business application) appears to be rather negatively perceived by survey responders, and was given its own entry in the negative vocabularly list.
+### Summary
 
-### Findings
-
-With only three surveys taken to date, it is difficult to be certain about trends, but it *appears* that the following conclusions could be reached:
+Through the four surveys taken to date, the following trends are emerging: [REVISE]
 
 * The number of comments is increasing with each survey
 * The number of positive vocabularly occurrences is increasing with each survey
@@ -46,6 +43,10 @@ With only three surveys taken to date, it is difficult to be certain about trend
 * The number of negative vocuabulary occurrences is noticeably less than the number of positive occurrences
 
 In short, the positives are going up and the negatives are going down. This could be a fact, but also could be coincidental.
+
+### Other Notes and Recommendations
+
+* Please collect the "best practices" and new software ideas from all employees and share them with others to improve everyone's productivity.
 
 `r pagebreak()`
 
@@ -453,7 +454,7 @@ p_vs_n <- ggplot() +
                       values = c("#0072B2", "#CC0000")) +
   labs(title = "Ratios of Positive & Negative Words to Comments", subtitle = "Ratio Comparisons by Survey") +
   ylab("# Words / # Comments") +
-  theme(legend.position = "top"")
+  theme(legend.position = c(0.22,0.85))
 
 # Arrange the two plots for pasting into deck
 grid.arrange(p_vs_n, ncol = 2)

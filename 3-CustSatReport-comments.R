@@ -382,7 +382,7 @@ p_vs_n <- ggplot() +
                       values = c("#0072B2", "#CC0000")) +
   labs(title = "Ratios of Positive & Negative Words to Comments", subtitle = "Ratio Comparisons by Survey") +
   ylab("# Words / # Comments") +
-  theme(legend.position = c(0.22,0.8))
+  theme(legend.position = c(0.22,0.85))
 
 # Arrange the two plots for pasting into deck
 grid.arrange(p_vs_n, ncol = 2)
