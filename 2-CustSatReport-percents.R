@@ -41,7 +41,7 @@ library(kableExtra)
 #
 
 # Import and Open the data file / Establish the data set
-data_filename <- "0_Input_CustSatData.csv"
+data_filename <- "0_Input_CustSatData_04.csv"
 dat <- read.csv(data_filename, stringsAsFactors = FALSE)
 
 #
@@ -76,6 +76,13 @@ wkgdat[wkgdat == "Mostly"]            <- "2-Mostly"
 wkgdat[wkgdat == "Sometimes"]         <- "3-Sometimes"
 wkgdat[wkgdat == "Rarely"]            <- "4-Rarely"
 wkgdat[wkgdat == "Never"]             <- "5-Never"
+
+# Rename group ratings to be consistent
+wkgdat[wkgdat == "Very Satisfied"]    <- "1-Very Satisfied"
+wkgdat[wkgdat == "Satisfied"]         <- "2-Satisfied"
+wkgdat[wkgdat == "Neutral"]           <- "3-Neutral"
+wkgdat[wkgdat == "Dissatisfied"]      <- "4-Dissatisfied"
+wkgdat[wkgdat == "Very Dissatisfied"] <- "5-Very Dissatisfied"
 
 # Change survey names to shorter form
 for(i in 1:length(unique(wkgdat$Surveyed))) {
@@ -169,12 +176,14 @@ pc_trends_plot_pcs <- ggplot() +
   labs(title = "Positive Contribution", subtitle = "% Always (By Survey)")
 
 # Arrange and display the two plots for pasting into deck
-grid.arrange(pc_plot, pc_trends_plot_pcs, pc_trends_plot_pas, ncol = 3)
+# grid.arrange(pc_plot, pc_trends_plot_pcs, pc_trends_plot_pas, ncol = 3)
+
+# Arrange and display the two plots for pasting into deck
+grid.arrange(pc_plot, pc_trends_plot_pcs, ncol = 2)
 
 # Display the % improvement in "Always" to date
-pc_imp <- round(((pc_trends[length(pc_trends$Surveyed),3] - pc_trends[1,3]) / 
-                   pc_trends[length(pc_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Always' over period:", pc_imp,"%")
+pc_imp <- pc_table_perc[nrow(pc_table_perc),4] - pc_table_perc[1,4]
+cat("Change in 'Always' rating over period:", pc_imp,"%")
 
 #
 # Experience Attribute 2
@@ -240,12 +249,13 @@ tr_trends_plot_pcs <- ggplot() +
   labs(title = "Timely Response", subtitle = "% Always (By Survey)")
 
 # Arrange the two plots for pasting into deck
-grid.arrange(tr_plot, tr_trends_plot_pcs, tr_trends_plot_pas, ncol = 3)
+# grid.arrange(tr_plot, tr_trends_plot_pcs, tr_trends_plot_pas, ncol = 3)
 
-# Display the % improvement in "Always" to date
-tr_imp <- round(((tr_trends[length(tr_trends$Surveyed),3] - tr_trends[1,3]) / 
-                   tr_trends[length(tr_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Always' over period:", tr_imp,"%")
+# Arrange and display the two plots for pasting into deck
+grid.arrange(tr_plot, tr_trends_plot_pcs, ncol = 2)
+
+tr_imp <- tr_table_perc[nrow(tr_table_perc),4] - tr_table_perc[1,4]
+cat("Change in 'Always' rating over period:", tr_imp,"%")
 
 #
 # Experience Attribute 3
@@ -311,12 +321,15 @@ ac_trends_plot_pcs <- ggplot() +
   labs(title = "Accountability", subtitle = "% Always (By Survey)")
 
 # Arrange the two plots for pasting into deck
-grid.arrange(ac_plot, ac_trends_plot_pcs, ac_trends_plot_pas, ncol = 3)
+# grid.arrange(ac_plot, ac_trends_plot_pcs, ac_trends_plot_pas, ncol = 3)
+
+# Arrange and display the two plots for pasting into deck
+grid.arrange(ac_plot, ac_trends_plot_pcs, ncol = 2)
 
 # Display the % improvement in "Always" to date
-ac_imp <- round(((ac_trends[length(ac_trends$Surveyed),3] - ac_trends[1,3]) / 
-                   ac_trends[length(ac_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Always' over period:", ac_imp,"%")
+ac_imp <- ac_table_perc[nrow(ac_table_perc),4] - ac_table_perc[1,4]
+cat("Change in 'Always' rating over period:", ac_imp,"%")
+
 
 #
 # Experience Attribute 4
@@ -382,19 +395,21 @@ kn_trends_plot_pcs <- ggplot() +
   labs(title = "Knowledgeable", subtitle = "% Always (By Survey)")
 
 # Arrange the two plots for pasting into deck
-grid.arrange(kn_plot, kn_trends_plot_pcs, kn_trends_plot_pas, ncol = 3)
+# grid.arrange(kn_plot, kn_trends_plot_pcs, kn_trends_plot_pas, ncol = 3)
+
+# Arrange and display the two plots for pasting into deck
+grid.arrange(kn_plot, kn_trends_plot_pcs, ncol = 2)
 
 # Display the % improvement in "Always" to date
-kn_imp <- round(((kn_trends[length(kn_trends$Surveyed),3] - kn_trends[1,3]) / 
-                   kn_trends[length(kn_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Always' over period:", kn_imp,"%")
+kn_imp <- kn_table_perc[nrow(kn_table_perc),4] - kn_table_perc[1,4]
+cat("Change in 'Always' rating over period:", kn_imp,"%")
 
 # 
 # Prepare Summary Grids
 #
 
 # Arrange the four experience plots in a 2x2 format
-grid.arrange(pc_plot, tr_plot, ac_plot, kn_plot, ncol = 2)
+# grid.arrange(pc_plot, tr_plot, ac_plot, kn_plot, ncol = 2)
 
 # Arrange the 4 "Very Satisfied" specific survey plots in a 2x2 format
 grid.arrange(pc_trends_plot_pcs, 
@@ -403,10 +418,10 @@ grid.arrange(pc_trends_plot_pcs,
              kn_trends_plot_pcs, ncol = 2)
 
 # Arrange the 4 "Very Satisfied" cumulative plots in a 2x2 format
-grid.arrange(pc_trends_plot_pas, 
-             tr_trends_plot_pas, 
-             ac_trends_plot_pas, 
-             kn_trends_plot_pas, ncol = 2)
+# grid.arrange(pc_trends_plot_pas, 
+#              tr_trends_plot_pas, 
+#              ac_trends_plot_pas, 
+#              kn_trends_plot_pas, ncol = 2)
 
 # Summarize improvements across groups
 cat("Summary of Percent Improvement Over All Surveys")
@@ -488,12 +503,12 @@ am_trends_plot_pcs <- ggplot() +
   theme(legend.position = "none") +
   labs(title = "Account Managers", subtitle = "% Very Sat (By Survey)")
 
-# Arrange the two plots for pasting into deck
-grid.arrange(am_plot, am_trends_plot_pcs, am_trends_plot_pas, ncol = 3)
+# Arrange and display the two plots for pasting into deck
+grid.arrange(am_plot, am_trends_plot_pcs, ncol = 2)
 
-am_imp <- round(((am_trends[length(am_trends$Surveyed),3] - am_trends[1,3]) / 
-                     am_trends[length(am_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", am_imp,"%")
+# Display the % improvement in "Always" to date
+am_imp <- am_table_perc[nrow(am_table_perc),4] - am_table_perc[1,4]
+cat("Change in 'Always' rating over period:", am_imp,"%")
 
 #
 # Subgroup 2
@@ -558,13 +573,12 @@ bmps_trends_plot_pcs <- ggplot() +
   theme(legend.position = "none") +
   labs(title = "B&MPS", subtitle = "% Very Sat (By Survey)")
 
-# Arrange the two plots for pasting into deck
-grid.arrange(bmps_plot, bmps_trends_plot_pcs, bmps_trends_plot_pas, ncol = 3)
+# Arrange and display the two plots for pasting into deck
+grid.arrange(bmps_plot, bmps_trends_plot_pcs, ncol = 2)
 
-# Display the % improvement in "Very Satisfied" to date
-bmps_imp <- round(((bmps_trends[length(bmps_trends$Surveyed),3] - bmps_trends[1,3]) / 
-                     bmps_trends[length(bmps_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", bmps_imp,"%")
+# Display the % improvement in "Always" to date
+bmps_imp <- bmps_table_perc[nrow(bmps_table_perc),4] - bmps_table_perc[1,4]
+cat("Change in 'Always' rating over period:", bmps_imp,"%")
 
 #
 # Subgroup 3
@@ -629,13 +643,12 @@ ba_trends_plot_pcs <- ggplot() +
   theme(legend.position = "none") +
   labs(title = "Business Applications", subtitle = "% Very Sat (By Survey)")
 
-# Arrange the two plots for pasting into deck
-grid.arrange(ba_plot, ba_trends_plot_pcs, ba_trends_plot_pas, ncol = 3)
+# Arrange and display the two plots for pasting into deck
+grid.arrange(ba_plot, ba_trends_plot_pcs, ncol = 2)
 
-# Display the % improvement in "Very Satisfied" to date
-ba_imp <- round(((ba_trends[length(ba_trends$Surveyed),3] - ba_trends[1,3]) / 
-                   ba_trends[length(ba_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", ba_imp,"%")
+# Display the % improvement in "Always" to date
+ba_imp <- ba_table_perc[nrow(ba_table_perc),4] - ba_table_perc[1,4]
+cat("Change in 'Always' rating over period:", ba_imp,"%")
 
 #
 # Subgroup 4
@@ -700,13 +713,12 @@ es_trends_plot_pcs <- ggplot() +
   theme(legend.position = "none") +
   labs(title = "Event Services", subtitle = "% Very Sat (By Survey)")
 
-# Arrange the two plots for pasting into deck
-grid.arrange(es_plot, es_trends_plot_pcs, es_trends_plot_pas, ncol = 3)
+# Arrange and display the two plots for pasting into deck
+grid.arrange(es_plot, es_trends_plot_pcs, ncol = 2)
 
-# Display the % improvement in "Very Satisfied" to date
-es_imp <- round(((es_trends[length(es_trends$Surveyed),3] - es_trends[1,3]) / 
-                   es_trends[length(es_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", es_imp,"%")
+# Display the % improvement in "Always" to date
+es_imp <- es_table_perc[nrow(es_table_perc),4] - es_table_perc[1,4]
+cat("Change in 'Always' rating over period:", es_imp,"%")
 
 #
 # Subgroup 5
@@ -771,13 +783,12 @@ ps_trends_plot_pcs <- ggplot() +
   theme(legend.position = "none") +
   labs(title = "Project Support", subtitle = "% Very Sat (By Survey)")
 
-# Arrange the two plots for pasting into deck
-grid.arrange(ps_plot, ps_trends_plot_pcs, ps_trends_plot_pas, ncol = 3)
+# Arrange and display the two plots for pasting into deck
+grid.arrange(ps_plot, ps_trends_plot_pcs, ncol = 2)
 
-# Display the % improvement in "Very Satisfied" to date
-ps_imp <- round(((ps_trends[length(ps_trends$Surveyed),3] - ps_trends[1,3]) / 
-                   ps_trends[length(ps_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", ps_imp,"%")
+# Display the % improvement in "Always" to date
+ps_imp <- ps_table_perc[nrow(ps_table_perc),4] - ps_table_perc[1,4]
+cat("Change in 'Always' rating over period:", ps_imp,"%")
 
 #
 # Subgroup 6
@@ -842,13 +853,12 @@ sd_trends_plot_pcs <- ggplot() +
   theme(legend.position = "none") +
   labs(title = "Service Desk", subtitle = "% Very Sat (By Survey)")
 
-# Arrange the two plots for pasting into deck
-grid.arrange(sd_plot, sd_trends_plot_pcs, sd_trends_plot_pas, ncol = 3)
+# Arrange and display the two plots for pasting into deck
+grid.arrange(sd_plot, sd_trends_plot_pcs, ncol = 2)
 
-# Display the % improvement in "Very Satisfied" to date
-sd_imp <- round(((sd_trends[length(sd_trends$Surveyed),3] - sd_trends[1,3]) / 
-                   sd_trends[length(sd_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", sd_imp,"%")
+# Display the % improvement in "Always" to date
+sd_imp <- sd_table_perc[nrow(sd_table_perc),4] - sd_table_perc[1,4]
+cat("Change in 'Always' rating over period:", sd_imp,"%")
 
 #
 # Subgroup 7
@@ -913,13 +923,12 @@ ss_trends_plot_pcs <- ggplot() +
   theme(legend.position = "none") +
   labs(title = "Studio Services", subtitle = "% Very Sat (By Survey)")
 
-# Arrange the two plots for pasting into deck
-grid.arrange(ss_plot, ss_trends_plot_pcs, ss_trends_plot_pas, ncol = 3)
+# Arrange and display the two plots for pasting into deck
+grid.arrange(ss_plot, ss_trends_plot_pcs, ncol = 2)
 
-# Display the % improvement in "Very Satisfied" to date
-ss_imp <- round(((ss_trends[length(ss_trends$Surveyed),3] - ss_trends[1,3]) / 
-                   ss_trends[length(ss_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", ss_imp,"%")
+# Display the % improvement in "Always" to date
+ss_imp <- ss_table_perc[nrow(ss_table_perc),4] - ss_table_perc[1,4]
+cat("Change in 'Always' rating over period:", ss_imp,"%")
 
 #
 # Subgroup 8
@@ -984,13 +993,12 @@ vm_trends_plot_pcs <- ggplot() +
   theme(legend.position = "none") +
   labs(title = "Vendor Management", subtitle = "% Very Sat (By Survey)")
 
-# Arrange the two plots for pasting into deck
-grid.arrange(vm_plot, vm_trends_plot_pcs, vm_trends_plot_pas, ncol = 3)
+# Arrange and display the two plots for pasting into deck
+grid.arrange(vm_plot, vm_trends_plot_pcs, ncol = 2)
 
-# Display the % improvement in "Very Satisfied" to date
-vm_imp <- round(((vm_trends[length(vm_trends$Surveyed),3] - vm_trends[1,3]) / 
-                   vm_trends[length(vm_trends$Surveyed),3]) * 100, digits = 2)
-cat("Improvement for 'Very Satisfied' over period:", vm_imp,"%")
+# Display the % improvement in "Always" to date
+vm_imp <- vm_table_perc[nrow(vm_table_perc),4] - vm_table_perc[1,4]
+cat("Change in 'Always' rating over period:", vm_imp,"%")
 
 #
 # Create summary grids for groups
@@ -1010,17 +1018,17 @@ grid.arrange(
   vm_trends_plot_pcs, ncol = 2)
 
 # Arrange the 8 subgroup plots in two 2x2 formatted pieces - all surveys
-grid.arrange(
-  am_trends_plot_pas,
-  bmps_trends_plot_pas,
-  ba_trends_plot_pas,
-  es_trends_plot_pas, ncol = 2)
-
-grid.arrange(
-  ps_trends_plot_pas,
-  sd_trends_plot_pas,
-  ss_trends_plot_pas,
-  vm_trends_plot_pas, ncol = 2)
+# grid.arrange(
+#   am_trends_plot_pas,
+#   bmps_trends_plot_pas,
+#   ba_trends_plot_pas,
+#   es_trends_plot_pas, ncol = 2)
+# 
+# grid.arrange(
+#   ps_trends_plot_pas,
+#   sd_trends_plot_pas,
+#   ss_trends_plot_pas,
+#   vm_trends_plot_pas, ncol = 2)
 
 cat("Account Managers improvement to date:     ", am_imp,"%")
 cat("BMPS improvement to date:                 ", bmps_imp,"%")

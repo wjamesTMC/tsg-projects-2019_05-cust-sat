@@ -1,7 +1,7 @@
 ---
 title: "Client Satisfaction Report"
-subtitle: "Part 1 of 3: Response Data View"
-date: "June 2019"
+subtitle: "Part 1 of 3: Base Responses View"
+date: "August 2019 (Surveys 1-4)"
 output:
   word_document:
     reference_docx: draftstyles.docx
@@ -52,7 +52,7 @@ library(kableExtra)
 #
 
 # Import and Open the data file / Establish the data set
-data_filename <- "0_Input_CustSatData.csv"
+data_filename <- "0_Input_CustSatData_04.csv"
 dat <- read.csv(data_filename, stringsAsFactors = FALSE)
 names(dat)
 
@@ -89,6 +89,13 @@ wkgdat[wkgdat == "Sometimes"]         <- "3-Sometimes"
 wkgdat[wkgdat == "Rarely"]            <- "4-Rarely"
 wkgdat[wkgdat == "Never"]             <- "5-Never"
 
+# Rename group ratings to be consistent
+wkgdat[wkgdat == "Very Satisfied"]    <- "1-Very Satisfied"
+wkgdat[wkgdat == "Satisfied"]         <- "2-Satisfied"
+wkgdat[wkgdat == "Neutral"]           <- "3-Neutral"
+wkgdat[wkgdat == "Dissatisfied"]      <- "4-Dissatisfied"
+wkgdat[wkgdat == "Very Dissatisfied"] <- "5-Very Dissatisfied"
+
 # Change survey names to shorter form
 for(i in 1:length(unique(wkgdat$Surveyed))) {
   sssq <- str_sub(unique(wkgdat$Surveyed)[i],  6,  6)
@@ -108,11 +115,9 @@ wkgdat[wkgdat == "N/A do not use"]    <- "NA/DNU"
 sapply(wkgdat, function(x)length(unique(x)))
 ```
 
-`r pagebreak()`
+### Experience Attribute 1: Makes a Positive Contribution
 
-# Experience Attribute 1: Makes a Positive Contribution
-
-### Data Summary - All Surveys
+#### Data Summary - All Surveys
 
 ```{r Exp Attribute 1 - Pos Contribution, echo=FALSE}
 #--------------------------------------------------------------------
@@ -167,18 +172,17 @@ pc_trends_plot <- ggplot() +
 grid.arrange(pc_plot, pc_trends_plot, ncol = 2)
 
 # Display the % improvement in "Always" to date
-pc_imp <- round(((pc_trends[length(pc_trends$Surveyed),3] - pc_trends[1,3]) / 
-                   pc_trends[length(pc_trends$Surveyed),3]) * 100, digits = 2)
+pc_imp <- pc_trends[nrow(pc_trends),ncol(pc_trends)] - pc_trends[1,ncol(pc_trends)]
 
 ```
 
-### Improvement for the rating of Always over the period is `r pc_imp`%
+#### Change in 'Always' rating over period is: `r pc_imp`
 
 `r pagebreak()`
 
-## Experience Attribute 2: Timely Response
+### Experience Attribute 2: Timely Response
 
-### Data Summary - All Surveys
+#### Data Summary - All Surveys
 
 ```{r Exp Attribute 2 - Timely Response, echo=FALSE}
 #
@@ -223,18 +227,17 @@ tr_trends_plot <- ggplot() +
 grid.arrange(tr_plot, tr_trends_plot, ncol = 2)
 
 # Display the % improvement in "Always" to date
-tr_imp <- round(((tr_trends[length(tr_trends$Surveyed),3] - tr_trends[1,3]) / 
-                   tr_trends[length(tr_trends$Surveyed),3]) * 100, digits = 2)
+tr_imp <- tr_trends[nrow(tr_trends),ncol(tr_trends)] - tr_trends[1,ncol(tr_trends)]
 
 ```
 
-### Improvement for the rating of Always over the period is `r tr_imp`%
+#### Change in 'Always' rating over period is: `r tr_imp`
 
 `r pagebreak()`
 
-## Experience Attribute 3: Accountability
+### Experience Attribute 3: Staff is Accountable
 
-### Data Summary - All Surveys
+#### Data Summary - All Surveys
 
 ```{r Exp Attribute 3 - Accontable, echo=FALSE}
 #
@@ -279,18 +282,17 @@ ac_trends_plot <- ggplot() +
 grid.arrange(ac_plot, ac_trends_plot, ncol = 2)
 
 # Display the % improvement in "Always" to date
-ac_imp <- round(((ac_trends[length(ac_trends$Surveyed),3] - ac_trends[1,3]) / 
-                   ac_trends[length(ac_trends$Surveyed),3]) * 100, digits = 2)
+ac_imp <- ac_trends[nrow(ac_trends),ncol(ac_trends)] - ac_trends[1,ncol(ac_trends)]
 
 ```
 
-### Improvement for the rating of Always over the period is `r ac_imp`%
+#### Change in 'Always' rating over period is: `r ac_imp`
 
 `r pagebreak()`
 
-## Experience Attribute 4: Knowledgeable
+### Experience Attribute 4: Staff is Knowledgeable
 
-### Data Summary - All Surveys
+#### Data Summary - All Surveys
 
 ```{r Experience Attribute 4 - Knowledgeable, echo=FALSE}
 #
@@ -334,29 +336,29 @@ kn_trends_plot <- ggplot() +
 grid.arrange(kn_plot, kn_trends_plot, ncol = 2)
 
 # Display the % improvement in "Always" to date
-kn_imp <- round(((kn_trends[length(kn_trends$Surveyed),3] - kn_trends[1,3]) / 
-                   kn_trends[length(kn_trends$Surveyed),3]) * 100, digits = 2)
+kn_imp <- kn_trends[nrow(kn_trends),ncol(kn_trends)] - kn_trends[1,ncol(kn_trends)]
+
 ```
 
-### Improvement for the rating of Always over the period is `r kn_imp`%
+#### Change in 'Always' rating over period is: `r kn_imp`
 
 `r pagebreak()`
 
-## Experience Attributes Summary
+### Experience Attributes Summary
 
 ```{r Experience Attributes Summary 1, echo=FALSE}
 # Arrange the four experience plots in a 2x2 format
-grid.arrange(pc_plot, tr_plot, ac_plot, kn_plot, ncol = 2)
+# grid.arrange(pc_plot, tr_plot, ac_plot, kn_plot, ncol = 2)
 
 # Arrange the 4 "Very Satisfied" plots in a 2x2 format
 grid.arrange(pc_trends_plot, tr_trends_plot, ac_trends_plot, kn_trends_plot, ncol = 2)
 ```
 
-### Experience Attributes - Improvement Over Period of Surveys
-**Positive Contribution: `r pc_imp`%**  
-**Timely Response      : `r tr_imp`%**  
-**Is Accountable       : `r ac_imp`%**  
-**Knowledgeable Staff  : `r kn_imp`%**  
+#### Experience Attributes - Change Over Period of Surveys
+**Positive Contribution: `r pc_imp`**  
+**Timely Response      : `r tr_imp`**  
+**Is Accountable       : `r ac_imp`**  
+**Knowledgeable Staff  : `r kn_imp`**  
 
 `r pagebreak()`
 
@@ -368,13 +370,13 @@ grid.arrange(pc_trends_plot, tr_trends_plot, ac_trends_plot, kn_trends_plot, nco
 #--------------------------------------------------------------------
 
 # Get the subgroup data
-grpfactors <- transform(wkgdat[c(1, 6, 7, 8, 9, 10, 11, 12, 13)]) 
+ grpfactors <- transform(wkgdat[c(1, 6, 7, 8, 9, 10, 11, 12, 13)]) 
 summary(grpfactors)
 ```
 
-## Group Performance: Account Managers
+### Group Performance: Account Managers
 
-### Data Summary - All Surveys
+#### Data Summary - All Surveys
 
 ```{r Group:, echo=FALSE}
 #
@@ -418,18 +420,18 @@ am_trends_plot <- ggplot() +
 # Arrange the two plots for pasting into deck
 grid.arrange(am_plot, am_trends_plot, ncol = 2)
 
-am_imp <- round(((am_trends[length(am_trends$Surveyed),3] - am_trends[1,3]) / 
-                     am_trends[length(am_trends$Surveyed),3]) * 100, digits = 2)
+# Display the % improvement in "Always" to date
+am_imp <- am_trends[nrow(am_trends),ncol(am_trends)] - am_trends[1,ncol(am_trends)]
 
 ```
 
-### Improvement for the rating of Very Satisfied over the period is `r am_imp`%
+#### Change in 'Always' rating over period is: `r am_imp`
 
 `r pagebreak()`
 
-## Group Performance: B&MPS
+### Group Performance: B&MPS
 
-### Data Summary - All Surveys
+#### Data Summary - All Surveys
 
 ```{r Group: BMPS, echo=FALSE}
 #
@@ -472,19 +474,18 @@ bmps_trends_plot <- ggplot() +
 # Arrange the two plots for pasting into deck
 grid.arrange(bmps_plot, bmps_trends_plot, ncol = 2)
 
-# Display the % improvement in "Very Satisfied" to date
-bmps_imp <- round(((bmps_trends[length(bmps_trends$Surveyed),3] - bmps_trends[1,3]) / 
-                     bmps_trends[length(bmps_trends$Surveyed),3]) * 100, digits = 2)
+# Display the % improvement in "Always" to date
+bmps_imp <- bmps_trends[nrow(bmps_trends),ncol(bmps_trends)] - bmps_trends[1,ncol(bmps_trends)]
 
 ```
 
-### Improvement for the rating of Very Satisfied over the period is `r bmps_imp`%
+#### Change in 'Always' rating over period is: `r bmps_imp`
 
 `r pagebreak()`
 
-## Group Performance: Business Applications
+### Group Performance: Business Applications
 
-### Data Summary - All Surveys
+#### Data Summary - All Surveys
 
 ```{r Group: Business Applications, echo=FALSE}
 #
@@ -528,19 +529,18 @@ ba_trends_plot <- ggplot() +
 # Arrange the two plots for pasting into deck
 grid.arrange(ba_plot, ba_trends_plot, ncol = 2)
 
-# Display the % improvement in "Very Satisfied" to date
-ba_imp <- round(((ba_trends[length(ba_trends$Surveyed),3] - ba_trends[1,3]) / 
-                   ba_trends[length(ba_trends$Surveyed),3]) * 100, digits = 2)
+# Display the % improvement in "Always" to date
+ba_imp <- ba_trends[nrow(ba_trends),ncol(ba_trends)] - ba_trends[1,ncol(ba_trends)]
 
 ```
 
-### Improvement for the rating of Very Satisfied over the period is `r ba_imp`%
+#### Change in 'Always' rating over period is: `r ba_imp`
 
 `r pagebreak()`
 
-## Group Performance: Event Services
+### Group Performance: Event Services
 
-### Data Summary - All Surveys
+#### Data Summary - All Surveys
 
 ```{r Group: Event Services, echo=FALSE}
 #
@@ -583,19 +583,18 @@ es_trends_plot <- ggplot() +
 # Arrange the two plots for pasting into deck
 grid.arrange(es_plot, es_trends_plot, ncol = 2)
 
-# Display the % improvement in "Very Satisfied" to date
-es_imp <- round(((es_trends[length(es_trends$Surveyed),3] - es_trends[1,3]) / 
-                   es_trends[length(es_trends$Surveyed),3]) * 100, digits = 2)
+# Display the % improvement in "Always" to date
+es_imp <- es_trends[nrow(es_trends),ncol(es_trends)] - es_trends[1,ncol(es_trends)]
 
 ```
 
-### Improvement for the rating of Very Satisfied over the period is `r es_imp`%
+#### Change in 'Always' rating over period is: `r es_imp`
 
 `r pagebreak()`
 
-## Group Performance: Project Support
+### Group Performance: Project Support
 
-### Data Summary - All Surveys
+#### Data Summary - All Surveys
 
 ```{r Group: Project Support, echo=FALSE}
 #
@@ -639,19 +638,18 @@ ps_trends_plot <- ggplot() +
 # Arrange the two plots for pasting into deck
 grid.arrange(ps_plot, ps_trends_plot, ncol = 2)
 
-# Display the % improvement in "Very Satisfied" to date
-ps_imp <- round(((ps_trends[length(ps_trends$Surveyed),3] - ps_trends[1,3]) / 
-                   ps_trends[length(ps_trends$Surveyed),3]) * 100, digits = 2)
+# Display the % improvement in "Always" to date
+ps_imp <- ps_trends[nrow(ps_trends),ncol(ps_trends)] - ps_trends[1,ncol(ps_trends)]
 
 ```
 
-### Improvement for the rating of Very Satisfied over the period is `r ps_imp`%
+#### Change in 'Always' rating over period is:`r ps_imp`
 
 `r pagebreak()`
 
-## Group Performance: Service Desk
+### Group Performance: Service Desk
 
-### Data Summary - All Surveys
+#### Data Summary - All Surveys
 
 ```{r Group: Service Desk, echo=FALSE}
 #
@@ -695,19 +693,18 @@ sd_trends_plot <- ggplot() +
 # Arrange the two plots for pasting into deck
 grid.arrange(sd_plot, sd_trends_plot, ncol = 2)
 
-# Display the % improvement in "Very Satisfied" to date
-sd_imp <- round(((sd_trends[length(sd_trends$Surveyed),3] - sd_trends[1,3]) / 
-                   sd_trends[length(sd_trends$Surveyed),3]) * 100, digits = 2)
+# Display the % improvement in "Always" to date
+sd_imp <- sd_trends[nrow(sd_trends),ncol(sd_trends)] - sd_trends[1,ncol(sd_trends)]
 
 ```
 
-### Improvement for the rating of Very Satisfied over the period is `r sd_imp`%
+#### Change in 'Always' rating over period is: `r sd_imp`
 
 `r pagebreak()`
 
-## Group Performance: Studio Services
+### Group Performance: Studio Services
 
-### Data Summary - All Surveys
+#### Data Summary - All Surveys
 
 ```{r Group: Studio Services, echo=FALSE}
 #
@@ -751,19 +748,18 @@ ss_trends_plot <- ggplot() +
 # Arrange the two plots for pasting into deck
 grid.arrange(ss_plot, ss_trends_plot, ncol = 2)
 
-# Display the % improvement in "Very Satisfied" to date
-ss_imp <- round(((ss_trends[length(ss_trends$Surveyed),3] - ss_trends[1,3]) / 
-                   ss_trends[length(ss_trends$Surveyed),3]) * 100, digits = 2)
+# Display the % improvement in "Always" to date
+ss_imp <- ss_trends[nrow(ss_trends),ncol(ss_trends)] - ss_trends[1,ncol(ss_trends)]
 
 ```
 
-### Improvement for the rating of Very Satisfied over the period is `r ss_imp`%
+#### Change in 'Always' rating over period is: `r ss_imp`
 
 `r pagebreak()`
 
-## Group Performance: Vendor Management
+### Group Performance: Vendor Management
 
-### Data Summary - All Surveys
+#### Data Summary - All Surveys
 
 ```{r Group: Vendor Management, echo=FALSE}
 #
@@ -807,17 +803,16 @@ vm_trends_plot <- ggplot() +
 # Arrange the two plots for pasting into deck
 grid.arrange(vm_plot, vm_trends_plot, ncol = 2)
 
-# Display the % improvement in "Very Satisfied" to date
-vm_imp <- round(((vm_trends[length(vm_trends$Surveyed),3] - vm_trends[1,3]) / 
-                   vm_trends[length(vm_trends$Surveyed),3]) * 100, digits = 2)
+# Display the % improvement in "Always" to date
+vm_imp <- vm_trends[nrow(vm_trends),ncol(vm_trends)] - vm_trends[1,ncol(vm_trends)]
 
 ```
 
-### Improvement for the rating of Very Satisfied over the period is `r vm_imp`%
+#### Change in 'Always' rating over period is: `r vm_imp`
 
 `r pagebreak()`
 
-## Group Performance Summary
+### Group Performance Summary
 
 ```{r Trends Summary, echo=FALSE}
 # Arrange the 8 subgroup plots in two 2x2 formatted pieces
@@ -834,14 +829,14 @@ grid.arrange(ps_trends_plot,
              ncol = 2)
 ```
 
-### Group Performance - Improvement Over Period of Surveys
-**Account Managers:     `r am_imp`%**  
-**BMPS:                 `r bmps_imp`%**  
-**Business Applications:`r ba_imp`%**  
-**Event Services:       `r es_imp`%**  
-**Project Support:      `r ps_imp`%**  
-**Service Desk:         `r sd_imp`%**  
-**Studio Services:      `r ss_imp`%**  
-**Vendor Management:    `r vm_imp`%**  
+#### Group Performance - Improvement Over Period of Surveys
+**Account Managers:     `r am_imp`**  
+**BMPS:                 `r bmps_imp`**  
+**Business Applications:`r ba_imp`**  
+**Event Services:       `r es_imp`**  
+**Project Support:      `r ps_imp`**  
+**Service Desk:         `r sd_imp`**  
+**Studio Services:      `r ss_imp`**  
+**Vendor Management:    `r vm_imp`**  
+
 [End of Report]
-```
