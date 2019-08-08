@@ -42,7 +42,7 @@ library(kableExtra)
 #
 
 # Import and Open the data file / Establish the data sets
-data_filename  <- "0_Input_CustSatData.csv"
+data_filename  <- "0_Input_CustSatData_04.csv"
 dat            <- read.csv(data_filename, stringsAsFactors = FALSE)
 
 vocab_filename <- "0_Input_Vocabulary.csv"
@@ -84,6 +84,13 @@ wkgdat[wkgdat == "Mostly"]            <- "2-Mostly"
 wkgdat[wkgdat == "Sometimes"]         <- "3-Sometimes"
 wkgdat[wkgdat == "Rarely"]            <- "4-Rarely"
 wkgdat[wkgdat == "Never"]             <- "5-Never"
+
+# Rename group ratings to be consistent
+wkgdat[wkgdat == "Very Satisfied"]    <- "1-Very Satisfied"
+wkgdat[wkgdat == "Satisfied"]         <- "2-Satisfied"
+wkgdat[wkgdat == "Neutral"]           <- "3-Neutral"
+wkgdat[wkgdat == "Dissatisfied"]      <- "4-Dissatisfied"
+wkgdat[wkgdat == "Very Dissatisfied"] <- "5-Very Dissatisfied"
 
 # Change survey names to shorter form
 for(i in 1:length(unique(wkgdat$Surveyed))) {
@@ -137,6 +144,7 @@ pos_df <- arrange(pos_df, desc(Count), Word)
 # Print out the top 10 words
 pos_df[1:10, ]
 
+#
 # Negative vocabulay elements
 #
 
@@ -327,13 +335,15 @@ num_c_and_r <- ggplot() +
   scale_colour_manual("", 
                       breaks = c("Responses", "Comments"),
                       values = c("#0072B2", "#CC0000")) +
-  labs(title = "Count of Comments and Responses", subtitle = "Numbers of each by Survey") + ylab("Number")
+  labs(title = "Count of Comments and Responses", subtitle = "Numbers of each by Survey") + ylab("Number") +
+  theme(legend.position = c(0.18,0.85))
 
 # Ratio of comments to responses
 ratio_c_to_r <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=c_to_r_ratio, color = "Ratios", group=1), size=2) +
   scale_colour_manual("", breaks = c("Ratios"), values = c("#000099")) +
-  labs(title = "Ratio of Comments to Responses", subtitle = "Ratio By Survey") + ylab("Proportion of Comments")  
+  labs(title = "Ratio of Comments to Responses", subtitle = "Ratio By Survey") + ylab("Proportion of Comments") +
+  theme(legend.position = c(0.15,0.88))
 
 # Arrange the two plots for pasting into deck
 grid.arrange(num_c_and_r, ratio_c_to_r, ncol = 2)
@@ -342,21 +352,23 @@ grid.arrange(num_c_and_r, ratio_c_to_r, ncol = 2)
 pw_vs_c <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=num_pos_words, color = "Positive Words", group=1), size=2) +
   geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
-  scale_y_continuous(limits=c(10, 60)) +
+  scale_y_continuous(limits=c(0, 60)) +
   scale_colour_manual("", 
                       breaks = c("Positive Words", "Comments"),
                       values = c("#0072B2", "#CC0000")) +
-  labs(title = "Positive Words Compared to Comments", subtitle = "Number of each by Survey") + ylab("Number of Each")
+  labs(title = "Positive Words vs. Comments", subtitle = "Number of each by Survey") + ylab("Number of Each") +
+  theme(legend.position = c(0.2,0.85))
 
 # Negative words vs. comments
 nw_vs_c <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=num_neg_words, color = "Negative Words", group=1), size=2) +
   geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
-  scale_y_continuous(limits=c(10, 60)) +
+  scale_y_continuous(limits=c(0, 60)) +
   scale_colour_manual("", 
                       breaks = c("Negative Words", "Comments"),
                       values = c("#0072B2", "#CC0000")) +
-  labs(title = "Negative Words Compared to Comments", subtitle = "Number of each by Survey") + ylab("Number of Each")
+  labs(title = "Negative Words vs. Comments", subtitle = "Number of each by Survey") + ylab("Number of Each") +
+  theme(legend.position = c(0.22,0.85))
 
 # Arrange the two plots for pasting into deck
 grid.arrange(pw_vs_c, nw_vs_c, ncol = 2)
@@ -366,13 +378,15 @@ p_vs_n <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=pw_to_c_ratio, color = "Positive", group=1), size=2) +
   geom_line(data=survey_inf, aes(x=Survey, y=nw_to_c_ratio, color = "Negative", group=1), size=2) +
   scale_colour_manual("", 
-                      breaks = c("Positive", "Negative"),
+                      breaks = c("Positive Words", "Negative Words"),
                       values = c("#0072B2", "#CC0000")) +
   labs(title = "Ratios of Positive & Negative Words to Comments", subtitle = "Ratio Comparisons by Survey") +
-  ylab("# Words / # Comments")  
+  ylab("# Words / # Comments") +
+  theme(legend.position = c(0.22,0.8))
 
 # Arrange the two plots for pasting into deck
 grid.arrange(p_vs_n, ncol = 2)
+
 
 #--------------------------------------------------------------------
 #
