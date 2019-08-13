@@ -46,6 +46,11 @@ library(kableExtra)
 data_filename <- "0_Input_CustSatData.csv"
 dat <- read.csv(data_filename, stringsAsFactors = FALSE)
 
+vocab_filename <- "0_Input_Vocabulary.csv"
+comms          <- read.csv(vocab_filename, stringsAsFactors = FALSE)
+pos_vocab      <- comms %>% filter(Tone == "P")
+neg_vocab      <- comms %>% filter(Tone == "N")
+
 # Trap all dates in the fall 2018 survey
 for(i in 1:length(dat$Timestamp)) {
   x <- str_detect(dat$Timestamp[i], "2018")
@@ -74,11 +79,6 @@ for(i in 1:length(dat$Timestamp)) {
     dat$Timestamp[i] <- "04 - Summer 2019"
   }
 }
-
-vocab_filename <- "0_Input_Vocabulary.csv"
-comms          <- read.csv(vocab_filename, stringsAsFactors = FALSE)
-pos_vocab      <- comms %>% filter(Tone == "P")
-neg_vocab      <- comms %>% filter(Tone == "N")
 
 #
 # Clean data file to set vector names
