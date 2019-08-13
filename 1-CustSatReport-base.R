@@ -41,15 +41,44 @@ library(kableExtra)
 #
 
 # Import and Open the data file / Establish the data set
-data_filename <- "0_Input_CustSatData_04.csv"
+data_filename <- "0_Input_CustSatData.csv"
 dat <- read.csv(data_filename, stringsAsFactors = FALSE)
-names(dat)
+
+# Trap all dates in the fall 2018 survey
+for(i in 1:length(dat$Timestamp)) {
+  x <- str_detect(dat$Timestamp[i], "2018")
+  if(x == TRUE) {
+    dat$Timestamp[i] <- "01 - Fall 2018"
+  }
+}
+
+# Trap for winter 2019
+for(i in 1:length(dat$Timestamp)) {
+  if(dat$Timestamp[i] > "1/1/2019" & dat$Timestamp[i] < "4/1/2019") {
+    dat$Timestamp[i] <- "02 - Winter 2019"
+  }
+}
+
+# Trap for Spring 2019
+for(i in 1:length(dat$Timestamp)) {
+  if(dat$Timestamp[i] > "4/1/2019" & dat$Timestamp[i] < "6/30/2019") {
+    dat$Timestamp[i] <- "03 - Spring 2019"
+  }
+}
+
+# Trap for Summer 2019
+for(i in 1:length(dat$Timestamp)) {
+  if(dat$Timestamp[i] > "7/1/2019" & dat$Timestamp[i] < "9/30/2019") {
+    dat$Timestamp[i] <- "04 - Summer 2019"
+  }
+}
 
 #
 # Clean data file to set vector names
 #
 
-dat <- rename(dat, replace = c("Tell.us.about.your.experience.working.with.us..TSG.makes.a.positive.contribution.to.my.work." = "PosContrib",
+dat <- rename(dat, replace = c("Timestamp" = "Surveyed",
+                               "Tell.us.about.your.experience.working.with.us..TSG.makes.a.positive.contribution.to.my.work." = "PosContrib",
                                "Tell.us.about.your.experience.working.with.us..TSG.responds.to.my.requests.in.a.timely.manner." = "TimelyResp",
                                "Tell.us.about.your.experience.working.with.us..TSG.takes.accountability.for.my.requests." = "Accountability",
                                "Tell.us.about.your.experience.working.with.us..TSG.staff.are.knowledgable.." = "Knowledgeable",
@@ -68,8 +97,8 @@ cleandat <- subset(dat, dat[ , 1] != "")
 
 # Take out Timestamp and the comments fields for now
 wkgdat <- cleandat %>% select(Surveyed,	PosContrib,	TimelyResp,	Accountability,
-                         Knowledgeable,	AcctMgrs,	BMPS,	BusApps,	EventSvcs,
-                         ProjSupp,	ServDesk,	StudioSvcs,	VenMgmt)
+                              Knowledgeable,	AcctMgrs,	BMPS,	BusApps,	EventSvcs,
+                              ProjSupp,	ServDesk,	StudioSvcs,	VenMgmt)
 
 # Rename ratings so they will sort
 wkgdat[wkgdat == "Always"]            <- "1-Always"

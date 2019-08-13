@@ -42,9 +42,11 @@ library(lubridate)
 #
 
 # Import and Open the data file / Establish the data set
-data_filename <- "0_Input_CustSatData_04C.csv"
+data_filename <- "0_Input_CustSatData.csv"
 dat <- read.csv(data_filename, stringsAsFactors = FALSE)
+tail(dat$Timestamp)
 
+# Trap all dates in the fall 2018 survey
 for(i in 1:length(dat$Timestamp)) {
   x <- str_detect(dat$Timestamp[i], "2018")
   if(x == TRUE) {
@@ -52,20 +54,21 @@ for(i in 1:length(dat$Timestamp)) {
   }
 }
 
+# Trap for winter 2019
 for(i in 1:length(dat$Timestamp)) {
-  if(dat$Timestamp[i] < 2019-02-01) {
+  if(dat$Timestamp[i] > "1/1/2019" & dat$Timestamp[i] < "4/1/2019") {
     dat$Timestamp[i] <- "02 - Winter 2019"
   }
 }
 
 for(i in 1:length(dat$Timestamp)) {
-  if(dat$Timestamp[i] < 2019-06-30) {
+  if(dat$Timestamp[i] > "4/1/2019" & dat$Timestamp[i] < "6/30/2019") {
     dat$Timestamp[i] <- "03 - Spring 2019"
   }
 }
 
 for(i in 1:length(dat$Timestamp)) {
-  if(dat$Timestamp[i] < 2019-09-30) {
+  if(dat$Timestamp[i] > "7/1/2019" & dat$Timestamp[i] < "9/30/2019") {
     dat$Timestamp[i] <- "04 - Summer 2019"
   }
 }
@@ -74,7 +77,8 @@ for(i in 1:length(dat$Timestamp)) {
 # Clean data file to set vector names
 #
 
-dat <- rename(dat, replace = c("Tell.us.about.your.experience.working.with.us..TSG.makes.a.positive.contribution.to.my.work." = "PosContrib",
+dat <- rename(dat, replace = c("Timestamp" = "Surveyed",
+                               "Tell.us.about.your.experience.working.with.us..TSG.makes.a.positive.contribution.to.my.work." = "PosContrib",
                                "Tell.us.about.your.experience.working.with.us..TSG.responds.to.my.requests.in.a.timely.manner." = "TimelyResp",
                                "Tell.us.about.your.experience.working.with.us..TSG.takes.accountability.for.my.requests." = "Accountability",
                                "Tell.us.about.your.experience.working.with.us..TSG.staff.are.knowledgable.." = "Knowledgeable",
@@ -109,11 +113,6 @@ wkgdat[wkgdat == "Satisfied"]         <- "2-Satisfied"
 wkgdat[wkgdat == "Neutral"]           <- "3-Neutral"
 wkgdat[wkgdat == "Dissatisfied"]      <- "4-Dissatisfied"
 wkgdat[wkgdat == "Very Dissatisfied"] <- "5-Very Dissatisfied"
-
-head(wkgdat)
-
-
-
 
 # Change survey names to shorter form
 for(i in 1:length(unique(wkgdat$Surveyed))) {
