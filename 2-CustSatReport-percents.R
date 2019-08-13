@@ -44,7 +44,11 @@ library(kableExtra)
 data_filename <- "0_Input_CustSatData.csv"
 dat <- read.csv(data_filename, stringsAsFactors = FALSE)
 
-# Trap all dates in the fall 2018 survey
+#
+# Convert time stamps to survey names
+#
+
+# Trap for 2018 survey
 for(i in 1:length(dat$Timestamp)) {
   x <- str_detect(dat$Timestamp[i], "2018")
   if(x == TRUE) {
@@ -52,22 +56,15 @@ for(i in 1:length(dat$Timestamp)) {
   }
 }
 
-# Trap for winter 2019
+# Trap for 2019 surveys
 for(i in 1:length(dat$Timestamp)) {
   if(dat$Timestamp[i] > "1/1/2019" & dat$Timestamp[i] < "4/1/2019") {
     dat$Timestamp[i] <- "02 - Winter 2019"
   }
-}
-
-# Trap for Spring 2019
-for(i in 1:length(dat$Timestamp)) {
   if(dat$Timestamp[i] > "4/1/2019" & dat$Timestamp[i] < "6/30/2019") {
     dat$Timestamp[i] <- "03 - Spring 2019"
   }
-}
-
-# Trap for Summer 2019
-for(i in 1:length(dat$Timestamp)) {
+  
   if(dat$Timestamp[i] > "7/1/2019" & dat$Timestamp[i] < "9/30/2019") {
     dat$Timestamp[i] <- "04 - Summer 2019"
   }
