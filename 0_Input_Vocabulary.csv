@@ -1,11 +1,14 @@
 Term,Tone
 above and beyond,P
+accurate descriptions,P
 appreciate,P
 appreciated,P
 awesome,P
 capable,P
 cheerfully,P
 competent,P
+confident,P
+confirmation,P
 congrats,P
 congratulations,P
 couldn't do my job without,P
@@ -13,6 +16,9 @@ courteous,P
 courteousness,P
 courtiousness,P
 devoted,P
+discipline,P
+disciplined recordkeeping,P
+easy,P
 effective,P
 empathetic,P
 excellent,P
@@ -20,6 +26,7 @@ excellent attitude,P
 exceptional,P
 extra mile,P
 fantastic,P
+faster in responding,P
 follow-through,P
 friendly,P
 fun to work with,P
@@ -28,9 +35,11 @@ goes out of their way,P
 gracious,P
 graciously,P
 great,P
+greater granularity,P
 hard work,P
 help,P
 highlight,P
+improve duration times,P
 joy to work with,P
 joyful,P
 kind,P
@@ -39,11 +48,14 @@ love,P
 love working with,P
 loving,P
 many thanks,P
+many thanks,P
+opportunities,P
 outstanding,P
 patient,P
 perseverance,P
 pleasant,P
 pleasure,P
+priorities,P
 professional,P
 prompt,P
 quick to respond,P
@@ -51,8 +63,11 @@ quicker,P
 responsive,P
 satisfied,P
 shining star,P
+significant jump,P
 skilled,P
 solution-oriented,P
+speed,P
+straightforward,P
 super,P
 thank you,P
 thanks,P
@@ -63,26 +78,37 @@ very good,P
 warm,P
 willing,P
 again and again,N
+apologize,N
 appears,N
 back and forth,N
+backlog,N
 bandwidth,N
+breach,N
 challenge,N
 could conduct,N
 could have gotten,N
 create excessive,N
 did not know what they were doing,N
 didn't,N
+didn't update,N
 difficulty,N
 disconnect,N
 doesn't,N
+drives up,N
 ended up,N
 Enterprise,N
+exceed the SLA,N
+exceeded SLA,N
+exceeding the SLA,N
 excessively,N
 expected time,N
+flawed,N
+forgotten,N
 get up to speed,N
 glitchy,N
 gone down,N
 hard time,N
+hardship,N
 haven't been able to,N
 impacted,N
 inconvenienced,N
@@ -92,24 +118,38 @@ inferior,N
 issues,N
 little vague,N
 many days,N
+meaningless,N
 need to get better,N
 needs work,N
 negatively,N
+no more,N
+no reasonable explanation,N
 not consistently,N
+not getting,N
+not possible,N
+not received,N
 not yet,N
+odd,N
 on hold,N
 out of date,N
 problematic,N
 problems,N
 really need,N
+rushing,N
 should strive,N
+slip through the cracks,N
 slow,N
+sorry about,N
+suspect,N
+suspects,N
 take too long,N
 taken months,N
 takes many days,N
 takes too long,N
 too busy,N
 too many days,N
+too much,N
+unaware,N
 unhelpful,N
 unnecessarily,N
 unresolved,N
@@ -118,3 +158,17 @@ wasn't efficient,N
 well-intentioned,N
 would have been nice,N
 would like to know,N
+as stated previously,-
+consistency,-
+duration times,-
+feedback,-
+forecasting,-
+key problems,-
+most important metrics,-
+previouosly,-
+resolve,-
+should be paid,-
+should see,-
+special requests,-
+uncovered,-
+what have you seen,-

@@ -1,0 +1,24 @@
+Comments
+"On the flip side, the staff may have useful insights as to why some of the odd correlations are occurring (for example, when more events cause maximum duration times to increase but minimum duration times to decrease). One suspects there will be some useful information gained from that discussion."
+"One of the original goals of this analysis was to discover if there was a means to do breach forecasting (determine if a given ticket would exceed the SLA targets). Given that 1439 of the 1451 incidents (99.2%) exceeded SLA targets, it is actually safe to assume that EVERY ticket will cause a breach. The problem is not with forecasting, it is with getting duration times down. It is not nearly so bad with service requests, with only 780 of 5209 (15%) exceeding the SLA. Of course, both of these figures assume a 30-day cutoff on durations."
+"The number of very high duration tickets is troublesome. If it is bad recordkeeping, that can be fixed. If we are mis-classifying tickets (for example, using them from everything from major projects to a note to call someone back), then they should not be entered into Cherwell. For example, updating 450 desktops to a new virus software package is not a ticket, it is a project. We would expect projects to take weeks or months to finish."
+"The service desk staff are likely unaware of their performance, or we would not see so many very high durations with no reasonable explanation. There is a lot of data in this report that management can use to convey the key problems of prioritization and recordkeeping consistency. The manager could hold one or more sessions to talk over the findings and create some action steps to resolve."
+One piece of feedback TSG has received from the organization is that they need to be faster in responding to problems and requests. The analysis has uncovered a number of opportunities (all relatively straightforward and easy) to improve duration times and thereby gain a significant jump in speed.
+"In this vein, management needs to decide what are the most important metrics; there are many to choose from - for example:"
+Average duration
+Average or maximum duration for priority 1’s
+Ability to meet SLA targets
+Number of tickets addressed in a given timeframe
+…and so forth
+"Once the staff understand the metrics they are going to be measured on, they will respond accordingly - and this implies some management mechanism be in place to show them how they are doing (individually and collectively)"
+This analysis will remain somewhat flawed until the service desk team dedicates itself to disciplined recordkeeping. This has the following parts:
+Adopting a taxonomy that categorizes problems with greater gradularity. This will enable the team to identify what problem areas are requiring the most staff time and effort to resolve. This should be built into Cherwell and be a required entry when a ticket is created.
+Adopting a method for assigning priorities. The 5-level prioritization does not seem to be working. Behavior suggests that there should be perhaps no more than 3:
+Immediately or same day
+Within 2 days (incidents) or 5 days (service requests)
+Best effort depending on other priorities and workload
+"Assuming a reasonable and accurate method of assigning priorities, discipline in addressing them - that is, all Incident 1’s are addressed before 2’s, and so forth"
+"Providing accurate descriptions of the problem for every ticket. In many instances, the description field has just a few words or something meaningless to anyone who did not enter the ticket."
+"Closing tickets in Cherwell the day they are completed - no more batching of recordkeeping, as it is not possible to generate accurate statistics when some staff are batching their updates."
+"Management of the backlog via a daily or weekly aging report so that no high priority ticket gets forgotten, and thereby drives up the average duration times."
+"Based on the aging report, select 1 or 2 tickets per week on which to conduct a post mortem to determine what when right and what when wrong. Make adjustments in communication, the data, or the process accordingly."
