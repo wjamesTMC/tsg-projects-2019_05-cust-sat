@@ -48,8 +48,9 @@ dat <- read.csv(data_filename, stringsAsFactors = FALSE)
 
 vocab_filename <- "0_Input_Vocabulary.csv"
 comms          <- read.csv(vocab_filename, stringsAsFactors = FALSE)
-pos_vocab      <- comms %>% filter(Tone == "P")
-neg_vocab      <- comms %>% filter(Tone == "N")
+pos_vocab      <- comms %>% filter(Tone == "Positive")
+neg_vocab      <- comms %>% filter(Tone == "Negative")
+neu_vocab      <- comms %>% filter(Tone == "Neutral")
 
 #
 # Convert time stamps to survey names
@@ -152,7 +153,7 @@ num_comments <- length(unique(wkgdat$Comments))
 # Build dataframe for positives
 pos_df   <- data.frame(Word  = pos_vocab$Term,
                        Count = 1:nrow(pos_vocab),
-                       Type  = "P")
+                       Type  = "Pos")
 
 # Loop to identify positive words in the comments field
 pct <- 0
@@ -172,13 +173,13 @@ pos_df <- arrange(pos_df, desc(Count), Word)
 pos_df[1:10, ]
 
 #
-# Negative vocabulay elements
+# Negative vocabulary elements
 #
 
 # Build dataframe for negatives
 neg_df   <- data.frame(Word  = neg_vocab$Term,
                        Count = 1:nrow(neg_vocab),
-                       Type  = "N")
+                       Type  = "Neg")
 
 
 # Loop to identify negative words in the comments field
@@ -198,26 +199,58 @@ neg_df <- arrange(neg_df, desc(Count), Word)
 # Print out the top 10 words
 neg_df[1:10, ]
 
-# Create datafrane and append negatives
+#
+# Neutral vocabulary elements
+#
+
+# Build dataframe for negatives
+neu_df   <- data.frame(Word  = neu_vocab$Term,
+                       Count = 1:nrow(neu_vocab),
+                       Type  = "Neu")
+
+
+# Loop to identify neutral words in the comments field
+neu_ct <- 0
+for(i in 1:nrow(neu_vocab)) {
+  x <- str_detect(wkgdat$Comments, neu_vocab$Term[i])
+  neu_df[i, 2] <- length(x[x == TRUE])
+  neu_ct <- neu_ct + length(x[x == TRUE])
+}
+
+# Remove words with zero counts
+neu_df   <- neu_df %>% filter(Count != 0)
+
+# Sort from high to low
+neu_df <- arrange(neu_df, desc(Count), Word)
+
+# Print out the top 10 words
+neu_df[1:10, ]
+
+# Create datafrane and append negatives and neutrals
 cum_count_df <- pos_df
 cum_count_df <- rbind(cum_count_df, neg_df)
+cum_count_df <- rbind(cum_count_df, neu_df)
 
 # Determine overall positive and negative indexes (pos / neg words / comments
 pos_index <- sum(pos_df$Count) / num_comments
 neg_index <- sum(neg_df$Count) / num_comments
+neu_index <- sum(neu_df$Count) / num_comments
 
 # Create a filename and write out the results
 filename <- paste("0_Output_cum_survey_data",".csv")
 filename <- stri_replace_all_fixed(filename, " ", "")
 write.csv(cum_count_df, file = filename)
 
-cat("Number of survey responses      :", nrow(wkgdat), "\n",
+cat(" Number of survey responses      :", nrow(wkgdat), "\n",
     "Number of survey comments       :", num_comments, "\n",
-    "Comments to responses ratio     :", num_comments / nrow(wkgdat), "\n",
+    "Comments to responses ratio     :", num_comments / nrow(wkgdat), "\n", "\n",
     "Number of positive words        :", pct, "\n",
-    "Positive words to comments ratio:", pos_index, "\n",
+    "Positive words to comments ratio:", pos_index, "\n", "\n",
     "Number of negative words        :", nct, "\n",
-    "Negative words to comments ratio:", neg_index, "\n")
+    "Negative words to comments ratio:", neg_index, "\n", "\n",
+    "Number of neutral words         :", neu_ct, "\n",
+    "Neutral words to comments raito :", neu_index, "\n")
+
 
 # Display results and statistics
 cat("Vocabulary word counts / occurrences")
@@ -229,6 +262,7 @@ cat("Vocabulary word counts / occurrences")
 
 pos_df
 neg_df
+neu_df
 
 #--------------------------------------------------------------------
 #
@@ -240,17 +274,23 @@ neg_df
 survey_num <- length(unique(wkgdat$Surveyed))
 
 # Dataframe to collect all the data and calculations
-survey_inf <- data.frame(Survey        = survey_num,
-                         num_resps     = survey_num,
-                         num_comments  = survey_num,
-                         c_to_r_ratio  = survey_num,
-                         num_pos_words = survey_num,
-                         pw_to_c_ratio = survey_num,
-                         num_neg_words = survey_num,
-                         nw_to_c_ratio = survey_num)
+survey_inf <- data.frame(Survey         = survey_num,
+                         num_resps      = survey_num,
+                         num_comments   = survey_num,
+                         c_to_r_ratio   = survey_num,
+                         num_pos_words  = survey_num,
+                         pw_to_c_ratio  = survey_num,
+                         num_neg_words  = survey_num,
+                         nw_to_c_ratio  = survey_num,
+                         num_neu_words  = survey_num,
+                         neu_to_c_ratio = survey_num)
 
 # Loop to examine each survey and assign values to a dataframe
 for(i in 1:survey_num) {
+  
+  # Set the specific survey data
+  survey_dat  <- wkgdat %>% filter(Surveyed == unique(wkgdat$Surveyed)[i])
+  survey_comments <- length(unique(survey_dat$Comments))
   
   #
   # Positive vocabulary elements
@@ -260,11 +300,7 @@ for(i in 1:survey_num) {
   sur_pos_df <- data.frame(Survey = unique(wkgdat$Surveyed)[i],
                            Word   = pos_vocab$Term,
                            Count  = 0,
-                           Type   = "P")
-  
-  # Set the specific survey data
-  survey_dat  <- wkgdat %>% filter(Surveyed == unique(wkgdat$Surveyed)[i])
-  survey_comments <- length(unique(survey_dat$Comments))
+                           Type   = "Pos")
   
   # Loop to count the occurrences of positive words
   pct <- 0
@@ -289,7 +325,7 @@ for(i in 1:survey_num) {
   sur_neg_df <- data.frame(Survey = unique(wkgdat$Surveyed)[i],
                            Word   = neg_vocab$Term,
                            Count  = 0,
-                           Type   = "N")
+                           Type   = "Neg")
   
   # Loop to count the occurrences of negative words
   nct <- 0
@@ -306,11 +342,37 @@ for(i in 1:survey_num) {
   sur_neg_df <- arrange(sur_neg_df, desc(Count), Word)
   sur_neg_df
   
+  #
+  # Neutral vocabulary elements
+  #
+  
+  # Build dataframe
+  sur_neu_df <- data.frame(Survey = unique(wkgdat$Surveyed)[i],
+                          Word   = neu_vocab$Term,
+                          Count  = 0,
+                          Type   = "Neu")
+  
+  # Loop to count the occurrences of neutral words
+  neu_ct <- 0
+  for(j in 1:nrow(neu_vocab)) {
+     x <- str_detect(survey_dat$Comments, neu_vocab$Term[j])
+     sur_neu_df[j, 3] <- length(x[x == TRUE])
+     neu_ct <- neu_ct + length(x[x == TRUE])
+  }
+  
+  # Remove words with zero counts
+  sur_neu_df  <- sur_neu_df %>% filter(Count != 0)
+
+  # Sort from high to low
+  sur_neu_df <- arrange(sur_neu_df, desc(Count), Word)
+  sur_neu_df
+  
   # Create combined dataframe
   sur_cum_df <- sur_pos_df
   
   # Append to the cumulative dataframe
   sur_cum_df <- rbind(sur_cum_df, sur_neg_df)
+  # sur_cum_df <- rbind(sur_cum_df, sur_neu_df)
   
   # Create the unique filename by survey and write out the results
   filename <- paste("0_Output_", sur_cum_df[i,1],".csv")
@@ -333,6 +395,8 @@ for(i in 1:survey_num) {
   survey_inf[i, 6] <- round(pct / survey_comments, digits = 2)
   survey_inf[i, 7] <- nct
   survey_inf[i, 8] <- round(nct / survey_comments, digits = 2)
+  survey_inf[i, 9] <- neu_ct
+  survey_inf[i,10] <- round(neu_ct / survey_comments, digits = 2)
     
   # Display results and statistics
   cat("Results for", survey_inf[i, 1], "\n")
@@ -343,6 +407,8 @@ for(i in 1:survey_num) {
   cat("Positive words to comments ratio:", survey_inf[i, 6], "\n")
   cat("Number of negative words        :", survey_inf[i, 7], "\n")
   cat("Negative words to comments ratio:", survey_inf[i, 8], "\n")
+  cat("Number of neutral words         :", survey_inf[i, 9], "\n")
+  cat("Neutral words to comments ratio :", survey_inf[i,10], "\n")
   cat("\n")
   
 }
@@ -397,19 +463,30 @@ nw_vs_c <- ggplot() +
   labs(title = "Negative Words vs. Comments", subtitle = "Number of each by Survey") + ylab("Number of Each") +
   theme(legend.position = c(0.22,0.85))
 
+# Neutral words vs. comments
+neu_vs_c <- ggplot() +
+  geom_line(data=survey_inf, aes(x=Survey, y=num_neu_words, color = "Neutral Words", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
+  scale_y_continuous(limits=c(0, 60)) +
+  scale_colour_manual("", 
+                      breaks = c("Neutral Words", "Comments"),
+                      values = c("#0072B2", "#CC0000")) +
+  labs(title = "Neutral Words vs. Comments", subtitle = "Number of each by Survey") + ylab("Number of Each") +
+  theme(legend.position = c(0.22,0.85))
+
 # Arrange the two plots for pasting into deck
-grid.arrange(pw_vs_c, nw_vs_c, ncol = 2)
+grid.arrange(pw_vs_c, nw_vs_c, neu_vs_c, ncol = 3)
 
 # Positive and negative words to comments ratios
 p_vs_n <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=pw_to_c_ratio, color = "Positive", group=1), size=2) +
   geom_line(data=survey_inf, aes(x=Survey, y=nw_to_c_ratio, color = "Negative", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=neu_to_c_ratio, color = "Neutral", group=1), size=2) +
   scale_colour_manual("", 
-                      breaks = c("Positive Words", "Negative Words"),
-                      values = c("#0072B2", "#CC0000")) +
-  labs(title = "Ratios of Positive & Negative Words to Comments", subtitle = "Ratio Comparisons by Survey") +
-  ylab("# Words / # Comments") +
-  theme(legend.position = c(0.22,0.85))
+                      breaks = c("Positive Words", "Negative Words", "Neutral Words"),
+                      values = c("indianred4", "mediumblue", "green4")) +
+  labs(title = "Ratios of Positive Negative & Neutral Words to Comments", subtitle = "Ratio Comparisons by Survey") +
+  ylab("# Words / # Comments") 
 
 # Arrange the two plots for pasting into deck
 grid.arrange(p_vs_n, ncol = 2)

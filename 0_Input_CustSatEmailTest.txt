@@ -1,0 +1,31 @@
+One of the original goals of this analysis was to discover if there was a means to do breach forecasting (determine if a given ticket would exceed the SLA targets). Given that 1439 of the 1451 incidents (99.2%) exceeded SLA targets, it is actually safe to assume that EVERY ticket will cause a breach. The problem is not with forecasting, it is with getting duration times down. It is not nearly so bad with service requests, with only 780 of 5209 (15%) exceeding the SLA. Of course, both of these figures assume a 30-day cutoff on durations.
+
+The number of very high duration tickets is troublesome. If it is bad recordkeeping, that can be fixed. If we are mis-classifying tickets (for example, using them from everything from major projects to a note to call someone back), then they should not be entered into Cherwell. For example, updating 450 desktops to a new virus software package is not a ticket, it is a project. We would expect projects to take weeks or months to finish.
+
+The service desk staff are likely unaware of their performance, or we would not see so many very high durations with no reasonable explanation. There is a lot of data in this report that management can use to convey the key problems of prioritization and recordkeeping consistency. The manager could hold one or more sessions to talk over the findings and create some action steps to resolve.
+
+On the flip side, the staff may have useful insights as to why some of the odd correlations are occurring (for example, when more events cause maximum duration times to increase but minimum duration times to decrease). One suspects there will be some useful information gained from that discussion.
+
+feedback
+faster in responding
+uncovered
+opportunities
+straightforward
+easy
+improve duration times
+significant jump
+speed
+most important metrics
+flawed
+discipline
+disciplined recordkeeping
+greater granularity
+priorities
+accurate descriptions
+meaningless
+no more
+not possible
+backlog
+forgotten
+drives up
+

@@ -205,7 +205,7 @@ The Top 10 Postive and Negative words are shown below. See the Appendix for a co
 # Build dataframe for positives
 pos_df   <- data.frame(Word  = pos_vocab$Term,
                        Count = 1:nrow(pos_vocab),
-                       Type  = "P")
+                       Type  = "Pos")
 
 # Loop to identify positive words in the comments field
 pct <- 0
@@ -231,7 +231,7 @@ pos_df[1:10, ]
 # Build dataframe for negatives
 neg_df   <- data.frame(Word  = neg_vocab$Term,
                        Count = 1:nrow(neg_vocab),
-                       Type  = "N")
+                       Type  = "Neg")
 
 
 # Loop to identify negative words in the comments field
@@ -306,6 +306,10 @@ survey_inf <- data.frame(Survey        = survey_num,
 # Loop to examine each survey and assign values to a dataframe
 for(i in 1:survey_num) {
   
+  # Set the specific survey data
+  survey_dat  <- wkgdat %>% filter(Surveyed == unique(wkgdat$Surveyed)[i])
+  survey_comments <- length(unique(survey_dat$Comments))
+  
   #
   # Positive vocabulary elements
   #
@@ -314,11 +318,7 @@ for(i in 1:survey_num) {
   sur_pos_df <- data.frame(Survey = unique(wkgdat$Surveyed)[i],
                            Word   = pos_vocab$Term,
                            Count  = 0,
-                           Type   = "P")
-  
-  # Set the specific survey data
-  survey_dat  <- wkgdat %>% filter(Surveyed == unique(wkgdat$Surveyed)[i])
-  survey_comments <- length(unique(survey_dat$Comments))
+                           Type   = "Pos")
   
   # Loop to count the occurrences of positive words
   pct <- 0
@@ -343,7 +343,7 @@ for(i in 1:survey_num) {
   sur_neg_df <- data.frame(Survey = unique(wkgdat$Surveyed)[i],
                            Word   = neg_vocab$Term,
                            Count  = 0,
-                           Type   = "N")
+                           Type   = "Neg")
   
   # Loop to count the occurrences of negative words
   nct <- 0
