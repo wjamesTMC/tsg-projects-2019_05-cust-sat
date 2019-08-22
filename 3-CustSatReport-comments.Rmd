@@ -28,9 +28,9 @@ Note that each survey was distributed to a unique 25% of the organization, and t
 
 Words used by responders can provide some useful insight into how responders are thinking and what troubles (or delights) them most. Totaling the number of occurrences of positives and negatives and looking at various ratos can provide some sense of how happy responders are (and with what). 
 
-Positive / negative vocabularly words were selected by reading through the comments manually, examining the context, and selecting those that would, in as many cases as possible, be unambiguous. The code reads each comment, and tabulates the number of occurrences of each word on the list - cumulatively, and by individual survey.
+Positive / negative / neutral vocabularly words were selected by reading through the comments manually, examining the context, and selecting those that would, in as many cases as possible, be unambiguous. The code reads each comment, and tabulates the number of occurrences of each word on the list - cumulatively, and by individual survey.
 
-This report includes graphs to help visualize the relative number of occurrences per comment, and to compare the various proportions / ratios of positives and negatives. The graphs and charts provide some insight into trends, but with only three surveys to work with, these trends have to be looked on as tentative.
+This report includes graphs to help visualize the relative number of occurrences per comment, and to compare the various proportions / ratios of positives, negatives, and neutrals. The graphs and charts provide some insight into trends, but with only three surveys to work with, these trends have to be looked on as tentative.
 
 ### Summary
 
@@ -45,6 +45,8 @@ Through the four surveys taken to date, the following trends are emerging: [REVI
 In short, the positives are going up and the negatives are going down. This could be a fact, but also could be coincidental.
 
 ### Other Notes and Recommendations
+
+The inclusion of neutral comments povides some additional insight to the relative tone of comments. In gteneral, one could say that comments are generally positive, occasionally, negative, and rarely neutral. Responders tend to be either very happy - or not.
 
 * Please collect the "best practices" and new software ideas from all employees and share them with others to improve everyone's productivity.
 
