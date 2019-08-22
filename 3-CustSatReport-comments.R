@@ -130,15 +130,20 @@ for(i in 1:length(unique(wkgdat$Surveyed))) {
 }
 
 # Replace missing values (zeros) with NR and shorten "do not use"
-wkgdat[wkgdat == 0]                   <- "NR"
-wkgdat[wkgdat == ""]                  <- "NR"
+wkgdat[wkgdat == 0]                    <- "NR"
+wkgdat[wkgdat == ""]                   <- "NR"
+wkgdat[wkgdat == "No"]                 <- "NR"
+wkgdat[wkgdat == "no"]                 <- "NR"
+wkgdat[wkgdat == "No further comment"] <- "NR"
+wkgdat[wkgdat == "none"]               <- "NR"
+
 wkgdat[wkgdat == "N/A do not use"]    <- "NA/DNU"
 
 # Verify the number of unique values of the various factors
 sapply(wkgdat, function(x)length(unique(x)))
 
-# Calc the number of comments
-num_comments <- length(unique(wkgdat$Comments))
+# Calc the number of comments (remove "NR" from the count)
+num_comments <- length(unique(wkgdat$Comments)) - 1
 
 #--------------------------------------------------------------------
 #
@@ -291,6 +296,8 @@ for(i in 1:survey_num) {
   # Set the specific survey data
   survey_dat  <- wkgdat %>% filter(Surveyed == unique(wkgdat$Surveyed)[i])
   survey_comments <- length(unique(survey_dat$Comments))
+  ifelse(str_detect(survey_dat$Comments, "NR"),
+         survey_comments <- survey_comments- 1, survey_comments)
   
   #
   # Positive vocabulary elements
@@ -427,14 +434,14 @@ num_c_and_r <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments"), group=1, size=2) +
   scale_colour_manual("", 
                       breaks = c("Responses", "Comments"),
-                      values = c("#0072B2", "#CC0000")) +
+                      values = c("mediumblue", "indianred4")) +
   labs(title = "Count of Comments and Responses", subtitle = "Numbers of each by Survey") + ylab("Number") +
   theme(legend.position = c(0.18,0.85))
 
 # Ratio of comments to responses
 ratio_c_to_r <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=c_to_r_ratio, color = "Ratios", group=1), size=2) +
-  scale_colour_manual("", breaks = c("Ratios"), values = c("#000099")) +
+  scale_colour_manual("", breaks = c("Ratios"), values = c("mediumblue")) +
   labs(title = "Ratio of Comments to Responses", subtitle = "Ratio By Survey") + ylab("Proportion of Comments") +
   theme(legend.position = c(0.15,0.88))
 
@@ -448,7 +455,7 @@ pw_vs_c <- ggplot() +
   scale_y_continuous(limits=c(0, 60)) +
   scale_colour_manual("", 
                       breaks = c("Positive Words", "Comments"),
-                      values = c("#0072B2", "#CC0000")) +
+                      values = c("mediumblue", "indianred4")) +
   labs(title = "Positive Words vs. Comments", subtitle = "Number of each by Survey") + ylab("Number of Each") +
   theme(legend.position = c(0.2,0.85))
 
@@ -459,7 +466,7 @@ nw_vs_c <- ggplot() +
   scale_y_continuous(limits=c(0, 60)) +
   scale_colour_manual("", 
                       breaks = c("Negative Words", "Comments"),
-                      values = c("#0072B2", "#CC0000")) +
+                      values = c("mediumblue", "indianred4")) +
   labs(title = "Negative Words vs. Comments", subtitle = "Number of each by Survey") + ylab("Number of Each") +
   theme(legend.position = c(0.22,0.85))
 
@@ -470,7 +477,7 @@ neu_vs_c <- ggplot() +
   scale_y_continuous(limits=c(0, 60)) +
   scale_colour_manual("", 
                       breaks = c("Neutral Words", "Comments"),
-                      values = c("#0072B2", "#CC0000")) +
+                      values = c("mediumblue", "indianred4")) +
   labs(title = "Neutral Words vs. Comments", subtitle = "Number of each by Survey") + ylab("Number of Each") +
   theme(legend.position = c(0.22,0.85))
 
@@ -484,7 +491,7 @@ p_vs_n <- ggplot() +
   geom_line(data=survey_inf, aes(x=Survey, y=neu_to_c_ratio, color = "Neutral", group=1), size=2) +
   scale_colour_manual("", 
                       breaks = c("Positive Words", "Negative Words", "Neutral Words"),
-                      values = c("indianred4", "mediumblue", "green4")) +
+                      values = c("indianred4", "gray40", "green4")) +
   labs(title = "Ratios of Positive Negative & Neutral Words to Comments", subtitle = "Ratio Comparisons by Survey") +
   ylab("# Words / # Comments") 
 
