@@ -1,8 +1,153 @@
 Term,Tone
+addressing the issue,Negative
+again and again,Negative
+apologize,Negative
+appears,Negative
+back and forth,Negative
+backlog,Negative
+bandwidth,Negative
+breach,Negative
+challenge,Negative
+could conduct,Negative
+could have gotten,Negative
+create excessive,Negative
+devote a bit more time,Negative
+devote more time,Negative
+did not know what they were doing,Negative
+didn't,Negative
+didn't update,Negative
+difficulty,Negative
+disconnect,Negative
+docked,Negative
+doesn't,Negative
+drives up,Negative
+ended up,Negative
+endure,Negative
+Enterprise,Negative
+exceed the SLA,Negative
+exceeded SLA,Negative
+exceeding the SLA,Negative
+excessively,Negative
+expected time,Negative
+flawed,Negative
+forgotten,Negative
+glitchy,Negative
+gone down,Negative
+hard time,Negative
+hardship,Negative
+haven't been able to,Negative
+having more,Negative
+impacted,Negative
+implications,Negative
+inconvenienced,Negative
+inconvenient,Negative
+inexperience,Negative
+inferior,Negative
+issues,Negative
+keep you on hold,Negative
+left straddling,Negative
+little vague,Negative
+many days,Negative
+meaningless,Negative
+more helptful than others,Negative
+more palatable,Negative
+need to get better,Negative
+needs some work,Negative
+needs work,Negative
+negatively,Negative
+never call,Negative
+never know,Negative
+never to call,Negative
+no clear plan,Negative
+no more,Negative
+no reasonable explanation,Negative
+not consistently,Negative
+not getting,Negative
+not possible,Negative
+not received,Negative
+not yet,Negative
+odd,Negative
+on hold,Negative
+out of date,Negative
+problematic,Negative
+problems,Negative
+putting off projects,Negative
+really need,Negative
+rushing,Negative
+should not raise,Negative
+should strive,Negative
+slip through the cracks,Negative
+slow,Negative
+sorry about,Negative
+suspect,Negative
+suspects,Negative
+take too long,Negative
+taken months,Negative
+takes many days,Negative
+takes more time,Negative
+takes too long,Negative
+too busy,Negative
+too many days,Negative
+too much,Negative
+unaware,Negative
+unhelpful,Negative
+unnecessarily,Negative
+unresolved,Negative
+upheaval,Negative
+vague,Negative
+wasn't efficient,Negative
+well-intentioned,Negative
+what was going on,Negative
+would have been nice,Negative
+would like to know,Negative
+would not quite say,Negative
+would not say,Negative
+a good example ,Neutral
+answer can be found,Neutral
+appropriately,Neutral
+as stated previously,Neutral
+can be a winning experience,Neutral
+can be addressed,Neutral
+conduct themselves,Neutral
+consistency,Neutral
+could help me,Neutral
+customized,Neutral
+duration times,Neutral
+feedback,Neutral
+forecasting,Neutral
+get up to speed,Neutral
+getting up to speed,Neutral
+historical knowledge,Neutral
+improve everyone's productivity,Neutral
+improve productivity,Neutral
+in-depth understanding,Neutral
+key problems,Neutral
+like to understand,Neutral
+might be helpful,Neutral
+most important metrics,Neutral
+newer,Neutral
+not always,Neutral
+not urgent,Neutral
+number of occasions,Neutral
+out of the box,Neutral
+previouosly,Neutral
+projected time,Neutral
+refining the system,Neutral
+research,Neutral
+resolve,Neutral
+should be paid,Neutral
+should see,Neutral
+simply,Neutral
+special requests,Neutral
+still important,Neutral
+support innovation,Neutral
+uncovered,Neutral
+what have you seen,Neutral
+would benefit by,Neutral
 above and beyond,Positive
 accurate descriptions,Positive
-always ready,Positive
 always patient,Positive
+always ready,Positive
 appreciate,Positive
 appreciated,Positive
 awesome,Positive
@@ -85,142 +230,4 @@ very good,Positive
 very helpful,Positive
 warm,Positive
 willing,Positive
-answer can be found,Neutral
-appropriately,Neutral
-as stated previously,Neutral
-can be addressed,Neutral
-conduct themselves,Neutral
-consistency,Neutral
-could help me,Neutral
-customized,Neutral
-duration times,Neutral
-feedback,Neutral
-forecasting,Neutral
-get up to speed,Neutral
-getting up to speed,Neutral
-historical knowledge,Neutral
-improve everyone's productivity,Neutral
-improve productivity,Neutral
-in-depth understanding,Neutral
-key problems,Neutral
-like to understand,Neutral
-might be helpful,Neutral
-most important metrics,Neutral
-newer,Neutral
-not always,Neutral
-not urgent,Neutral
-number of occasions,Neutral
-out of the box,Neutral
-previouosly,Neutral
-projected time,Neutral
-refining the system,Neutral
-resolve,Neutral
-should be paid,Neutral
-should see,Neutral
-simply,Neutral
-special requests,Neutral
-still important,Neutral
-uncovered,Neutral
-what have you seen,Neutral
-addressing the issue,Negative
-again and again,Negative
-apologize,Negative
-appears,Negative
-back and forth,Negative
-backlog,Negative
-bandwidth,Negative
-breach,Negative
-challenge,Negative
-could conduct,Negative
-could have gotten,Negative
-create excessive,Negative
-devote a bit more time,Negative
-devote more time,Negative
-did not know what they were doing,Negative
-didn't,Negative
-didn't update,Negative
-difficulty,Negative
-disconnect,Negative
-docked,Negative
-doesn't,Negative
-drives up,Negative
-ended up,Negative
-endure,Negative
-Enterprise,Negative
-exceed the SLA,Negative
-exceeded SLA,Negative
-exceeding the SLA,Negative
-excessively,Negative
-expected time,Negative
-flawed,Negative
-forgotten,Negative
-glitchy,Negative
-gone down,Negative
-hard time,Negative
-hardship,Negative
-haven't been able to,Negative
-impacted,Negative
-implications,Negative
-inconvenienced,Negative
-inconvenient,Negative
-inexperience,Negative
-inferior,Negative
-issues,Negative
-keep you on hold,Negative
-left straddling,Negative
-little vague,Negative
-many days,Negative
-meaningless,Negative
-more helptful than others,Negative
-more palatable,Negative
-need to get better,Negative
-needs some work,Negative
-needs work,Negative
-negatively,Negative
-never call,Negative
-never know,Negative
-never to call,Negative
-no clear plan,Negative
-no more,Negative
-no reasonable explanation,Negative
-not consistently,Negative
-not getting,Negative
-not possible,Negative
-not received,Negative
-not yet,Negative
-odd,Negative
-on hold,Negative
-out of date,Negative
-problematic,Negative
-problems,Negative
-putting off projects,Negative
-really need,Negative
-rushing,Negative
-should not raise,Negative
-should strive,Negative
-slip through the cracks,Negative
-slow,Negative
-sorry about,Negative
-suspect,Negative
-suspects,Negative
-take too long,Negative
-taken months,Negative
-takes many days,Negative
-takes more time,Negative
-takes too long,Negative
-too busy,Negative
-too many days,Negative
-too much,Negative
-upheaval,Negative
-unaware,Negative
-unhelpful,Negative
-unnecessarily,Negative
-unresolved,Negative
-vague,Negative
-wasn't efficient,Negative
-well-intentioned,Negative
-what was going on,Negative
-would have been nice,Negative
-would like to know,Negative
-would not quite say,Negative
-would not say,Negative
+,

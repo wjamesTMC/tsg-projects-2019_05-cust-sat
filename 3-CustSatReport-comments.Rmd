@@ -24,29 +24,41 @@ This report analyzes the occurrences of positive and negative vocabulary words i
 * Spring 2019
 * Summer 2019
 
-Note that each survey was distributed to a unique 25% of the organization, and therefore does not follow the principle of random selection. The surveys provide some sense of the organization's opinions.
+Note that each survey was distributed to a unique 25% of the organization, and therefore does not follow the principle of "random selection with replacement." However, the surveys provide a working sense of the organization's opinions.
 
 Words used by responders can provide some useful insight into how responders are thinking and what troubles (or delights) them most. Totaling the number of occurrences of positives and negatives and looking at various ratos can provide some sense of how happy responders are (and with what). 
 
-Positive / negative vocabularly words were selected by reading through the comments manually, examining the context, and selecting those that would, in as many cases as possible, be unambiguous. The code reads each comment, and tabulates the number of occurrences of each word on the list - cumulatively, and by individual survey.
+Positive, negative, and neutral vocabularly words were selected by reading through the comments manually, examining the context, and selecting those that would, in as many cases as possible, be unambiguous. The code reads each comment, and tabulates the number of occurrences of each word or phrase on the list - cumulatively, and by individual survey.
 
 This report includes graphs to help visualize the relative number of occurrences per comment, and to compare the various proportions / ratios of positives and negatives. The graphs and charts provide some insight into trends, but with only three surveys to work with, these trends have to be looked on as tentative.
 
 ### Summary
 
-Through the four surveys taken to date, the following trends are emerging: [REVISE]
+Through the four surveys taken to date, the following trends appear to be true:
 
-* The number of comments is increasing with each survey
-* The number of positive vocabularly occurrences is increasing with each survey
-* The number of positive vocabularly occurrences is increasing faster than the increase in comments
-* The number of negative vocabularly occurrences is decreasing with each survey, but slowly
-* The number of negative vocuabulary occurrences is noticeably less than the number of positive occurrences
+* There is generally 1 comment for every 3 responses (in the range of 30%-35%)
+* There are more positive comments than negative (or neutral); there are generally:
 
-In short, the positives are going up and the negatives are going down. This could be a fact, but also could be coincidental.
+  * Two positive words per comment vs.
+  * One negative word per comment
+  
+* The number of negative words per comment appears to be decreasing over time
+
+Overall, the opinion of TSG is positive but with ample opportunity for improvement. Three areas appear to be important to responders, and where TSG should strive to excel:
+
+* Job knowledge (the person knows what they are doing)
+* Speed (my problem is resolved quickly and the first time)
+* Empathy (the person is easy to deal with and understands my problem)
 
 ### Other Notes and Recommendations
 
+A few recommendations surfaced within the comments that may be worth while for the management team to consider:
+
 * Please collect the "best practices" and new software ideas from all employees and share them with others to improve everyone's productivity.
+* I think TSG would benefit by having more interns who can support innovation and research. The vendor management internship is a good example of how this can be a winning experience for everyone involved. 
+* For an existing employee who is transitioning to a new role... Before you require them to get a new email account (as I was required to do), you should explain to them why it is necessary.
+
+A full list of the comments can be found in column N of the responses spreadsheet. This can be accessed here: https://docs.google.com/spreadsheets/d/1tzD84pHfpDht0IESMPmWr-wjkoEiSbLvFo5Z5uU6A-Y/edit#gid=1724531182. These are worth looking at.
 
 `r pagebreak()`
 
@@ -329,14 +341,14 @@ survey_num <- length(unique(wkgdat$Surveyed))
 
 # Dataframe to collect all the data and calculations
 survey_inf <- data.frame(Survey         = survey_num,
-                         num_resps      = survey_num,
-                         num_comments   = survey_num,
+                         Resp           = survey_num,
+                         Comms          = survey_num,
                          c_to_r_ratio   = survey_num,
-                         num_pos_words  = survey_num,
+                         PosWds         = survey_num,
                          pw_to_c_ratio  = survey_num,
-                         num_neg_words  = survey_num,
+                         NegWds         = survey_num,
                          nw_to_c_ratio  = survey_num,
-                         num_neu_words  = survey_num,
+                         NeuWds         = survey_num,
                          neu_to_c_ratio = survey_num)
 
 # Loop to examine each survey and assign values to a dataframe
@@ -475,17 +487,20 @@ for(i in 1:survey_num) {
 
 Translation of field names:
 
-* num_resp = number of responses
-* num_comments = the number of comments in the survey
+* Resp = number of responses
+* Comms = the number of comments in the survey
 * c_to_r_ratio = the number of comments divided by the number of responses
-* num_pos_words = the number of positive words found in the survey
+* PosWds = the number of positive words found in the survey
 * pw_to_c_ratio = the number of positive words divided by the number of comments
-* num_neg_words = the number of negative words found in the survey
+* NegWds = the number of negative words found in the survey
 * nw_to_c_ratio = the number of negative words divided by the number of comments
+* NueWds = the number of neutral words found in the survey
+* neu_to_c_ratio = the number of neutral words divided by the number of comments
 
 ```{r Summary Table, echo=FALSE}
 kable(survey_inf) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+  kable_styling(bootstrap_options = "striped", full_width = T, position = "left", latex_options="scale_down")
+
 ```
 
 Graphical representations of the summary statistics by Survey are shown below.
@@ -499,8 +514,8 @@ Graphical representations of the summary statistics by Survey are shown below.
 
 # Number of coments and responses by survey
 num_c_and_r <- ggplot() +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_resps, color = "Responses"), group=1, size=2) +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments"), group=1, size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=Resp, color = "Responses"), group=1, size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=Comms, color = "Comments"), group=1, size=2) +
   scale_colour_manual("", 
                       breaks = c("Responses", "Comments"),
                       values = c("mediumblue", "indianred4")) +
@@ -519,8 +534,8 @@ grid.arrange(num_c_and_r, ratio_c_to_r, ncol = 2)
 
 # Positive words vs. comments
 pw_vs_c <- ggplot() +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_pos_words, color = "Positive Words", group=1), size=2) +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=PosWds, color = "Positive Words", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=Comms, color = "Comments", group=1), size=2) +
   scale_y_continuous(limits=c(0, 60)) +
   scale_colour_manual("", 
                       breaks = c("Positive Words", "Comments"),
@@ -530,8 +545,8 @@ pw_vs_c <- ggplot() +
 
 # Negative words vs. comments
 nw_vs_c <- ggplot() +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_neg_words, color = "Negative Words", group=1), size=2) +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=NegWds, color = "Negative Words", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=Comms, color = "Comments", group=1), size=2) +
   scale_y_continuous(limits=c(0, 60)) +
   scale_colour_manual("", 
                       breaks = c("Negative Words", "Comments"),
@@ -541,8 +556,8 @@ nw_vs_c <- ggplot() +
 
 # Neutral words vs. comments
 neu_vs_c <- ggplot() +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_neu_words, color = "Neutral Words", group=1), size=2) +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=NeuWds, color = "Neutral Words", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=Comms, color = "Comments", group=1), size=2) +
   scale_y_continuous(limits=c(0, 60)) +
   scale_colour_manual("", 
                       breaks = c("Neutral Words", "Comments"),

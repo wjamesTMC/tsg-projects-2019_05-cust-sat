@@ -7,6 +7,8 @@
 #
 ##############################################################################
 
+#--------------------------------------------------------------------
+#
 #
 # Library setups
 #
@@ -145,8 +147,6 @@ sapply(wkgdat, function(x)length(unique(x)))
 # Calc the number of comments (remove "NR" from the count)
 num_comments <- length(unique(wkgdat$Comments)) - 1
 
-#--------------------------------------------------------------------
-#
 # Vocabulary analysis - Cumulative
 #
 #--------------------------------------------------------------------
@@ -280,14 +280,14 @@ survey_num <- length(unique(wkgdat$Surveyed))
 
 # Dataframe to collect all the data and calculations
 survey_inf <- data.frame(Survey         = survey_num,
-                         num_resps      = survey_num,
-                         num_comments   = survey_num,
+                         Resp           = survey_num,
+                         Comms          = survey_num,
                          c_to_r_ratio   = survey_num,
-                         num_pos_words  = survey_num,
+                         PosWds         = survey_num,
                          pw_to_c_ratio  = survey_num,
-                         num_neg_words  = survey_num,
+                         NegWds         = survey_num,
                          nw_to_c_ratio  = survey_num,
-                         num_neu_words  = survey_num,
+                         NeuWds         = survey_num,
                          neu_to_c_ratio = survey_num)
 
 # Loop to examine each survey and assign values to a dataframe
@@ -430,8 +430,8 @@ survey_inf
 
 # Number of coments and responses by survey
 num_c_and_r <- ggplot() +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_resps, color = "Responses"), group=1, size=2) +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments"), group=1, size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=Resp, color = "Responses"), group=1, size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=Comms, color = "Comments"), group=1, size=2) +
   scale_colour_manual("", 
                       breaks = c("Responses", "Comments"),
                       values = c("mediumblue", "indianred4")) +
@@ -450,8 +450,8 @@ grid.arrange(num_c_and_r, ratio_c_to_r, ncol = 2)
 
 # Positive words vs. comments
 pw_vs_c <- ggplot() +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_pos_words, color = "Positive Words", group=1), size=2) +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=PosWds, color = "Positive Words", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=Comms, color = "Comments", group=1), size=2) +
   scale_y_continuous(limits=c(0, 60)) +
   scale_colour_manual("", 
                       breaks = c("Positive Words", "Comments"),
@@ -461,8 +461,8 @@ pw_vs_c <- ggplot() +
 
 # Negative words vs. comments
 nw_vs_c <- ggplot() +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_neg_words, color = "Negative Words", group=1), size=2) +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=NegWds, color = "Negative Words", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=Comms, color = "Comments", group=1), size=2) +
   scale_y_continuous(limits=c(0, 60)) +
   scale_colour_manual("", 
                       breaks = c("Negative Words", "Comments"),
@@ -472,8 +472,8 @@ nw_vs_c <- ggplot() +
 
 # Neutral words vs. comments
 neu_vs_c <- ggplot() +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_neu_words, color = "Neutral Words", group=1), size=2) +
-  geom_line(data=survey_inf, aes(x=Survey, y=num_comments, color = "Comments", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=NeuWds, color = "Neutral Words", group=1), size=2) +
+  geom_line(data=survey_inf, aes(x=Survey, y=Comms, color = "Comments", group=1), size=2) +
   scale_y_continuous(limits=c(0, 60)) +
   scale_colour_manual("", 
                       breaks = c("Neutral Words", "Comments"),
