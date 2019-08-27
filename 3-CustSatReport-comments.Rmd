@@ -28,9 +28,13 @@ Note that each survey was distributed to a unique 25% of the organization, and t
 
 Words used by responders can provide some useful insight into how responders are thinking and what troubles (or delights) them most. Totaling the number of occurrences of positives and negatives and looking at various ratos can provide some sense of how happy responders are (and with what). 
 
+<<<<<<< HEAD
 Positive, negative, and neutral vocabularly words were selected by reading through the comments manually, examining the context, and selecting those that would, in as many cases as possible, be unambiguous. The code reads each comment, and tabulates the number of occurrences of each word or phrase on the list - cumulatively, and by individual survey.
+=======
+Positive / negative / neutral vocabularly words were selected by reading through the comments manually, examining the context, and selecting those that would, in as many cases as possible, be unambiguous. The code reads each comment, and tabulates the number of occurrences of each word on the list - cumulatively, and by individual survey.
+>>>>>>> 617c12fc1bf96a709780b332771f8a2119719244
 
-This report includes graphs to help visualize the relative number of occurrences per comment, and to compare the various proportions / ratios of positives and negatives. The graphs and charts provide some insight into trends, but with only three surveys to work with, these trends have to be looked on as tentative.
+This report includes graphs to help visualize the relative number of occurrences per comment, and to compare the various proportions / ratios of positives, negatives, and neutrals. The graphs and charts provide some insight into trends, but with only three surveys to work with, these trends have to be looked on as tentative.
 
 ### Summary
 
@@ -52,7 +56,11 @@ Overall, the opinion of TSG is positive but with ample opportunity for improveme
 
 ### Other Notes and Recommendations
 
+<<<<<<< HEAD
 A few recommendations surfaced within the comments that may be worth while for the management team to consider:
+=======
+The inclusion of neutral comments povides some additional insight to the relative tone of comments. In gteneral, one could say that comments are generally positive, occasionally, negative, and rarely neutral. Responders tend to be either very happy - or not.
+>>>>>>> 617c12fc1bf96a709780b332771f8a2119719244
 
 * Please collect the "best practices" and new software ideas from all employees and share them with others to improve everyone's productivity.
 * I think TSG would benefit by having more interns who can support innovation and research. The vendor management internship is a good example of how this can be a winning experience for everyone involved. 
