@@ -254,7 +254,7 @@ cat(" Number of survey responses      :", nrow(wkgdat), "\n",
     "Number of negative words        :", nct, "\n",
     "Negative words to comments ratio:", neg_index, "\n", "\n",
     "Number of neutral words         :", neu_ct, "\n",
-    "Neutral words to comments raito :", neu_index, "\n")
+    "Neutral words to comments ratoo :", neu_index, "\n")
 
 
 # Display results and statistics
