@@ -279,13 +279,16 @@ kable(full_year$Q4) %>%
 # Verify the number of unique values of the various factors
 sapply(dat, function(x)length(unique(x)))
 
-#--------------------------------------------------------------------
+################################################################################
 #
-# Graphics - Groups by Quarter
+# Graphics 
 #
-#--------------------------------------------------------------------
+################################################################################
 
-# Set up dataframe to collect the mean for each question for each group for each quarter
+#
+# Set up dataframe to collect the mean for each question by group
+#
+
 fy_df <- data.frame(Qtr = 1:24, Group = 1:24, Avg = 1:24)
 
 # Populate the first two colums
@@ -294,225 +297,34 @@ fy_df[ 7:12,1]  <- unique(dat$Surveyed)[2]
 fy_df[13:18,1]  <- unique(dat$Surveyed)[3]
 fy_df[19:24,1]  <- unique(dat$Surveyed)[4]
 
-
 #
-# Account Managers
-#
-
-grp_df <- as.data.frame(full_year$Q1[1])
-ms <- round(mean(grp_df$Avg), digits = 1)
-fy_df[1,2] <- "AM"
-fy_df[1,3] <- ms
-
-am_bar <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Qtr), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Account Managers", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
-
-#
-# business Analysts
+# Set up the dataframe to collect data for summary of questions
 #
 
-grp_df <- as.data.frame(full_year$Q1[2])
-ms <- round(mean(grp_df$Avg), digits = 1)
-fy_df[2,2] <- "BA"
-fy_df[2,3] <- ms
-
-ba_bar <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Qtr), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Business Analysts", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
-
-#
-# B&MPS
-#
-
-grp_df <- as.data.frame(full_year$Q1[3])
-ms <- round(mean(grp_df$Avg), digits = 1)
-fy_df[3,2] <- "B&MPS"
-fy_df[3,3] <- ms
-
-bm_bar <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Qtr), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
-
-#
-# Project Support
-#
-
-grp_df <- as.data.frame(full_year$Q1[4])
-ms <- round(mean(grp_df$Avg), digits = 1)
-fy_df[4,2] <- "PS"
-fy_df[4,3] <- ms
-
-ps_bar <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Qtr), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
-
-#
-# Service Desk
-#
-
-grp_df <- as.data.frame(full_year$Q1[5])
-ms <- round(mean(grp_df$Avg), digits = 1)
-fy_df[5,2] <- "SD"
-fy_df[5,3] <- ms
-
-sd_bar <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Qtr), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
-
-#
-# Vendor Managers
-#
-
-grp_df <- as.data.frame(full_year$Q1[6])
-ms <- round(mean(grp_df$Avg), digits = 1)
-fy_df[6,2] <- "VM"
-fy_df[6,3] <- ms
-
-vm_bar <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Qtr), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Vendor Managers", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
+qs_df <- data.frame(Q1A = 1:24, Q1B = 1:24, Q1C = 1:24, Q2A = 1:24, Q2B = 1:24, Q3x = 1:24)
 
 #-------------------------------------------------------------------------------
 #
-# Quarter 2
+# Part 1 - Quarterly Summaries
+#    8 charts
+#    For each Quarter group comparisons
+#    X = Group
+#    Y = Average Score
+#
+#    For each quarter question comparisons
+#    X = Question
+#    Y - Average Score
 #
 #-------------------------------------------------------------------------------
 
-#
-# Account Managers
-#
-
-grp_df <- as.data.frame(full_year$Q2[1])
-ms <- round(mean(grp_df$Avg), digits = 1)
-fy_df[7,2] <- "AM"
-fy_df[7,3] <- ms
-
-am_bar <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Qtr), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Account Managers", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
+#-------------------------------------------------------------------------------
+#  Quarter 1
+#    Group Chart
+#    Questions Chart
+#-------------------------------------------------------------------------------
 
 #
-# business Analysts
-#
-
-grp_df <- as.data.frame(full_year$Q2[2])
-ms <- round(mean(grp_df$Avg), digits = 1)
-fy_df[8,2] <- "BA"
-fy_df[8,3] <- ms
-
-ba_bar <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Qtr), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Business Analysts", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
-
-#
-# B&MPS
-#
-
-grp_df <- as.data.frame(full_year$Q2[3])
-ms <- round(mean(grp_df$Avg), digits = 1)
-fy_df[9,2] <- "B&MPS"
-fy_df[9,3] <- ms
-
-bm_bar <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Qtr), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
-
-#
-# Project Support
-#
-
-grp_df <- as.data.frame(full_year$Q2[4])
-ms <- round(mean(grp_df$Avg), digits = 1)
-fy_df[10,2] <- "PS"
-fy_df[10,3] <- ms
-
-ps_bar <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Qtr), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
-
-#
-# Service Desk
-#
-
-grp_df <- as.data.frame(full_year$Q2[5])
-ms <- round(mean(grp_df$Avg), digits = 1)
-fy_df[11,2] <- "SD"
-fy_df[11,3] <- ms
-
-sd_bar <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Qtr), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
-
-
-#
-# Vendor Managers
-#
-
-grp_df <- as.data.frame(full_year$Q2[6])
-ms <- round(mean(grp_df$Avg), digits = 1)
-fy_df[12,2] <- "VM"
-fy_df[12,3] <- ms
-
-vm_bar <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Qtr), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Vendor Managers", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
-
-
-#-------------------
-# Groups by quarter
-#-------------------
-
-#
-# Quarter 1 (Fall)
+# Group Chart
 #
 
 # Assemble data
@@ -523,12 +335,45 @@ gbq_q1_bar <- ggplot() +
   geom_bar(aes(x = Group, y = Avg, fill = "red"),
            data = gbq_q1_df, stat = "identity") +
   geom_text(data = gbq_q1_df, aes(x = Group, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 3) + 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Quarterly Group Comparison", subtitle = "Q1F19")                 
+  labs(title = "Quarterly Question Response Averages", subtitle = "Q1F19 - By Group")     
+
+# Assemble data
+
+# Gather and store Q1 data
+for(i in 1:6) {
+  wq_df <- as.data.frame(full_year$Q1[[i]])
+  for(j in 1:6) {
+    qs_df[i,j] <- wq_df[i,4]
+  }
+}
+
+START HERE TO WORK OUT THE RIGHT is and js TO KEEP WRITING qs_df
+# Gather and store Q1 data
+for(i in 1:6) {
+  wq_df <- as.data.frame(full_year$Q2[[i]])
+  for(j in 6:12) {
+    qs_df[i,j] <- wq_df[i,4]
+  }
+}
+# Build plot
+gbq_q1_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = gbq_q1_df, stat = "identity") +
+  geom_text(data = gbq_q1_df, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Quarterly Question Response Averages", subtitle = "Q1F19 - By Group") 
+
+#-------------------------------------------------------------------------------
+#  Quarter 2
+#    Group Chart
+#    Questions Chart
+#-------------------------------------------------------------------------------
 
 #
-# Quarter 2 (Winter)
+# Group Chart
 #
 
 # Assemble data
@@ -543,11 +388,14 @@ gbq_q2_bar <- ggplot() +
   theme(legend.position = "none") +
   labs(title = "Quarterly Group Comparison", subtitle = "Q2W20")   
 
-# Arrange the grids
-grid.arrange(gbq_q1_bar, gbq_q2_bar, ncol = 2)
+#-------------------------------------------------------------------------------
+#  Quarter 3
+#    Group Chart
+#    Questions Chart
+#-------------------------------------------------------------------------------
 
 #
-# Quarter 3 (Spring)
+# Group Chart
 #
 
 # Assemble data
@@ -562,8 +410,14 @@ gbq_q3_bar <- ggplot() +
   theme(legend.position = "none") +
   labs(title = "Quarterly Group Comparison", subtitle = "Q3S20")   
 
+#-------------------------------------------------------------------------------
+#  Quarter 4
+#    Group Chart
+#    Questions Chart
+#-------------------------------------------------------------------------------
+
 #
-# Quarter 4 (sUMMER)
+# Group Chart
 #
 
 # Assemble data
@@ -579,7 +433,459 @@ gbq_q4_bar <- ggplot() +
   labs(title = "Quarterly Group Comparison", subtitle = "Q4S20")   
 
 # Arrange the grids
+grid.arrange(gbq_q1_bar, gbq_q2_bar, ncol = 2)
 grid.arrange(gbq_q3_bar, gbq_q4_bar, ncol = 2)
+
+
+#-------------------------------------------------------------------------------
+#
+# Part 3 - Quarterly Summaries
+#    24 charts
+#    For each Quarter, 1 chart per group for Questions 1-6
+#    X = Question
+#    Y - Average Score
+#
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+#  Quarter 1
+#    One chart per group
+#-------------------------------------------------------------------------------
+
+#
+# Account Managers
+#
+
+grp_df <- as.data.frame(full_year$Q1[1])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[1,2] <- "AM"
+fy_df[1,3] <- ms
+
+am_bar_Q1 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Account Managers", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
+
+#
+# business Analysts
+#
+
+grp_df <- as.data.frame(full_year$Q1[2])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[2,2] <- "BA"
+fy_df[2,3] <- ms
+
+ba_bar_Q1 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Business Analysts", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
+
+#
+# B&MPS
+#
+
+grp_df <- as.data.frame(full_year$Q1[3])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[3,2] <- "B&MPS"
+fy_df[3,3] <- ms
+
+bm_bar_Q1 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "B&MPS", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
+
+#
+# Project Support
+#
+
+grp_df <- as.data.frame(full_year$Q1[4])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[4,2] <- "PS"
+fy_df[4,3] <- ms
+
+ps_bar_Q1 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Project Support", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
+
+#
+# Service Desk
+#
+
+grp_df <- as.data.frame(full_year$Q1[5])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[5,2] <- "SD"
+fy_df[5,3] <- ms
+
+sd_bar_Q1 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Service Desk", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
+
+#
+# Vendor Managers
+#
+
+grp_df <- as.data.frame(full_year$Q1[6])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[6,2] <- "VM"
+fy_df[6,3] <- ms
+
+vm_bar_Q1 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Vendor Managers", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
+
+#-------------------------------------------------------------------------------
+#  Quarter 2
+#    One chart per group
+#    X = Question
+#    Y - Average Score
+#-------------------------------------------------------------------------------
+
+#
+# Account Managers
+#
+
+grp_df <- as.data.frame(full_year$Q2[1])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[7,2] <- "AM"
+fy_df[7,3] <- ms
+
+am_bar_Q2 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Account Managers", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
+
+#
+# business Analysts
+#
+
+grp_df <- as.data.frame(full_year$Q2[2])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[8,2] <- "BA"
+fy_df[8,3] <- ms
+
+ba_bar_Q2 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Business Analysts", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
+
+#
+# B&MPS
+#
+
+grp_df <- as.data.frame(full_year$Q2[3])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[9,2] <- "B&MPS"
+fy_df[9,3] <- ms
+
+bm_bar_Q2 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "B&MPS", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
+
+#
+# Project Support
+#
+
+grp_df <- as.data.frame(full_year$Q2[4])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[10,2] <- "PS"
+fy_df[10,3] <- ms
+
+ps_bar_Q2 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Project Support", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
+
+#
+# Service Desk
+#
+
+grp_df <- as.data.frame(full_year$Q2[5])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[11,2] <- "SD"
+fy_df[11,3] <- ms
+
+sd_bar_Q2 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Service Desk", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
+
+
+#
+# Vendor Managers
+#
+
+grp_df <- as.data.frame(full_year$Q2[6])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[12,2] <- "VM"
+fy_df[12,3] <- ms
+
+vm_bar_Q2 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Vendor Managers", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
+
+#-------------------------------------------------------------------------------
+#  Quarter 3
+#    One chart per group
+#    X = Question
+#    Y - Average Score
+#-------------------------------------------------------------------------------
+
+#
+# Account Managers
+#
+
+grp_df <- as.data.frame(full_year$Q3[1])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[13,2] <- "AM"
+fy_df[13,3] <- ms
+
+am_bar_Q3 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Account Managers", subtitle = paste("Q3 Average Score by Question - Overall Average is",ms))
+
+#
+# business Analysts
+#
+
+grp_df <- as.data.frame(full_year$Q3[2])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[14,2] <- "BA"
+fy_df[14,3] <- ms
+
+ba_bar_Q3 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Business Analysts", subtitle = paste("Q3 Average Score by Question - Overall Average is",ms))
+
+#
+# B&MPS
+#
+
+grp_df <- as.data.frame(full_year$Q3[3])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[15,2] <- "B&MPS"
+fy_df[15,3] <- ms
+
+bm_bar_Q3 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "B&MPS", subtitle = paste("Q3 Average Score by Question - Overall Average is",ms))
+
+#
+# Project Support
+#
+
+grp_df <- as.data.frame(full_year$Q3[4])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[16,2] <- "PS"
+fy_df[16,3] <- ms
+
+ps_bar_Q3 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Project Support", subtitle = paste("Q3 Average Score by Question - Overall Average is",ms))
+
+#
+# Service Desk
+#
+
+grp_df <- as.data.frame(full_year$Q3[5])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[17,2] <- "SD"
+fy_df[17,3] <- ms
+
+sd_bar_Q3 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Service Desk", subtitle = paste("Q3 Average Score by Question - Overall Average is",ms))
+
+
+#
+# Vendor Managers
+#
+
+grp_df <- as.data.frame(full_year$Q3[6])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[18,2] <- "VM"
+fy_df[18,3] <- ms
+
+vm_bar_Q3 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Vendor Managers", subtitle = paste("Q3 Average Score by Question - Overall Average is",ms))
+
+
+#-------------------------------------------------------------------------------
+#  Quarter 4
+#    One chart per group
+#    X = Question
+#    Y - Average Score
+#-------------------------------------------------------------------------------
+
+#
+# Account Managers
+#
+
+grp_df <- as.data.frame(full_year$Q4[1])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[19,2] <- "AM"
+fy_df[19,3] <- ms
+
+am_bar_Q4 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Account Managers", subtitle = paste("Q4 Average Score by Question - Overall Average is",ms))
+
+#
+# business Analysts
+#
+
+grp_df <- as.data.frame(full_year$Q4[2])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[20,2] <- "BA"
+fy_df[20,3] <- ms
+
+ba_bar_Q4 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Business Analysts", subtitle = paste("Q4 Average Score by Question - Overall Average is",ms))
+
+#
+# B&MPS
+#
+
+grp_df <- as.data.frame(full_year$Q4[3])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[21,2] <- "B&MPS"
+fy_df[21,3] <- ms
+
+bm_bar_Q4 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "B&MPS", subtitle = paste("Q4 Average Score by Question - Overall Average is",ms))
+
+#
+# Project Support
+#
+
+grp_df <- as.data.frame(full_year$Q4[4])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[22,2] <- "PS"
+fy_df[22,3] <- ms
+
+ps_bar_Q4 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Project Support", subtitle = paste("Q4 Average Score by Question - Overall Average is",ms))
+
+#
+# Service Desk
+#
+
+grp_df <- as.data.frame(full_year$Q4[5])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[23,2] <- "SD"
+fy_df[23,3] <- ms
+
+sd_bar_Q4 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Service Desk", subtitle = paste("Q4 Average Score by Question - Overall Average is",ms))
+
+
+#
+# Vendor Managers
+#
+
+grp_df <- as.data.frame(full_year$Q4[6])
+ms <- round(mean(grp_df$Avg), digits = 1)
+fy_df[24,2] <- "VM"
+fy_df[24,3] <- ms
+
+vm_bar_Q4 <- ggplot() +
+  geom_bar(aes(x = Q, y = Avg, fill = "red"),
+           data = grp_df, stat = "identity") +
+  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Vendor Managers", subtitle = paste("Q4 Average Score by Question - Overall Average is",ms))
+
+
 
 #-------------------
 # Multiple quarters bar charts
