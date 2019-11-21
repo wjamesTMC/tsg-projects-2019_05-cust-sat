@@ -349,14 +349,31 @@ for(i in 1:6) {
   }
 }
 
-START HERE TO WORK OUT THE RIGHT is and js TO KEEP WRITING qs_df
-# Gather and store Q1 data
+
+# Gather and store Q2 data
 for(i in 1:6) {
   wq_df <- as.data.frame(full_year$Q2[[i]])
-  for(j in 6:12) {
-    qs_df[i,j] <- wq_df[i,4]
+  for(j in 1:6) {
+    qs_df[i+6,j] <- wq_df[i,4]
   }
 }
+
+# Gather and store Q3 data
+for(i in 1:6) {
+  wq_df <- as.data.frame(full_year$Q2[[i]])
+  for(j in 1:6) {
+    qs_df[i+12,j] <- wq_df[i,4]
+  }
+}
+
+# Gather and store Q4 data
+for(i in 1:6) {
+  wq_df <- as.data.frame(full_year$Q2[[i]])
+  for(j in 1:6) {
+    qs_df[i+18,j] <- wq_df[i,4]
+  }
+}
+
 # Build plot
 gbq_q1_bar <- ggplot() +
   geom_bar(aes(x = Group, y = Avg, fill = "red"),
