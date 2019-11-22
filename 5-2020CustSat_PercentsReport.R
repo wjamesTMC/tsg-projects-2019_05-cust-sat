@@ -1,11 +1,11 @@
-##############################################################################
+#*******************************************************************************
 #
 # Customer Sat data Analysis Project
 # Bill James / jamesw@csps.com
 #
 # Files:  https://github.com/wjamesTMC/tsg-projects-2019_05-cust-sat.git
 #
-##############################################################################
+#*******************************************************************************
 
 #
 # Library setups
@@ -32,11 +32,11 @@ library(kableExtra)
 library(googlesheets)
 library(purrr)
 
-#--------------------------------------------------------------------
+################################################################################
 #
 # File open, cleanup, and set up for the analysis
 #
-#--------------------------------------------------------------------
+################################################################################
 
 #
 # Download and open survey file
@@ -126,6 +126,12 @@ dat[is.na(dat)]                      <- 0
 dat[dat == "0"]                      <- 0
 dat[dat == ""]                       <- 0
 
+################################################################################
+#
+# Create dataframes for reporting
+#
+################################################################################
+
 # Create the dataframes to hold all the results
 res_df     <- data.frame(Qtr = 1:6,   Grp = 1:6,   Q = 1:6,   Avg = 1:6)
 
@@ -138,6 +144,8 @@ res_df_vm  <- data.frame(Qtr = 1:6,   Grp = 1:6,   Q = 1:6,   Avg = 1:6)
 
 grp_x_qtr  <- list(res_df_am, res_df_ba, res_df_bm, res_df_ps, res_df_sd, res_df_vm)
 full_year  <- list(Q1 = grp_x_qtr, Q2 = grp_x_qtr, Q3 = grp_x_qtr, Q4 = grp_x_qtr)
+groups <- c("AM", "BA", "BM", "PS", "SD", "VM")
+questions <- c("1A", "1B", "1C", "2A", "2B", "3x")
 
 #-------------------------------------------------------------------------------
 #
@@ -160,8 +168,7 @@ vm_results  <- transform(dat[c(1, 7,13,19,25,31,37)])
 
 results_list <- list(am_results, ba_results, bm_results, ps_results, sd_results, vm_results)
 
-groups <- c("AM", "BA", "BM", "PS", "SD", "VM")
-questions <- c("1A", "1B", "1C", "2A", "2B", "3x")
+
 
 #
 # Process each group, quarter by quarter
@@ -271,7 +278,7 @@ cat("Summary for 3rd Quarter")
 kable(full_year$Q3) %>%
   kable_styling(bootstrap_options = "striped", full_width = T, position = "left")
 
-cat("Summary for 2nd Quarter")
+cat("Summary for 4th Quarter")
 
 kable(full_year$Q4) %>%
   kable_styling(bootstrap_options = "striped", full_width = T, position = "left")
@@ -297,161 +304,210 @@ fy_df[ 7:12,1]  <- unique(dat$Surveyed)[2]
 fy_df[13:18,1]  <- unique(dat$Surveyed)[3]
 fy_df[19:24,1]  <- unique(dat$Surveyed)[4]
 
+fy_df[ 1:6, 2] <- t(groups)[ ,1:6]
+fy_df[ 7:12,2] <- t(groups)[ ,1:6]
+fy_df[13:18,2] <- t(groups)[ ,1:6]
+fy_df[19:24,2] <- t(groups)[ ,1:6]
+
 #
 # Set up the dataframe to collect data for summary of questions
 #
 
-qs_df <- data.frame(Q1A = 1:24, Q1B = 1:24, Q1C = 1:24, Q2A = 1:24, Q2B = 1:24, Q3x = 1:24)
+qs_df <- data.frame(Group = 1:24, Q1A = 1:24, Q1B = 1:24, Q1C = 1:24, Q2A = 1:24, Q2B = 1:24, Q3x = 1:24)
+qs_df[ 1:6, 1] <- t(groups)[ ,1:6]
+qs_df[ 7:12,1] <- t(groups)[ ,1:6]
+qs_df[13:18,1] <- t(groups)[ ,1:6]
+qs_df[19:24,1] <- t(groups)[ ,1:6]
 
 #-------------------------------------------------------------------------------
 #
 # Part 1 - Quarterly Summaries
-#    8 charts
-#    For each Quarter group comparisons
+#    8 charts total (2 / quarter)
+#
+#    For each Quarter (4) Question Response Averages by group 
 #    X = Group
 #    Y = Average Score
 #
-#    For each quarter question comparisons
+#    For each quarter (4) Group Averages by Question
 #    X = Question
 #    Y - Average Score
 #
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-#  Quarter 1
-#    Group Chart
-#    Questions Chart
+#
+#  Group Charts
+#
 #-------------------------------------------------------------------------------
 
-#
-# Group Chart
-#
-
-# Assemble data
+# Q1 Assemble data
 gbq_q1_df <- fy_df %>% filter(Qtr == unique(dat$Surveyed)[1])
+for(i in 1:6) {
+  gbq_q1_df[i,3] <- round(mean(full_year$Q1[[i]]$Avg), digits = 1)
+}
 
-# Build plot
+# Q1 Build plot
 gbq_q1_bar <- ggplot() +
   geom_bar(aes(x = Group, y = Avg, fill = "red"),
            data = gbq_q1_df, stat = "identity") +
   geom_text(data = gbq_q1_df, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Quarterly Question Response Averages", subtitle = "Q1F19 - By Group")     
+  labs(title = "Question Response Averages", subtitle = "Q1F19 - By Group")     
 
-# Assemble data
-
-# Gather and store Q1 data
-for(i in 1:6) {
-  wq_df <- as.data.frame(full_year$Q1[[i]])
-  for(j in 1:6) {
-    qs_df[i,j] <- wq_df[i,4]
-  }
-}
-
-
-# Gather and store Q2 data
-for(i in 1:6) {
-  wq_df <- as.data.frame(full_year$Q2[[i]])
-  for(j in 1:6) {
-    qs_df[i+6,j] <- wq_df[i,4]
-  }
-}
-
-# Gather and store Q3 data
-for(i in 1:6) {
-  wq_df <- as.data.frame(full_year$Q2[[i]])
-  for(j in 1:6) {
-    qs_df[i+12,j] <- wq_df[i,4]
-  }
-}
-
-# Gather and store Q4 data
-for(i in 1:6) {
-  wq_df <- as.data.frame(full_year$Q2[[i]])
-  for(j in 1:6) {
-    qs_df[i+18,j] <- wq_df[i,4]
-  }
-}
-
-# Build plot
-gbq_q1_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
-           data = gbq_q1_df, stat = "identity") +
-  geom_text(data = gbq_q1_df, aes(x = Group, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Quarterly Question Response Averages", subtitle = "Q1F19 - By Group") 
-
-#-------------------------------------------------------------------------------
-#  Quarter 2
-#    Group Chart
-#    Questions Chart
-#-------------------------------------------------------------------------------
-
-#
-# Group Chart
-#
-
-# Assemble data
+# Q2 Assemble data
 gbq_q2_df <- fy_df %>% filter(Qtr == unique(dat$Surveyed)[2])
+for(i in 1:6) {
+  gbq_q2_df[i,3] <- round(mean(full_year$Q2[[i]]$Avg), digits = 1)
+}
 
-# Build plot
+# Q2 Build plot
 gbq_q2_bar <- ggplot() +
   geom_bar(aes(x = Group, y = Avg, fill = "red"),
            data = gbq_q2_df, stat = "identity") +
   geom_text(data = gbq_q2_df, aes(x = Group, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 3) + 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Quarterly Group Comparison", subtitle = "Q2W20")   
+  labs(title = "Question Response Averages", subtitle = "Q2W20 - By Group")  
 
-#-------------------------------------------------------------------------------
-#  Quarter 3
-#    Group Chart
-#    Questions Chart
-#-------------------------------------------------------------------------------
-
-#
-# Group Chart
-#
-
-# Assemble data
+# Q3 Assemble data
 gbq_q3_df <- fy_df %>% filter(Qtr == unique(dat$Surveyed)[3])
+for(i in 1:6) {
+  gbq_q3_df[i,3] <- round(mean(full_year$Q3[[i]]$Avg), digits = 1)
+}
 
-# Build plot
+# Q3 Build plot
 gbq_q3_bar <- ggplot() +
   geom_bar(aes(x = Group, y = Avg, fill = "red"),
            data = gbq_q3_df, stat = "identity") +
   geom_text(data = gbq_q3_df, aes(x = Group, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 3) + 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Quarterly Group Comparison", subtitle = "Q3S20")   
+  labs(title = "Question Response Averages", subtitle = "Q3S20 - By Group") 
 
-#-------------------------------------------------------------------------------
-#  Quarter 4
-#    Group Chart
-#    Questions Chart
-#-------------------------------------------------------------------------------
-
-#
-# Group Chart
-#
-
-# Assemble data
+# Q4 Assemble data
 gbq_q4_df <- fy_df %>% filter(Qtr == unique(dat$Surveyed)[4])
+for(i in 1:6) {
+  gbq_q4_df[i,3] <- round(mean(full_year$Q4[[i]]$Avg), digits = 1)
+}
 
-# Build plot
+# Q4 Build plot
 gbq_q4_bar <- ggplot() +
   geom_bar(aes(x = Group, y = Avg, fill = "red"),
            data = gbq_q4_df, stat = "identity") +
   geom_text(data = gbq_q4_df, aes(x = Group, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 3) + 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Quarterly Group Comparison", subtitle = "Q4S20")   
+  labs(title = "Question Response Averages", subtitle = "Q4S20 - By Group")
+
+#-------------------------------------------------------------------------------
+#
+#  Question Charts
+#
+#-------------------------------------------------------------------------------
+
+# Q1 Gather data
+qbq_q1_df <- data.frame(Question = 1:6, Avg = 1:6)
+
+x = 0
+for(i in 1:6) {
+  qbq_q1_df[i,1] <- questions[i]
+  for(j in 1:6) {
+    x <- x + full_year$Q1[[j]]$Avg[i]
+  }
+  x <- x / 6
+  qbq_q1_df[i,2] <- round(x, digits = 1)
+  x = 0
+}
+
+# Q1 Build plot
+qbq_q1_bar <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "red"),
+           data = qbq_q1_df, stat = "identity") +
+  geom_text(data = qbq_q1_df, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Question Response Averages", subtitle = "Q1F19 - By Question") 
+
+# Q2 Gather data
+qbq_q2_df <- data.frame(Question = 1:6, Avg = 1:6)
+
+x = 0
+for(i in 1:6) {
+  qbq_q2_df[i,1] <- questions[i]
+  for(j in 1:6) {
+    x <- x + full_year$Q2[[j]]$Avg[i]
+  }
+  x <- x / 6
+  qbq_q2_df[i,2] <- round(x, digits = 1)
+  x = 0
+}
+
+# Q2 Build plot
+qbq_q2_bar <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "red"),
+           data = qbq_q2_df, stat = "identity") +
+  geom_text(data = qbq_q2_df, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Question Response Averages", subtitle = "Q2W20 - By Question") 
+
+
+# Q3 Gather data
+qbq_q3_df <- data.frame(Question = 1:6, Avg = 1:6)
+
+x = 0
+for(i in 1:6) {
+  qbq_q3_df[i,1] <- questions[i]
+  for(j in 1:6) {
+    x <- x + full_year$Q3[[j]]$Avg[i]
+  }
+  x <- x / 6
+  qbq_q3_df[i,2] <- round(x, digits = 1)
+  x = 0
+}
+
+# Q3 Build plot
+qbq_q3_bar <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "red"),
+           data = qbq_q3_df, stat = "identity") +
+  geom_text(data = qbq_q3_df, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Question Response Averages", subtitle = "Q3S20 - By Question") 
+
+
+# Q4 Gather data
+qbq_q4_df <- data.frame(Question = 1:6, Avg = 1:6)
+
+x = 0
+for(i in 1:6) {
+  qbq_q4_df[i,1] <- questions[i]
+  for(j in 1:6) {
+    x <- x + full_year$Q4[[j]]$Avg[i]
+  }
+  x <- x / 6
+  qbq_q4_df[i,2] <- round(x, digits = 1)
+  x = 0
+}
+
+# Q4 Build plot
+qbq_q4_bar <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "red"),
+           data = qbq_q4_df, stat = "identity") +
+  geom_text(data = qbq_q4_df, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Question Response Averages", subtitle = "Q4S20 - By Question") 
+
 
 # Arrange the grids
 grid.arrange(gbq_q1_bar, gbq_q2_bar, ncol = 2)
 grid.arrange(gbq_q3_bar, gbq_q4_bar, ncol = 2)
+
+grid.arrange(qbq_q1_bar, qbq_q2_bar, ncol = 2)
+grid.arrange(qbq_q3_bar, qbq_q4_bar, ncol = 2)
+
 
 
 #-------------------------------------------------------------------------------
