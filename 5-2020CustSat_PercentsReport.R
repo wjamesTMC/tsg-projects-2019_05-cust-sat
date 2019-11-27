@@ -153,12 +153,6 @@ questions <- c("1A", "1B", "1C", "2A", "2B", "3x")
 #
 #-------------------------------------------------------------------------------
 
-# By Quarter
-# q1_results  <- dat %>% filter(Surveyed == "1F19")
-# q2_results  <- dat %>% filter(Surveyed == "2W20")
-# q3_results  <- dat %>% filter(Surveyed == "3S20")
-# q4_results  <- dat %>% filter(Surveyed == "4S20")
-
 am_results  <- transform(dat[c(1, 2, 8,14,20,26,32)])
 ba_results  <- transform(dat[c(1, 3, 9,15,21,27,33)])
 bm_results  <- transform(dat[c(1, 4,10,16,22,28,34)])
@@ -236,7 +230,7 @@ for(a in 1:length(unique(dat$Surveyed))) {
       z <- length(y[y == TRUE])
       
       # Calculate the mean
-      mean_new_df <- round(sum(new_df[m]) / (x - z), digits = 1)
+      mean_new_df <- round(sum(new_df[m]) / (x - z), digits = 2)
       
       # write the results to the dataframe
       res_df[m,1]  <- quarter
@@ -336,14 +330,14 @@ qs_df[19:24,1] <- t(groups)[ ,1:6]
 
 #-------------------------------------------------------------------------------
 #
-#  Group Charts
+#  Response Averages by Group
 #
 #-------------------------------------------------------------------------------
 
 # Q1 Assemble data
 gbq_q1_df <- fy_df %>% filter(Qtr == unique(dat$Surveyed)[1])
 for(i in 1:6) {
-  gbq_q1_df[i,3] <- round(mean(full_year$Q1[[i]]$Avg), digits = 1)
+  gbq_q1_df[i,3] <- round(mean(full_year$Q1[[i]]$Avg), digits = 2)
 }
 
 # Q1 Build plot
@@ -353,12 +347,12 @@ gbq_q1_bar <- ggplot() +
   geom_text(data = gbq_q1_df, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Question Response Averages", subtitle = "Q1F19 - By Group")     
+  labs(title = "Response Averages", subtitle = "Q1 (Fall 2019) - By Group")     
 
 # Q2 Assemble data
 gbq_q2_df <- fy_df %>% filter(Qtr == unique(dat$Surveyed)[2])
 for(i in 1:6) {
-  gbq_q2_df[i,3] <- round(mean(full_year$Q2[[i]]$Avg), digits = 1)
+  gbq_q2_df[i,3] <- round(mean(full_year$Q2[[i]]$Avg), digits = 2)
 }
 
 # Q2 Build plot
@@ -368,12 +362,12 @@ gbq_q2_bar <- ggplot() +
   geom_text(data = gbq_q2_df, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Question Response Averages", subtitle = "Q2W20 - By Group")  
+  labs(title = "Response Averages", subtitle = "Q2 (Winter 2020) - By Group")  
 
 # Q3 Assemble data
 gbq_q3_df <- fy_df %>% filter(Qtr == unique(dat$Surveyed)[3])
 for(i in 1:6) {
-  gbq_q3_df[i,3] <- round(mean(full_year$Q3[[i]]$Avg), digits = 1)
+  gbq_q3_df[i,3] <- round(mean(full_year$Q3[[i]]$Avg), digits = 2)
 }
 
 # Q3 Build plot
@@ -383,12 +377,12 @@ gbq_q3_bar <- ggplot() +
   geom_text(data = gbq_q3_df, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Question Response Averages", subtitle = "Q3S20 - By Group") 
+  labs(title = "Response Averages", subtitle = "Q3 (Spring 2020) - By Group") 
 
 # Q4 Assemble data
 gbq_q4_df <- fy_df %>% filter(Qtr == unique(dat$Surveyed)[4])
 for(i in 1:6) {
-  gbq_q4_df[i,3] <- round(mean(full_year$Q4[[i]]$Avg), digits = 1)
+  gbq_q4_df[i,3] <- round(mean(full_year$Q4[[i]]$Avg), digits = 2)
 }
 
 # Q4 Build plot
@@ -398,11 +392,11 @@ gbq_q4_bar <- ggplot() +
   geom_text(data = gbq_q4_df, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Question Response Averages", subtitle = "Q4S20 - By Group")
+  labs(title = "Response Averages", subtitle = "Q4 (Summer 2020) - By Group")
 
 #-------------------------------------------------------------------------------
 #
-#  Question Charts
+#  Response Averages by Question
 #
 #-------------------------------------------------------------------------------
 
@@ -416,7 +410,7 @@ for(i in 1:6) {
     x <- x + full_year$Q1[[j]]$Avg[i]
   }
   x <- x / 6
-  qbq_q1_df[i,2] <- round(x, digits = 1)
+  qbq_q1_df[i,2] <- round(x, digits = 2)
   x = 0
 }
 
@@ -427,7 +421,7 @@ qbq_q1_bar <- ggplot() +
   geom_text(data = qbq_q1_df, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Question Response Averages", subtitle = "Q1F19 - By Question") 
+  labs(title = "Response Averages", subtitle = "Q1 (Fall 2019) - By Question") 
 
 # Q2 Gather data
 qbq_q2_df <- data.frame(Question = 1:6, Avg = 1:6)
@@ -439,7 +433,7 @@ for(i in 1:6) {
     x <- x + full_year$Q2[[j]]$Avg[i]
   }
   x <- x / 6
-  qbq_q2_df[i,2] <- round(x, digits = 1)
+  qbq_q2_df[i,2] <- round(x, digits = 2)
   x = 0
 }
 
@@ -450,7 +444,7 @@ qbq_q2_bar <- ggplot() +
   geom_text(data = qbq_q2_df, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Question Response Averages", subtitle = "Q2W20 - By Question") 
+  labs(title = "Response Averages", subtitle = "Q2 (Winter 2020) - By Question") 
 
 
 # Q3 Gather data
@@ -463,7 +457,7 @@ for(i in 1:6) {
     x <- x + full_year$Q3[[j]]$Avg[i]
   }
   x <- x / 6
-  qbq_q3_df[i,2] <- round(x, digits = 1)
+  qbq_q3_df[i,2] <- round(x, digits = 2)
   x = 0
 }
 
@@ -474,7 +468,7 @@ qbq_q3_bar <- ggplot() +
   geom_text(data = qbq_q3_df, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Question Response Averages", subtitle = "Q3S20 - By Question") 
+  labs(title = "Response Averages", subtitle = "Q3 (Spring 2020) - By Question") 
 
 
 # Q4 Gather data
@@ -487,7 +481,7 @@ for(i in 1:6) {
     x <- x + full_year$Q4[[j]]$Avg[i]
   }
   x <- x / 6
-  qbq_q4_df[i,2] <- round(x, digits = 1)
+  qbq_q4_df[i,2] <- round(x, digits = 2)
   x = 0
 }
 
@@ -498,7 +492,7 @@ qbq_q4_bar <- ggplot() +
   geom_text(data = qbq_q4_df, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Question Response Averages", subtitle = "Q4S20 - By Question") 
+  labs(title = "Response Averages", subtitle = "Q4 (Summer 2020) - By Question") 
 
 
 # Arrange the grids
@@ -508,11 +502,9 @@ grid.arrange(gbq_q3_bar, gbq_q4_bar, ncol = 2)
 grid.arrange(qbq_q1_bar, qbq_q2_bar, ncol = 2)
 grid.arrange(qbq_q3_bar, qbq_q4_bar, ncol = 2)
 
-
-
 #-------------------------------------------------------------------------------
 #
-# Part 3 - Quarterly Summaries
+# Part 2 - Quarterly Summaries by Group
 #    24 charts
 #    For each Quarter, 1 chart per group for Questions 1-6
 #    X = Question
@@ -530,7 +522,7 @@ grid.arrange(qbq_q3_bar, qbq_q4_bar, ncol = 2)
 #
 
 grp_df <- as.data.frame(full_year$Q1[1])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[1,2] <- "AM"
 fy_df[1,3] <- ms
 
@@ -540,14 +532,14 @@ am_bar_Q1 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Account Managers", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
+  labs(title = "Account Managers", subtitle = paste("Q1 (Fall 2019) Average Score by Question - OA =",ms))
 
 #
 # business Analysts
 #
 
 grp_df <- as.data.frame(full_year$Q1[2])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[2,2] <- "BA"
 fy_df[2,3] <- ms
 
@@ -557,14 +549,14 @@ ba_bar_Q1 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Business Analysts", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
+  labs(title = "Business Analysts", subtitle = paste("Q1 (Fall 2019) Average Score by Question - OA =",ms))
 
 #
 # B&MPS
 #
 
 grp_df <- as.data.frame(full_year$Q1[3])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[3,2] <- "B&MPS"
 fy_df[3,3] <- ms
 
@@ -574,14 +566,14 @@ bm_bar_Q1 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
+  labs(title = "B&MPS", subtitle = paste("Q1 (Fall 2019) Average Score by Question - OA =",ms))
 
 #
 # Project Support
 #
 
 grp_df <- as.data.frame(full_year$Q1[4])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[4,2] <- "PS"
 fy_df[4,3] <- ms
 
@@ -591,14 +583,14 @@ ps_bar_Q1 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
+  labs(title = "Project Support", subtitle = paste("Q1 (Fall 2019) Average Score by Question - OA =",ms))
 
 #
 # Service Desk
 #
 
 grp_df <- as.data.frame(full_year$Q1[5])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[5,2] <- "SD"
 fy_df[5,3] <- ms
 
@@ -608,14 +600,14 @@ sd_bar_Q1 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
+  labs(title = "Service Desk", subtitle = paste("Q1 (Fall 2019) Average Score by Question - OA =",ms))
 
 #
 # Vendor Managers
 #
 
 grp_df <- as.data.frame(full_year$Q1[6])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[6,2] <- "VM"
 fy_df[6,3] <- ms
 
@@ -625,7 +617,7 @@ vm_bar_Q1 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Vendor Managers", subtitle = paste("Q1 Average Score by Question - Overall Average is",ms))
+  labs(title = "Vendor Managers", subtitle = paste("Q1 (Fall 2019) Average Score by Question - OA =",ms))
 
 #-------------------------------------------------------------------------------
 #  Quarter 2
@@ -639,7 +631,7 @@ vm_bar_Q1 <- ggplot() +
 #
 
 grp_df <- as.data.frame(full_year$Q2[1])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[7,2] <- "AM"
 fy_df[7,3] <- ms
 
@@ -649,14 +641,14 @@ am_bar_Q2 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Account Managers", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
+  labs(title = "Account Managers", subtitle = paste("Q2 (Winter 2020) Average Score by Question - OA =",ms))
 
 #
 # business Analysts
 #
 
 grp_df <- as.data.frame(full_year$Q2[2])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[8,2] <- "BA"
 fy_df[8,3] <- ms
 
@@ -666,14 +658,14 @@ ba_bar_Q2 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Business Analysts", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
+  labs(title = "Business Analysts", subtitle = paste("Q2 (Winter 2020) Average Score by Question - OA =",ms))
 
 #
 # B&MPS
 #
 
 grp_df <- as.data.frame(full_year$Q2[3])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[9,2] <- "B&MPS"
 fy_df[9,3] <- ms
 
@@ -683,14 +675,14 @@ bm_bar_Q2 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
+  labs(title = "B&MPS", subtitle = paste("Q2 (Winter 2020) Average Score by Question - OA =",ms))
 
 #
 # Project Support
 #
 
 grp_df <- as.data.frame(full_year$Q2[4])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[10,2] <- "PS"
 fy_df[10,3] <- ms
 
@@ -700,14 +692,14 @@ ps_bar_Q2 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
+  labs(title = "Project Support", subtitle = paste("Q2 (Winter 2020) Average Score by Question - OA =",ms))
 
 #
 # Service Desk
 #
 
 grp_df <- as.data.frame(full_year$Q2[5])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[11,2] <- "SD"
 fy_df[11,3] <- ms
 
@@ -717,7 +709,7 @@ sd_bar_Q2 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
+  labs(title = "Service Desk", subtitle = paste("Q2 (Winter 2020) Average Score by Question - OA =",ms))
 
 
 #
@@ -725,7 +717,7 @@ sd_bar_Q2 <- ggplot() +
 #
 
 grp_df <- as.data.frame(full_year$Q2[6])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[12,2] <- "VM"
 fy_df[12,3] <- ms
 
@@ -735,7 +727,7 @@ vm_bar_Q2 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Vendor Managers", subtitle = paste("Q2 Average Score by Question - Overall Average is",ms))
+  labs(title = "Vendor Managers", subtitle = paste("Q2 (Winter 2020) Average Score by Question - OA =",ms))
 
 #-------------------------------------------------------------------------------
 #  Quarter 3
@@ -749,7 +741,7 @@ vm_bar_Q2 <- ggplot() +
 #
 
 grp_df <- as.data.frame(full_year$Q3[1])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[13,2] <- "AM"
 fy_df[13,3] <- ms
 
@@ -759,14 +751,14 @@ am_bar_Q3 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Account Managers", subtitle = paste("Q3 Average Score by Question - Overall Average is",ms))
+  labs(title = "Account Managers", subtitle = paste("Q3 (Spring 2020) Average Score by Question - OA =",ms))
 
 #
 # business Analysts
 #
 
 grp_df <- as.data.frame(full_year$Q3[2])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[14,2] <- "BA"
 fy_df[14,3] <- ms
 
@@ -776,14 +768,14 @@ ba_bar_Q3 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Business Analysts", subtitle = paste("Q3 Average Score by Question - Overall Average is",ms))
+  labs(title = "Business Analysts", subtitle = paste("Q3 (Spring 2020) Average Score by Question - OA =",ms))
 
 #
 # B&MPS
 #
 
 grp_df <- as.data.frame(full_year$Q3[3])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[15,2] <- "B&MPS"
 fy_df[15,3] <- ms
 
@@ -793,14 +785,14 @@ bm_bar_Q3 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = paste("Q3 Average Score by Question - Overall Average is",ms))
+  labs(title = "B&MPS", subtitle = paste("Q3 (Spring 2020) Average Score by Question - OA =",ms))
 
 #
 # Project Support
 #
 
 grp_df <- as.data.frame(full_year$Q3[4])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[16,2] <- "PS"
 fy_df[16,3] <- ms
 
@@ -810,14 +802,14 @@ ps_bar_Q3 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = paste("Q3 Average Score by Question - Overall Average is",ms))
+  labs(title = "Project Support", subtitle = paste("Q3 (Spring 2020) Average Score by Question - OA =",ms))
 
 #
 # Service Desk
 #
 
 grp_df <- as.data.frame(full_year$Q3[5])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[17,2] <- "SD"
 fy_df[17,3] <- ms
 
@@ -827,7 +819,7 @@ sd_bar_Q3 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = paste("Q3 Average Score by Question - Overall Average is",ms))
+  labs(title = "Service Desk", subtitle = paste("Q3 (Spring 2020) Average Score by Question - OA =",ms))
 
 
 #
@@ -835,7 +827,7 @@ sd_bar_Q3 <- ggplot() +
 #
 
 grp_df <- as.data.frame(full_year$Q3[6])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[18,2] <- "VM"
 fy_df[18,3] <- ms
 
@@ -845,7 +837,7 @@ vm_bar_Q3 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Vendor Managers", subtitle = paste("Q3 Average Score by Question - Overall Average is",ms))
+  labs(title = "Vendor Managers", subtitle = paste("Q3 (Spring 2020) Average Score by Question - OA =",ms))
 
 
 #-------------------------------------------------------------------------------
@@ -860,7 +852,7 @@ vm_bar_Q3 <- ggplot() +
 #
 
 grp_df <- as.data.frame(full_year$Q4[1])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[19,2] <- "AM"
 fy_df[19,3] <- ms
 
@@ -870,14 +862,14 @@ am_bar_Q4 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Account Managers", subtitle = paste("Q4 Average Score by Question - Overall Average is",ms))
+  labs(title = "Account Managers", subtitle = paste("Q4 (Summer 2020) Average Score by Question - OA =",ms))
 
 #
 # business Analysts
 #
 
 grp_df <- as.data.frame(full_year$Q4[2])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[20,2] <- "BA"
 fy_df[20,3] <- ms
 
@@ -887,14 +879,14 @@ ba_bar_Q4 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Business Analysts", subtitle = paste("Q4 Average Score by Question - Overall Average is",ms))
+  labs(title = "Business Analysts", subtitle = paste("Q4 (Summer 2020) Average Score by Question - OA =",ms))
 
 #
 # B&MPS
 #
 
 grp_df <- as.data.frame(full_year$Q4[3])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[21,2] <- "B&MPS"
 fy_df[21,3] <- ms
 
@@ -904,14 +896,14 @@ bm_bar_Q4 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = paste("Q4 Average Score by Question - Overall Average is",ms))
+  labs(title = "B&MPS", subtitle = paste("Q4 (Summer 2020) Average Score by Question - OA =",ms))
 
 #
 # Project Support
 #
 
 grp_df <- as.data.frame(full_year$Q4[4])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[22,2] <- "PS"
 fy_df[22,3] <- ms
 
@@ -921,14 +913,14 @@ ps_bar_Q4 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = paste("Q4 Average Score by Question - Overall Average is",ms))
+  labs(title = "Project Support", subtitle = paste("Q4 (Summer 2020) Average Score by Question - OA =",ms))
 
 #
 # Service Desk
 #
 
 grp_df <- as.data.frame(full_year$Q4[5])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[23,2] <- "SD"
 fy_df[23,3] <- ms
 
@@ -938,7 +930,7 @@ sd_bar_Q4 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = paste("Q4 Average Score by Question - Overall Average is",ms))
+  labs(title = "Service Desk", subtitle = paste("Q4 (Summer 2020) Average Score by Question - OA =",ms))
 
 
 #
@@ -946,7 +938,7 @@ sd_bar_Q4 <- ggplot() +
 #
 
 grp_df <- as.data.frame(full_year$Q4[6])
-ms <- round(mean(grp_df$Avg), digits = 1)
+ms <- round(mean(grp_df$Avg), digits = 2)
 fy_df[24,2] <- "VM"
 fy_df[24,3] <- ms
 
@@ -956,1046 +948,750 @@ vm_bar_Q4 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Vendor Managers", subtitle = paste("Q4 Average Score by Question - Overall Average is",ms))
+  labs(title = "Vendor Managers", subtitle = paste("Q4 (Summer 2020) Average Score by Question - OA =",ms))
 
-
-
-#-------------------
-# Multiple quarters bar charts
-#-------------------
-
-#-------------------
-# Multiple quarters bar charts
-#-------------------
-
-grp_q1_df <- as.data.frame(full_year$Q1[6])
-grp_q2_df <- as.data.frame(full_year$Q2[6])
-grp_q3_df <- as.data.frame(full_year$Q3[6])
-grp_q4_df <- as.data.frame(full_year$Q4[6])
-
-ms_q1 <- round(mean(grp_q1_df$Avg), digits = 1)
-ms_q2 <- round(mean(grp_q2_df$Avg), digits = 1)
-ms_q3 <- round(mean(grp_q3_df$Avg), digits = 1)
-ms_q4 <- round(mean(grp_q4_df$Avg), digits = 1)
-
-vm_bar <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Qtr), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Vendor Managers", subtitle = paste("Average Score by Question - Overall Average is",ms))
-
-
-ggplot(data=dat1, aes(x=time, y=total_bill, fill=sex)) +
-  geom_bar(stat="identity", position=position_dodge())
-
-# END HERE
-
-
-#--------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #
-# Create the set of pivot tables for group and question results
+# Part 3 - Quarterly Summaries by Question
+#    24 charts
+#    For each Quarter, 1 chart per Question for Groups 1-6
+#    X = Question
+#    Y - Average Score
 #
-#--------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
+#-------------------------------------------------------------------------------
+#  Quarter 1
+#    One chart per Question
+#    For each of the 6 questions, X = Group, Y = Avg
+#-------------------------------------------------------------------------------
 
+#
+# Question 1A
+#
 
+# Q1 Gather data
+qbq_q1_q1a_df <- transform(as.data.frame(full_year$Q1)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q1_Q1A <- data.frame(Group = 1:6, Avg = 1:6)
 
+Q1_Q1A[1,  1] <- qbq_q1_q1a_df[1,  3]
+Q1_Q1A[1,  2] <- qbq_q1_q1a_df[1,  4]
+Q1_Q1A[2,  1] <- qbq_q1_q1a_df[1,  5]
+Q1_Q1A[2,  2] <- qbq_q1_q1a_df[1,  6]
+Q1_Q1A[3,  1] <- qbq_q1_q1a_df[1,  7]
+Q1_Q1A[3,  2] <- qbq_q1_q1a_df[1,  8]
+Q1_Q1A[4,  1] <- qbq_q1_q1a_df[1,  9]
+Q1_Q1A[4,  2] <- qbq_q1_q1a_df[1, 10]
+Q1_Q1A[5,  1] <- qbq_q1_q1a_df[1, 11]
+Q1_Q1A[5,  2] <- qbq_q1_q1a_df[1, 12]
+Q1_Q1A[6,  1] <- qbq_q1_q1a_df[1, 13]
+Q1_Q1A[6,  2] <- qbq_q1_q1a_df[1, 14]
 
-# Create a dataframe to hold the results
-am_table <- data.frame(Surveyed = 4,
-                       AM_1A = 4,
-                       AM_1B = 4,
-                       AM_1C = 4,
-                       AM_2A = 4,
-                       AM_2B = 4,
-                       AM_3x = 4)
-
-# Break data down by quarter
-mv_AM_Q1    <- am_results %>% filter(Surveyed == unique(dat$Surveyed[1]))
-
-# Break down the quarter into individual questions - we have to process each
-# column individually to avoid dropping rows
-mv_AM_Q1_1A <- mv_AM_Q1 %>% filter(as.numeric(mv_AM_Q1$Q1A_AM) != 0) %>% select(Q1A_AM)
-mv_AM_Q1_1B <- mv_AM_Q1 %>% filter(as.numeric(mv_AM_Q1$Q1B_AM) != 0) %>% select(Q1B_AM)
-mv_AM_Q1_1C <- mv_AM_Q1 %>% filter(as.numeric(mv_AM_Q1$Q1C_AM) != 0) %>% select(Q1C_AM)
-mv_AM_Q1_2A <- mv_AM_Q1 %>% filter(as.numeric(mv_AM_Q1$Q2A_AM) != 0) %>% select(Q2A_AM)
-mv_AM_Q1_2B <- mv_AM_Q1 %>% filter(as.numeric(mv_AM_Q1$Q2B_AM) != 0) %>% select(Q2B_AM)
-mv_AM_Q1_3x <- mv_AM_Q1 %>% filter(as.numeric(mv_AM_Q1$Q3_AM ) != 0) %>% select(Q3_AM)
-
-# Take each AM rating for each question in the given survey and get the average
-am_table[1,1] <- unique(dat$Surveyed)[1]
-am_table[2,1] <- unique(dat$Surveyed)[2]
-am_table[3,1] <- unique(dat$Surveyed)[3]
-am_table[4,1] <- unique(dat$Surveyed)[4]
-am_table[1,2] <- round(mean(as.numeric(mv_AM_Q1_1A$Q1A_AM)), digits = 1)
-am_table[1,3] <- round(mean(as.numeric(mv_AM_Q1_1B$Q1B_AM)), digits = 1)
-am_table[1,4] <- round(mean(as.numeric(mv_AM_Q1_1C$Q1C_AM)), digits = 1)
-am_table[1,5] <- round(mean(as.numeric(mv_AM_Q1_2A$Q2A_AM)), digits = 1)
-am_table[1,6] <- round(mean(as.numeric(mv_AM_Q1_2B$Q2B_AM)), digits = 1)
-am_table[1,7] <- round(mean(as.numeric(mv_AM_Q1_3x$Q3_AM )), digits = 1)
-
-# Print out summary of average scores                                  
-cat("Summary for Account Managers")
-kable(t(am_table)) %>%
-  kable_styling(bootstrap_options = "striped", full_width = FALSE, position = "left")
-
-
-# Plot stacked bar for the experience factor results
-am_table <- as.data.frame(t(am_table))
-
-# Basic barplot
-p <- ggplot(data = am_table, aes(x = Surveyed, y = am_table$1F19)) +
-  geom_bar(stat="identity")
-p
-
-cat("Summary for Question 1A")
-kable(q1a_results) %>%
-  kable_styling(bootstrap_options = "striped", full_width = FALSE, position = "left")
-
-# Convert to a dataframe and set the frequency position
-df <- as.data.frame(am_results)
-df <- ddply(df, .('Q1A-AM'),
-            transform, pos = cumsum(Freq))
-
-# Calc the number of "Always" responses
-pc_trends <- with(expfactors, table(PosContrib, Surveyed))
-pc_trends <- as.data.frame(pc_trends)
-pc_trends <- pc_trends %>% filter(PosContrib == "1-Always") 
-
-# Plot stacked bar for the experience factor results
-pc_plot <- ggplot() +
-  geom_bar(aes(x = q1_results_AM, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = PosContrib, y = pos, label = Freq), 
+Q1_Q1A_ms <- round(mean(Q1_Q1A[2]), digits = 2)
+  
+# Q1 Build plot
+Q1_Q1A_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q1_Q1A, stat = "identity") +
+  geom_text(data = Q1_Q1A, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   theme(legend.position = "none") +
-  labs(title = "Positive Contribution", subtitle = "All Attributes / All Surveys")
+  labs(title = "Q1A", subtitle = paste("Q1 (Fall 2019) Averages by Group - OA =", Q1_Q1A_ms)) 
 
-# Calc the percentage of "Always" responses
-pc_table_perc <- data.frame(Survey = 1:length(unique(dat$Surveyed)),
-                            Always = 1:length(unique(dat$Surveyed)),
-                            PAS    = 1:length(unique(dat$Surveyed)),
-                            PCS    = 1:length(unique(dat$Surveyed)))
+# Q2 Gather data
+qbq_q2_q1a_df <- transform(as.data.frame(full_year$Q2)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q2_Q1A <- data.frame(Group = 1:6, Avg = 1:6)
 
-# Run through the data and summarize each survey; log number and %'s of "Always'
-for(i in 1:length(unique(dat$Surveyed))) {
-  pc_table_perc[i,1] <- unique(dat$Surveyed)[i]
-  pc_table_perc[i,2] <- pc_table[i,1]
-  pc_table_perc[i,3] <- round((pc_table[i,1] / nrow(dat)), digits = 3) * 100
-  pc_table_perc[i,4] <- round((pc_table[i,1] / sum(pc_table[i, 1:5])), digits = 3) * 100
-}
+Q2_Q1A[1,  1] <- qbq_q2_q1a_df[1,  3]
+Q2_Q1A[1,  2] <- qbq_q2_q1a_df[1,  4]
+Q2_Q1A[2,  1] <- qbq_q2_q1a_df[1,  5]
+Q2_Q1A[2,  2] <- qbq_q2_q1a_df[1,  6]
+Q2_Q1A[3,  1] <- qbq_q2_q1a_df[1,  7]
+Q2_Q1A[3,  2] <- qbq_q2_q1a_df[1,  8]
+Q2_Q1A[4,  1] <- qbq_q2_q1a_df[1,  9]
+Q2_Q1A[4,  2] <- qbq_q2_q1a_df[1, 10]
+Q2_Q1A[5,  1] <- qbq_q2_q1a_df[1, 11]
+Q2_Q1A[5,  2] <- qbq_q2_q1a_df[1, 12]
+Q2_Q1A[6,  1] <- qbq_q2_q1a_df[1, 13]
+Q2_Q1A[6,  2] <- qbq_q2_q1a_df[1, 14]
 
-# Plot stacked bar and "Always" results for all surveys
-pc_trends_plot_pas <- ggplot() +
-  geom_bar(aes(x = Survey, y = PAS, fill = Survey),
-           data = pc_table_perc, stat = "identity") +
-  geom_text(data = pc_table_perc, aes(x = Survey, y = PAS, label = PAS), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Positive Contribution", subtitle = "% Always (All Surveys)")
+Q2_Q1A_ms <- round(mean(Q2_Q1A[2]), digits = 2)
 
-# Plot stacked bar and "Always" results for current survey
-pc_trends_plot_pcs <- ggplot() +
-  geom_bar(aes(x = Survey, y = PCS, fill = Survey),
-           data = pc_table_perc, stat = "identity") +
-  geom_text(data = pc_table_perc, aes(x = Survey, y = PCS, label = PCS), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Positive Contribution", subtitle = "% Always (By Survey)")
-
-# Arrange and display the two plots for pasting into deck
-# grid.arrange(pc_plot, pc_trends_plot_pcs, pc_trends_plot_pas, ncol = 3)
-
-# Arrange and display the two plots for pasting into deck
-grid.arrange(pc_plot, pc_trends_plot_pcs, ncol = 2)
-
-# Display the % improvement in "Always" to date
-pc_imp <- pc_table_perc[nrow(pc_table_perc),4] - pc_table_perc[1,4]
-cat("Change in 'Always' rating over period:", pc_imp,"%")
-
-#
-# Experience Attribute 2
-#
-
-# Create the data table and display
-tr_table <- with(expfactors, table(Surveyed, TimelyResp))
-
-cat("Data Summary - All Surveys")
-kable(tr_table) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(tr_table)
-df <- ddply(df, .(TimelyResp),
-            transform, pos = cumsum(Freq))
-
-# Calc the number of "Always" responses
-tr_trends <- with(expfactors, table(TimelyResp, Surveyed))
-tr_trends <- as.data.frame(tr_trends)
-tr_trends <- tr_trends %>% filter(TimelyResp == "1-Always") 
-
-# Plot stacked bar for the experience factor results
-tr_plot <- ggplot() +
-  geom_bar(aes(x = TimelyResp, y = Freq, fill = Surveyed),
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = TimelyResp, y = pos, label = Freq), 
+# Q2 Build plot
+Q2_Q1A_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q2_Q1A, stat = "identity") +
+  geom_text(data = Q2_Q1A, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   theme(legend.position = "none") +
-  labs(title = "Timely Response", subtitle = "All Attributes / All Surveys")
+  labs(title = "Question Q1A", subtitle = paste("Q2 (Winter 2020) Averages by Group - OA =", Q2_Q1A_ms)) 
 
-# Calc the percentage of "Always" responses
-tr_table_perc <- data.frame(Survey = 1:length(unique(dat$Surveyed)),
-                            Always = 1:length(unique(dat$Surveyed)),
-                            PAS    = 1:length(unique(dat$Surveyed)),
-                            PCS    = 1:length(unique(dat$Surveyed)))
+# Q3 Gather data
+qbq_q3_q1a_df <- transform(as.data.frame(full_year$Q3)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q3_Q1A <- data.frame(Group = 1:6, Avg = 1:6)
 
-# Run through the data and summarize each survey; log number and %'s of "Always'
-for(i in 1:length(unique(dat$Surveyed))) {
-  tr_table_perc[i,1] <- unique(dat$Surveyed)[i]
-  tr_table_perc[i,2] <- tr_table[i,1]
-  tr_table_perc[i,3] <- round((tr_table[i,1] / nrow(dat)), digits = 3) * 100
-  tr_table_perc[i,4] <- round((tr_table[i,1] / sum(tr_table[i, 1:5])), digits = 3) * 100
-}
+Q3_Q1A[1,  1] <- qbq_q3_q1a_df[1,  3]
+Q3_Q1A[1,  2] <- qbq_q3_q1a_df[1,  4]
+Q3_Q1A[2,  1] <- qbq_q3_q1a_df[1,  5]
+Q3_Q1A[2,  2] <- qbq_q3_q1a_df[1,  6]
+Q3_Q1A[3,  1] <- qbq_q3_q1a_df[1,  7]
+Q3_Q1A[3,  2] <- qbq_q3_q1a_df[1,  8]
+Q3_Q1A[4,  1] <- qbq_q3_q1a_df[1,  9]
+Q3_Q1A[4,  2] <- qbq_q3_q1a_df[1, 10]
+Q3_Q1A[5,  1] <- qbq_q3_q1a_df[1, 11]
+Q3_Q1A[5,  2] <- qbq_q3_q1a_df[1, 12]
+Q3_Q1A[6,  1] <- qbq_q3_q1a_df[1, 13]
+Q3_Q1A[6,  2] <- qbq_q3_q1a_df[1, 14]
 
-# Plot stacked bar and "Always" results for all surveys
-tr_trends_plot_pas <- ggplot() +
-  geom_bar(aes(x = Survey, y = PAS, fill = Survey),
-           data = tr_table_perc, stat = "identity") +
-  geom_text(data = tr_table_perc, aes(x = Survey, y = PAS, label = PAS), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Timely Response", subtitle = "% Always (All Surveys)")
+Q3_Q1A_ms <- round(mean(Q3_Q1A[2]), digits = 2)
 
-# Plot stacked bar and "Always" results for current survey
-tr_trends_plot_pcs <- ggplot() +
-  geom_bar(aes(x = Survey, y = PCS, fill = Survey),
-           data = tr_table_perc, stat = "identity") +
-  geom_text(data = tr_table_perc, aes(x = Survey, y = PCS, label = PCS), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Timely Response", subtitle = "% Always (By Survey)")
-
-# Arrange the two plots for pasting into deck
-# grid.arrange(tr_plot, tr_trends_plot_pcs, tr_trends_plot_pas, ncol = 3)
-
-# Arrange and display the two plots for pasting into deck
-grid.arrange(tr_plot, tr_trends_plot_pcs, ncol = 2)
-
-tr_imp <- tr_table_perc[nrow(tr_table_perc),4] - tr_table_perc[1,4]
-cat("Change in 'Always' rating over period:", tr_imp,"%")
-
-#
-# Experience Attribute 3
-#
-
-# Create the data table and display
-ac_table <- with(expfactors, table(Surveyed, Accountability))
-
-cat("Data Summary - All Surveys")
-kable(ac_table) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(ac_table)
-df <- ddply(df, .(Accountability),
-            transform, pos = cumsum(Freq))
-
-# Calc the number of "Always" responses
-ac_trends <- with(expfactors, table(Accountability, Surveyed))
-ac_trends <- as.data.frame(ac_trends)
-ac_trends <- ac_trends %>% filter(Accountability == "1-Always") 
-
-# Plot stacked bar for the experience factor results
-ac_plot <- ggplot() +
-  geom_bar(aes(x = Accountability, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = Accountability, y = pos, label = Freq), 
+# Q3 Build plot
+Q3_Q1A_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q3_Q1A, stat = "identity") +
+  geom_text(data = Q3_Q1A, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   theme(legend.position = "none") +
-  labs(title = "Accountability", subtitle = "All Attributes / All Surveys")
+  labs(title = "Question Q1A", subtitle = paste("Q3 (Spring 2020) Averages by Group - OA =", Q3_Q1A_ms)) 
 
-# Calc the percentage of "Always" responses
-ac_table_perc <- data.frame(Survey = 1:length(unique(dat$Surveyed)),
-                            Always = 1:length(unique(dat$Surveyed)),
-                            PAS    = 1:length(unique(dat$Surveyed)),
-                            PCS    = 1:length(unique(dat$Surveyed)))
+# Q4 Gather data
+qbq_q4_q1a_df <- transform(as.data.frame(full_year$Q4)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q4_Q1A <- data.frame(Group = 1:6, Avg = 1:6)
 
-# Run through the data and summarize each survey; log number and %'s of "Always'
-for(i in 1:length(unique(dat$Surveyed))) {
-  ac_table_perc[i,1] <- unique(dat$Surveyed)[i]
-  ac_table_perc[i,2] <- ac_table[i,1]
-  ac_table_perc[i,3] <- round((ac_table[i,1] / nrow(dat)), digits = 3) * 100
-  ac_table_perc[i,4] <- round((ac_table[i,1] / sum(ac_table[i, 1:5])), digits = 3) * 100
-}
+Q4_Q1A[1,  1] <- qbq_q4_q1a_df[1,  3]
+Q4_Q1A[1,  2] <- qbq_q4_q1a_df[1,  4]
+Q4_Q1A[2,  1] <- qbq_q4_q1a_df[1,  5]
+Q4_Q1A[2,  2] <- qbq_q4_q1a_df[1,  6]
+Q4_Q1A[3,  1] <- qbq_q4_q1a_df[1,  7]
+Q4_Q1A[3,  2] <- qbq_q4_q1a_df[1,  8]
+Q4_Q1A[4,  1] <- qbq_q4_q1a_df[1,  9]
+Q4_Q1A[4,  2] <- qbq_q4_q1a_df[1, 10]
+Q4_Q1A[5,  1] <- qbq_q4_q1a_df[1, 11]
+Q4_Q1A[5,  2] <- qbq_q4_q1a_df[1, 12]
+Q4_Q1A[6,  1] <- qbq_q4_q1a_df[1, 13]
+Q4_Q1A[6,  2] <- qbq_q4_q1a_df[1, 14]
 
-# Plot stacked bar and "Always" results for all surveys
-ac_trends_plot_pas <- ggplot() +
-  geom_bar(aes(x = Survey, y = PAS, fill = Survey),
-           data = ac_table_perc, stat = "identity") +
-  geom_text(data = ac_table_perc, aes(x = Survey, y = PAS, label = PAS), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Accountability", subtitle = "% Always (All Surveys)")
+Q4_Q1A_ms <- round(mean(Q4_Q1A[2]), digits = 2)
 
-# Plot stacked bar and "Always" results for current survey
-ac_trends_plot_pcs <- ggplot() +
-  geom_bar(aes(x = Survey, y = PCS, fill = Survey),
-           data = ac_table_perc, stat = "identity") +
-  geom_text(data = ac_table_perc, aes(x = Survey, y = PCS, label = PCS), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Accountability", subtitle = "% Always (By Survey)")
-
-# Arrange the two plots for pasting into deck
-# grid.arrange(ac_plot, ac_trends_plot_pcs, ac_trends_plot_pas, ncol = 3)
-
-# Arrange and display the two plots for pasting into deck
-grid.arrange(ac_plot, ac_trends_plot_pcs, ncol = 2)
-
-# Display the % improvement in "Always" to date
-ac_imp <- ac_table_perc[nrow(ac_table_perc),4] - ac_table_perc[1,4]
-cat("Change in 'Always' rating over period:", ac_imp,"%")
-
-
-#
-# Experience Attribute 4
-#
-
-# Create the data table and display
-kn_table <- with(expfactors, table(Surveyed, Knowledgeable))
-
-cat("Data Summary - All Surveys")
-kable(kn_table) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(kn_table)
-df <- ddply(df, .(Knowledgeable),
-            transform, pos = cumsum(Freq))
-
-# Calc the number of "Always" responses
-kn_trends <- with(expfactors, table(Knowledgeable, Surveyed))
-kn_trends <- as.data.frame(kn_trends)
-kn_trends <- kn_trends %>% filter(Knowledgeable == "1-Always") 
-
-# Plot stacked bar for the experience factor results
-kn_plot <- ggplot() +
-  geom_bar(aes(x = Knowledgeable, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = Knowledgeable, y = pos, label = Freq), 
+# Q4 Build plot
+Q4_Q1A_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q4_Q1A, stat = "identity") +
+  geom_text(data = Q4_Q1A, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   theme(legend.position = "none") +
-  labs(title = "Knowledgeable", subtitle = "All Attributes / All Surveys")
+  labs(title = "Question Q1A", subtitle = paste("Q4 (Summer 2020) Averages by Group - OA =", Q4_Q1A_ms)) 
 
-# Calc the percentage of "Always" responses
-kn_table_perc <- data.frame(Survey = 1:length(unique(dat$Surveyed)),
-                            Always = 1:length(unique(dat$Surveyed)),
-                            PAS    = 1:length(unique(dat$Surveyed)),
-                            PCS    = 1:length(unique(dat$Surveyed)))
-
-# Run through the data and summarize each survey; log number and %'s of "Always'
-for(i in 1:length(unique(dat$Surveyed))) {
-  kn_table_perc[i,1] <- unique(dat$Surveyed)[i]
-  kn_table_perc[i,2] <- kn_table[i,1]
-  kn_table_perc[i,3] <- round((kn_table[i,1] / nrow(dat)), digits = 3) * 100
-  kn_table_perc[i,4] <- round((kn_table[i,1] / sum(kn_table[i, 1:5])), digits = 3) * 100
-}
-
-# Plot stacked bar and "Always" results for all surveys
-kn_trends_plot_pas <- ggplot() +
-  geom_bar(aes(x = Survey, y = PAS, fill = Survey),
-           data = kn_table_perc, stat = "identity") +
-  geom_text(data = kn_table_perc, aes(x = Survey, y = PAS, label = PAS), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Knowledgeable", subtitle = "% Always (All Surveys)")
-
-# Plot stacked bar and "Always" results for current survey
-kn_trends_plot_pcs <- ggplot() +
-  geom_bar(aes(x = Survey, y = PCS, fill = Survey),
-           data = kn_table_perc, stat = "identity") +
-  geom_text(data = kn_table_perc, aes(x = Survey, y = PCS, label = PCS), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Knowledgeable", subtitle = "% Always (By Survey)")
-
-# Arrange the two plots for pasting into deck
-# grid.arrange(kn_plot, kn_trends_plot_pcs, kn_trends_plot_pas, ncol = 3)
-
-# Arrange and display the two plots for pasting into deck
-grid.arrange(kn_plot, kn_trends_plot_pcs, ncol = 2)
-
-# Display the % improvement in "Always" to date
-kn_imp <- kn_table_perc[nrow(kn_table_perc),4] - kn_table_perc[1,4]
-cat("Change in 'Always' rating over period:", kn_imp,"%")
-
-# 
-# Prepare Summary Grids
-#
-
-# Arrange the four experience plots in a 2x2 format
-# grid.arrange(pc_plot, tr_plot, ac_plot, kn_plot, ncol = 2)
-
-# Arrange the 4 "Very Satisfied" specific survey plots in a 2x2 format
-grid.arrange(pc_trends_plot_pcs, 
-             tr_trends_plot_pcs, 
-             ac_trends_plot_pcs, 
-             kn_trends_plot_pcs, ncol = 2)
-
-# Arrange the 4 "Very Satisfied" cumulative plots in a 2x2 format
-# grid.arrange(pc_trends_plot_pas, 
-#              tr_trends_plot_pas, 
-#              ac_trends_plot_pas, 
-#              kn_trends_plot_pas, ncol = 2)
-
-# Summarize improvements across groups
-cat("Summary of Percent Improvement Over All Surveys")
-cat("Positive Contribution improvement to date:", pc_imp,"%")
-cat("Timely Response improvement to date:      ", tr_imp,"%")
-cat("Accountable improvement to date:          ", ac_imp,"%")
-cat("Knowledgeable improvement to date:        ", kn_imp,"%")
-
-#--------------------------------------------------------------------
-#
-# Create the set of pivot tables for TSG group ratings
-#
-#--------------------------------------------------------------------
-
-# Get the subgroup data
-grpfactors <- transform(dat[c(1, 6, 7, 8, 9, 10, 11, 12, 13)]) 
-# summary(grpfactors)
+# Arrange the Q1A grids
+grid.arrange(Q1_Q1A_bar, Q2_Q1A_bar, ncol = 2)
+grid.arrange(Q3_Q1A_bar, Q4_Q1A_bar, ncol = 2)
 
 #
-# Subgroup 1
+# Question 1B
 #
 
-# Create the data table and display
-am_table <- with(grpfactors, table(Surveyed, AcctMgrs))
+# Q1 Gather data
+qbq_q1_q1b_df <- transform(as.data.frame(full_year$Q1)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q1_Q1B <- data.frame(Group = 1:6, Avg = 1:6)
 
-cat("Data Summary - All Surveys")
-kable(am_table) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+Q1_Q1B[1,  1] <- qbq_q1_q1b_df[2,  3]
+Q1_Q1B[1,  2] <- qbq_q1_q1b_df[2,  4]
+Q1_Q1B[2,  1] <- qbq_q1_q1b_df[2,  5]
+Q1_Q1B[2,  2] <- qbq_q1_q1b_df[2,  6]
+Q1_Q1B[3,  1] <- qbq_q1_q1b_df[2,  7]
+Q1_Q1B[3,  2] <- qbq_q1_q1b_df[2,  8]
+Q1_Q1B[4,  1] <- qbq_q1_q1b_df[2,  9]
+Q1_Q1B[4,  2] <- qbq_q1_q1b_df[2, 10]
+Q1_Q1B[5,  1] <- qbq_q1_q1b_df[2, 11]
+Q1_Q1B[5,  2] <- qbq_q1_q1b_df[2, 12]
+Q1_Q1B[6,  1] <- qbq_q1_q1b_df[2, 13]
+Q1_Q1B[6,  2] <- qbq_q1_q1b_df[2, 14]
 
-# Convert to dataframe and set frequency position
-df <- as.data.frame(am_table)
-df <- ddply(df, .(AcctMgrs),
-            transform, pos = cumsum(Freq))
+Q1_Q1B_ms <- round(mean(Q1_Q1B[2]), digits = 2)
 
-# Calc the number of "Always" responses
-am_trends <- with(grpfactors, table(AcctMgrs, Surveyed))
-am_trends <- as.data.frame(am_trends)
-am_trends <- am_trends %>% filter(AcctMgrs == "1-Very Satisfied")
-
-# Plot stacked bar for the group results
-am_plot <- ggplot() +
-  geom_bar(aes(x = AcctMgrs, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = AcctMgrs, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 2) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+# Q1 Build plot
+Q1_Q1B_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q1_Q1B, stat = "identity") +
+  geom_text(data = Q1_Q1B, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Account Managers", subtitle = "All Attributes / All Surveys")
+  labs(title = "Question Q1B", subtitle = paste("Q1 (Fall 2019) Averages by Group - OA =", Q1_Q1B_ms)) 
 
-# Calc the percentage of "Always" responses
-am_table_perc <- data.frame(Survey = 1:length(unique(dat$Surveyed)),
-                            Always = 1:length(unique(dat$Surveyed)),
-                            PAS    = 1:length(unique(dat$Surveyed)),
-                            PCS    = 1:length(unique(dat$Surveyed)))
+# Q2 Gather data
+qbq_q2_q1b_df <- transform(as.data.frame(full_year$Q2)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q2_Q1B <- data.frame(Group = 1:6, Avg = 1:6)
 
-# Run through the data and summarize each survey; log number and %'s of "Always'
-for(i in 1:length(unique(dat$Surveyed))) {
-  am_table_perc[i,1] <- unique(dat$Surveyed)[i]
-  am_table_perc[i,2] <- am_table[i,1]
-  am_table_perc[i,3] <- round((am_table[i,1] / nrow(dat)), digits = 3) * 100
-  # Subtract 2 from ncol to drop NA/DNU and NR responses
-  am_table_perc[i,4] <- round((am_table[i,1] / sum(am_table[i, 1:(ncol(am_table)-2)])), digits = 3) * 100
-}
+Q2_Q1B[1,  1] <- qbq_q2_q1b_df[2,  3]
+Q2_Q1B[1,  2] <- qbq_q2_q1b_df[2,  4]
+Q2_Q1B[2,  1] <- qbq_q2_q1b_df[2,  5]
+Q2_Q1B[2,  2] <- qbq_q2_q1b_df[2,  6]
+Q2_Q1B[3,  1] <- qbq_q2_q1b_df[2,  7]
+Q2_Q1B[3,  2] <- qbq_q2_q1b_df[2,  8]
+Q2_Q1B[4,  1] <- qbq_q2_q1b_df[2,  9]
+Q2_Q1B[4,  2] <- qbq_q2_q1b_df[2, 10]
+Q2_Q1B[5,  1] <- qbq_q2_q1b_df[2, 11]
+Q2_Q1B[5,  2] <- qbq_q2_q1b_df[2, 12]
+Q2_Q1B[6,  1] <- qbq_q2_q1b_df[2, 13]
+Q2_Q1B[6,  2] <- qbq_q2_q1b_df[2, 14]
 
-# Plot stacked bar and "Always" results for all surveys
-am_trends_plot_pas <- ggplot() +
-  geom_bar(aes(x = Survey, y = PAS, fill = Survey),
-           data = am_table_perc, stat = "identity") +
-  geom_text(data = am_table_perc, aes(x = Survey, y = PAS, label = PAS), 
-            vjust = 1.5, color = "black", size = 3) + 
+Q2_Q1B_ms <- round(mean(Q2_Q1B[2]), digits = 2)
+
+# Q2 Build plot
+Q2_Q1B_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q2_Q1B, stat = "identity") +
+  geom_text(data = Q2_Q1B, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Account Managers", subtitle = "% Very Sat (All Surveys)")
+  labs(title = "Question Q1B", subtitle = paste("Q2 (Winter 2020) Averages by Group - OA =", Q2_Q1A_ms)) 
 
-# Plot stacked bar and "Always" results for current survey
-am_trends_plot_pcs <- ggplot() +
-  geom_bar(aes(x = Survey, y = PCS, fill = Survey),
-           data = am_table_perc, stat = "identity") +
-  geom_text(data = am_table_perc, aes(x = Survey, y = PCS, label = PCS), 
-            vjust = 1.5, color = "black", size = 3) + 
+# Q3 Gather data
+qbq_q3_q1b_df <- transform(as.data.frame(full_year$Q3)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q3_Q1B <- data.frame(Group = 1:6, Avg = 1:6)
+
+Q3_Q1B[1,  1] <- qbq_q3_q1b_df[2,  3]
+Q3_Q1B[1,  2] <- qbq_q3_q1b_df[2,  4]
+Q3_Q1B[2,  1] <- qbq_q3_q1b_df[2,  5]
+Q3_Q1B[2,  2] <- qbq_q3_q1b_df[2,  6]
+Q3_Q1B[3,  1] <- qbq_q3_q1b_df[2,  7]
+Q3_Q1B[3,  2] <- qbq_q3_q1b_df[2,  8]
+Q3_Q1B[4,  1] <- qbq_q3_q1b_df[2,  9]
+Q3_Q1B[4,  2] <- qbq_q3_q1b_df[2, 10]
+Q3_Q1B[5,  1] <- qbq_q3_q1b_df[2, 11]
+Q3_Q1B[5,  2] <- qbq_q3_q1b_df[2, 12]
+Q3_Q1B[6,  1] <- qbq_q3_q1b_df[2, 13]
+Q3_Q1B[6,  2] <- qbq_q3_q1b_df[2, 14]
+
+Q3_Q1B_ms <- round(mean(Q3_Q1B[2]), digits = 2)
+
+# Q3 Build plot
+Q3_Q1B_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q3_Q1B, stat = "identity") +
+  geom_text(data = Q3_Q1B, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Account Managers", subtitle = "% Very Sat (By Survey, no NR/DNU)")
+  labs(title = "Question Q1B", subtitle = paste("Q3 (Spring 2020) Averages by Group - OA =", Q3_Q1B_ms)) 
 
-# Arrange and display the two plots for pasting into deck
-grid.arrange(am_plot, am_trends_plot_pcs, ncol = 2)
+# Q4 Gather data
+qbq_q4_q1b_df <- transform(as.data.frame(full_year$Q4)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q4_Q1B <- data.frame(Group = 1:6, Avg = 1:6)
 
-# Display the % improvement in "Always" to date
-am_imp <- am_table_perc[nrow(am_table_perc),4] - am_table_perc[1,4]
-cat("Change in 'Always' rating over period:", am_imp,"%")
+Q4_Q1B[1,  1] <- qbq_q4_q1b_df[2,  3]
+Q4_Q1B[1,  2] <- qbq_q4_q1b_df[2,  4]
+Q4_Q1B[2,  1] <- qbq_q4_q1b_df[2,  5]
+Q4_Q1B[2,  2] <- qbq_q4_q1b_df[2,  6]
+Q4_Q1B[3,  1] <- qbq_q4_q1b_df[2,  7]
+Q4_Q1B[3,  2] <- qbq_q4_q1b_df[2,  8]
+Q4_Q1B[4,  1] <- qbq_q4_q1b_df[2,  9]
+Q4_Q1B[4,  2] <- qbq_q4_q1b_df[2, 10]
+Q4_Q1B[5,  1] <- qbq_q4_q1b_df[2, 11]
+Q4_Q1B[5,  2] <- qbq_q4_q1b_df[2, 12]
+Q4_Q1B[6,  1] <- qbq_q4_q1b_df[2, 13]
+Q4_Q1B[6,  2] <- qbq_q4_q1b_df[2, 14]
+
+Q4_Q1B_ms <- round(mean(Q4_Q1B[2]), digits = 2)
+
+# Q4 Build plot
+Q4_Q1B_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q4_Q1B, stat = "identity") +
+  geom_text(data = Q4_Q1B, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Question Q1B", subtitle = paste("Q4 (Summer 2020) Averages by Group - OA =", Q4_Q1B_ms)) 
+
+# Arrange the Q1B grids
+grid.arrange(Q1_Q1B_bar, Q2_Q1B_bar, ncol = 2)
+grid.arrange(Q3_Q1B_bar, Q4_Q1B_bar, ncol = 2)
 
 #
-# Subgroup 2
+# Question 1c
 #
 
-# Create the data table and display
-bmps_table <- with(grpfactors, table(Surveyed, BMPS))
+# Q1 Gather data
+qbq_q1_q1c_df <- transform(as.data.frame(full_year$Q1)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q1_Q1C <- data.frame(Group = 1:6, Avg = 1:6)
 
-cat("Data Summary - All Surveys")
-kable(bmps_table) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+Q1_Q1C[1,  1] <- qbq_q1_q1c_df[3,  3]
+Q1_Q1C[1,  2] <- qbq_q1_q1c_df[3,  4]
+Q1_Q1C[2,  1] <- qbq_q1_q1c_df[3,  5]
+Q1_Q1C[2,  2] <- qbq_q1_q1c_df[3,  6]
+Q1_Q1C[3,  1] <- qbq_q1_q1c_df[3,  7]
+Q1_Q1C[3,  2] <- qbq_q1_q1c_df[3,  8]
+Q1_Q1C[4,  1] <- qbq_q1_q1c_df[3,  9]
+Q1_Q1C[4,  2] <- qbq_q1_q1c_df[3, 10]
+Q1_Q1C[5,  1] <- qbq_q1_q1c_df[3, 11]
+Q1_Q1C[5,  2] <- qbq_q1_q1c_df[3, 12]
+Q1_Q1C[6,  1] <- qbq_q1_q1c_df[3, 13]
+Q1_Q1C[6,  2] <- qbq_q1_q1c_df[3, 14]
 
-# Convert to dataframe and set frequency position
-df <- as.data.frame(bmps_table)
-df <- ddply(df, .(BMPS),
-            transform, pos = cumsum(Freq))
+Q1_Q1C_ms <- round(mean(Q1_Q1C[2]), digits = 2)
 
-# Calc the number of "Always" responses
-bmps_trends <- with(grpfactors, table(BMPS, Surveyed))
-bmps_trends <- as.data.frame(bmps_trends)
-bmps_trends <- bmps_trends %>% filter(BMPS == "1-Very Satisfied")
-
-# Plot stacked bar for the group results
-bmps_plot <- ggplot() +
-  geom_bar(aes(x = BMPS, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = BMPS, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 2) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+# Q1 Build plot
+Q1_Q1C_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q1_Q1C, stat = "identity") +
+  geom_text(data = Q1_Q1C, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = "All Attributes / All Surveys")
+  labs(title = "Question Q1C", subtitle = paste("Q1 (Fall 2019) Averages by Group - OA =", Q1_Q1C_ms)) 
 
-# Calc the percentage of "Always" responses
-bmps_table_perc <- data.frame(Survey   = 1:length(unique(dat$Surveyed)),
-                              Very_Sat = 1:length(unique(dat$Surveyed)),
-                              PAS      = 1:length(unique(dat$Surveyed)),
-                              PCS      = 1:length(unique(dat$Surveyed)))
+# Q2 Gather data
+qbq_q2_q1c_df <- transform(as.data.frame(full_year$Q2)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q2_Q1C <- data.frame(Group = 1:6, Avg = 1:6)
 
-# Run through the data and summarize each survey; log number and %'s of "Always'
-for(i in 1:length(unique(dat$Surveyed))) {
-  bmps_table_perc[i,1] <- unique(dat$Surveyed)[i]
-  bmps_table_perc[i,2] <- bmps_table[i,1]
-  bmps_table_perc[i,3] <- round((bmps_table[i,1] / nrow(dat)), digits = 3) * 100
-  # Subtract 2 from ncol to drop NA/DNU and NR responses
-  bmps_table_perc[i,4] <- round((bmps_table[i,1] / sum(bmps_table[i, 1:(ncol(bmps_table)-2)])), digits = 3) * 100
-}
+Q2_Q1C[1,  1] <- qbq_q2_q1c_df[3,  3]
+Q2_Q1C[1,  2] <- qbq_q2_q1c_df[3,  4]
+Q2_Q1C[2,  1] <- qbq_q2_q1c_df[3,  5]
+Q2_Q1C[2,  2] <- qbq_q2_q1c_df[3,  6]
+Q2_Q1C[3,  1] <- qbq_q2_q1c_df[3,  7]
+Q2_Q1C[3,  2] <- qbq_q2_q1c_df[3,  8]
+Q2_Q1C[4,  1] <- qbq_q2_q1c_df[3,  9]
+Q2_Q1C[4,  2] <- qbq_q2_q1c_df[3, 10]
+Q2_Q1C[5,  1] <- qbq_q2_q1c_df[3, 11]
+Q2_Q1C[5,  2] <- qbq_q2_q1c_df[3, 12]
+Q2_Q1C[6,  1] <- qbq_q2_q1c_df[3, 13]
+Q2_Q1C[6,  2] <- qbq_q2_q1c_df[3, 14]
 
-# Plot stacked bar and "Always" results for all surveys
-bmps_trends_plot_pas <- ggplot() +
-  geom_bar(aes(x = Survey, y = PAS, fill = Survey),
-           data = bmps_table_perc, stat = "identity") +
-  geom_text(data = bmps_table_perc, aes(x = Survey, y = PAS, label = PAS), 
-            vjust = 1.5, color = "black", size = 3) + 
+Q2_Q1C_ms <- round(mean(Q2_Q1C[2]), digits = 2)
+
+# Q2 Build plot
+Q2_Q1C_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q2_Q1C, stat = "identity") +
+  geom_text(data = Q2_Q1C, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = "% Very Sat (All Surveys)")
+  labs(title = "Question Q1C", subtitle = paste("Q2 (Winter 2020) Averages by Group - OA =", Q2_Q1C_ms)) 
 
-# Plot stacked bar for the group results
-bmps_trends_plot_pcs <- ggplot() +
-  geom_bar(aes(x = Survey, y = PCS, fill = Survey),
-           data = bmps_table_perc, stat = "identity") +
-  geom_text(data = bmps_table_perc, aes(x = Survey, y = PCS, label = PCS), 
-            vjust = 1.5, color = "black", size = 3) + 
+
+# Q3 Gather data
+qbq_q3_q1c_df <- transform(as.data.frame(full_year$Q3)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q3_Q1C <- data.frame(Group = 1:6, Avg = 1:6)
+
+Q3_Q1C[1,  1] <- qbq_q3_q1c_df[3,  3]
+Q3_Q1C[1,  2] <- qbq_q3_q1c_df[3,  4]
+Q3_Q1C[2,  1] <- qbq_q3_q1c_df[3,  5]
+Q3_Q1C[2,  2] <- qbq_q3_q1c_df[3,  6]
+Q3_Q1C[3,  1] <- qbq_q3_q1c_df[3,  7]
+Q3_Q1C[3,  2] <- qbq_q3_q1c_df[3,  8]
+Q3_Q1C[4,  1] <- qbq_q3_q1c_df[3,  9]
+Q3_Q1C[4,  2] <- qbq_q3_q1c_df[3, 10]
+Q3_Q1C[5,  1] <- qbq_q3_q1c_df[3, 11]
+Q3_Q1C[5,  2] <- qbq_q3_q1c_df[3, 12]
+Q3_Q1C[6,  1] <- qbq_q3_q1c_df[3, 13]
+Q3_Q1C[6,  2] <- qbq_q3_q1c_df[3, 14]
+
+Q3_Q1C_ms <- round(mean(Q3_Q1C[2]), digits = 2)
+
+# Q3 Build plot
+Q3_Q1C_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q3_Q1C, stat = "identity") +
+  geom_text(data = Q3_Q1C, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = "% Very Sat (By Survey, no NR/DNU)")
+  labs(title = "Question Q1C", subtitle = paste("Q3 (Spring 2020) Averages by Group - OA =", Q3_Q1C_ms)) 
 
-# Arrange and display the two plots for pasting into deck
-grid.arrange(bmps_plot, bmps_trends_plot_pcs, ncol = 2)
 
-# Display the % improvement in "Always" to date
-bmps_imp <- bmps_table_perc[nrow(bmps_table_perc),4] - bmps_table_perc[1,4]
-cat("Change in 'Always' rating over period:", bmps_imp,"%")
+# Q4 Gather data
+qbq_q4_q1c_df <- transform(as.data.frame(full_year$Q4)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q4_Q1C <- data.frame(Group = 1:6, Avg = 1:6)
+
+Q4_Q1C[1,  1] <- qbq_q4_q1c_df[3,  3]
+Q4_Q1C[1,  2] <- qbq_q4_q1c_df[3,  4]
+Q4_Q1C[2,  1] <- qbq_q4_q1c_df[3,  5]
+Q4_Q1C[2,  2] <- qbq_q4_q1c_df[3,  6]
+Q4_Q1C[3,  1] <- qbq_q4_q1c_df[3,  7]
+Q4_Q1C[3,  2] <- qbq_q4_q1c_df[3,  8]
+Q4_Q1C[4,  1] <- qbq_q4_q1c_df[3,  9]
+Q4_Q1C[4,  2] <- qbq_q4_q1c_df[3, 10]
+Q4_Q1C[5,  1] <- qbq_q4_q1c_df[3, 11]
+Q4_Q1C[5,  2] <- qbq_q4_q1c_df[3, 12]
+Q4_Q1C[6,  1] <- qbq_q4_q1c_df[3, 13]
+Q4_Q1C[6,  2] <- qbq_q4_q1c_df[3, 14]
+
+Q4_Q1C_ms <- round(mean(Q4_Q1C[2]), digits = 2)
+
+# Q4 Build plot
+Q4_Q1C_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q4_Q1C, stat = "identity") +
+  geom_text(data = Q4_Q1C, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Question Q1C", subtitle = paste("Q4 (Summer 2020) Averages by Group - OA =", Q4_Q1C_ms)) 
+
+
+# Arrange the Q1C grids
+grid.arrange(Q1_Q1C_bar, Q2_Q1C_bar, ncol = 2)
+grid.arrange(Q3_Q1C_bar, Q4_Q1C_bar, ncol = 2)
 
 #
-# Subgroup 3
+# Question 2A
 #
 
-# Create the data table and display
-ba_table <- with(grpfactors, table(Surveyed, BusApps))
+# Q1 Gather data
+qbq_q1_q2a_df <- transform(as.data.frame(full_year$Q1)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q1_Q2A <- data.frame(Group = 1:6, Avg = 1:6)
 
-cat("Data Summary - All Surveys")
-kable(ba_table) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+Q1_Q2A[1,  1] <- qbq_q1_q2a_df[4,  3]
+Q1_Q2A[1,  2] <- qbq_q1_q2a_df[4,  4]
+Q1_Q2A[2,  1] <- qbq_q1_q2a_df[4,  5]
+Q1_Q2A[2,  2] <- qbq_q1_q2a_df[4,  6]
+Q1_Q2A[3,  1] <- qbq_q1_q2a_df[4,  7]
+Q1_Q2A[3,  2] <- qbq_q1_q2a_df[4,  8]
+Q1_Q2A[4,  1] <- qbq_q1_q2a_df[4,  9]
+Q1_Q2A[4,  2] <- qbq_q1_q2a_df[4, 10]
+Q1_Q2A[5,  1] <- qbq_q1_q2a_df[4, 11]
+Q1_Q2A[5,  2] <- qbq_q1_q2a_df[4, 12]
+Q1_Q2A[6,  1] <- qbq_q1_q2a_df[4, 13]
+Q1_Q2A[6,  2] <- qbq_q1_q2a_df[4, 14]
 
-# Convert to dataframe and set frequency position
-df <- as.data.frame(ba_table)
-df <- ddply(df, .(BusApps),
-            transform, pos = cumsum(Freq))
+Q1_Q2A_ms <- round(mean(Q1_Q2A[2]), digits = 2)
 
-# Calc the number of "Always" responses
-ba_trends <- with(grpfactors, table(BusApps, Surveyed))
-ba_trends <- as.data.frame(ba_trends)
-ba_trends <- ba_trends %>% filter(BusApps == "1-Very Satisfied")
-
-# Plot stacked bar for the group results
-ba_plot <- ggplot() +
-  geom_bar(aes(x = BusApps, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = BusApps, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 2) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+# Q1 Build plot
+Q1_Q2A_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q1_Q2A, stat = "identity") +
+  geom_text(data = Q1_Q2A, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Business Applications", subtitle = "All Attributes / All Surveys")
+  labs(title = "Question Q2A", subtitle = paste("Q1 (Fall 2019) Averages by Group - OA =", Q1_Q2A_ms)) 
 
-# Calc the percentage of "Always" responses
-ba_table_perc <- data.frame(Survey   = 1:length(unique(dat$Surveyed)),
-                              Very_Sat = 1:length(unique(dat$Surveyed)),
-                              PAS      = 1:length(unique(dat$Surveyed)),
-                              PCS      = 1:length(unique(dat$Surveyed)))
+# Q2 Gather data
+qbq_q2_q2a_df <- transform(as.data.frame(full_year$Q2)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q2_Q2A <- data.frame(Group = 1:6, Avg = 1:6)
 
-# Run through the data and summarize each survey; log number and %'s of "Always'
-for(i in 1:length(unique(dat$Surveyed))) {
-  ba_table_perc[i,1] <- unique(dat$Surveyed)[i]
-  ba_table_perc[i,2] <- ba_table[i,1]
-  ba_table_perc[i,3] <- round((ba_table[i,1] / nrow(dat)), digits = 3) * 100
-  # Subtract 2 from ncol to drop NA/DNU and NR responses
-  ba_table_perc[i,4] <- round((ba_table[i,1] / sum(ba_table[i, 1:(ncol(ba_table)-2)])), digits = 3) * 100
-}
+Q2_Q2A[1,  1] <- qbq_q2_q2a_df[4,  3]
+Q2_Q2A[1,  2] <- qbq_q2_q2a_df[4,  4]
+Q2_Q2A[2,  1] <- qbq_q2_q2a_df[4,  5]
+Q2_Q2A[2,  2] <- qbq_q2_q2a_df[4,  6]
+Q2_Q2A[3,  1] <- qbq_q2_q2a_df[4,  7]
+Q2_Q2A[3,  2] <- qbq_q2_q2a_df[4,  8]
+Q2_Q2A[4,  1] <- qbq_q2_q2a_df[4,  9]
+Q2_Q2A[4,  2] <- qbq_q2_q2a_df[4, 10]
+Q2_Q2A[5,  1] <- qbq_q2_q2a_df[4, 11]
+Q2_Q2A[5,  2] <- qbq_q2_q2a_df[4, 12]
+Q2_Q2A[6,  1] <- qbq_q2_q2a_df[4, 13]
+Q2_Q2A[6,  2] <- qbq_q2_q2a_df[4, 14]
 
-# Plot stacked bar and "Always" results for all surveys
-ba_trends_plot_pas <- ggplot() +
-  geom_bar(aes(x = Survey, y = PAS, fill = Survey),
-           data = ba_table_perc, stat = "identity") +
-  geom_text(data = ba_table_perc, aes(x = Survey, y = PAS, label = PAS), 
-            vjust = 1.5, color = "black", size = 3) + 
+Q2_Q2A_ms <- round(mean(Q2_Q2A[2]), digits = 2)
+
+# Q2 Build plot
+Q2_Q2A_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q2_Q2A, stat = "identity") +
+  geom_text(data = Q2_Q2A, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Busness Applications", subtitle = "% Very Sat (All Surveys)")
+  labs(title = "Question Q2A", subtitle = paste("Q2 (Winter 2020) Averages by Group - OA =", Q2_Q2A_ms))
+       
+# Q3 Gather data
+qbq_q3_q2a_df <- transform(as.data.frame(full_year$Q3)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q3_Q2A <- data.frame(Group = 1:6, Avg = 1:6)
 
-# Plot stacked bar for the group results
-ba_trends_plot_pcs <- ggplot() +
-  geom_bar(aes(x = Survey, y = PCS, fill = Survey),
-           data = ba_table_perc, stat = "identity") +
-  geom_text(data = ba_table_perc, aes(x = Survey, y = PCS, label = PCS), 
-            vjust = 1.5, color = "black", size = 3) + 
+Q3_Q2A[1,  1] <- qbq_q3_q2a_df[4,  3]
+Q3_Q2A[1,  2] <- qbq_q3_q2a_df[4,  4]
+Q3_Q2A[2,  1] <- qbq_q3_q2a_df[4,  5]
+Q3_Q2A[2,  2] <- qbq_q3_q2a_df[4,  6]
+Q3_Q2A[3,  1] <- qbq_q3_q2a_df[4,  7]
+Q3_Q2A[3,  2] <- qbq_q3_q2a_df[4,  8]
+Q3_Q2A[4,  1] <- qbq_q3_q2a_df[4,  9]
+Q3_Q2A[4,  2] <- qbq_q3_q2a_df[4, 10]
+Q3_Q2A[5,  1] <- qbq_q3_q2a_df[4, 11]
+Q3_Q2A[5,  2] <- qbq_q3_q2a_df[4, 12]
+Q3_Q2A[6,  1] <- qbq_q3_q2a_df[4, 13]
+Q3_Q2A[6,  2] <- qbq_q3_q2a_df[4, 14]
+
+Q3_Q2A_ms <- round(mean(Q3_Q2A[2]), digits = 2)
+
+# Q3 Build plot
+Q3_Q2A_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q3_Q2A, stat = "identity") +
+  geom_text(data = Q3_Q2A, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Business Applications", subtitle = "% Very Sat (By Survey, no NR/DNU)")
+  labs(title = "Question Q2A", subtitle = paste("Q3 (Spring 2020) Averages by Group - OA =", Q3_Q2A_ms))
 
-# Arrange and display the two plots for pasting into deck
-grid.arrange(ba_plot, ba_trends_plot_pcs, ncol = 2)
+# Q4 Gather data
+qbq_q4_q2a_df <- transform(as.data.frame(full_year$Q4)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q4_Q2A <- data.frame(Group = 1:6, Avg = 1:6)
 
-# Display the % improvement in "Always" to date
-ba_imp <- ba_table_perc[nrow(ba_table_perc),4] - ba_table_perc[1,4]
-cat("Change in 'Always' rating over period:", ba_imp,"%")
+Q4_Q2A[1,  1] <- qbq_q4_q2a_df[4,  3]
+Q4_Q2A[1,  2] <- qbq_q4_q2a_df[4,  4]
+Q4_Q2A[2,  1] <- qbq_q4_q2a_df[4,  5]
+Q4_Q2A[2,  2] <- qbq_q4_q2a_df[4,  6]
+Q4_Q2A[3,  1] <- qbq_q4_q2a_df[4,  7]
+Q4_Q2A[3,  2] <- qbq_q4_q2a_df[4,  8]
+Q4_Q2A[4,  1] <- qbq_q4_q2a_df[4,  9]
+Q4_Q2A[4,  2] <- qbq_q4_q2a_df[4, 10]
+Q4_Q2A[5,  1] <- qbq_q4_q2a_df[4, 11]
+Q4_Q2A[5,  2] <- qbq_q4_q2a_df[4, 12]
+Q4_Q2A[6,  1] <- qbq_q4_q2a_df[4, 13]
+Q4_Q2A[6,  2] <- qbq_q4_q2a_df[4, 14]
+
+Q4_Q2A_ms <- round(mean(Q4_Q2A[2]), digits = 2)
+
+# Q4 Build plot
+Q4_Q2A_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q4_Q2A, stat = "identity") +
+  geom_text(data = Q4_Q2A, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Question Q2A", subtitle = paste("Q4 (Summer 2020) Averages by Group - OA =", Q4_Q2A_ms))
+
+
+# Arrange the Q2A grids
+grid.arrange(Q1_Q2A_bar, Q2_Q2A_bar, ncol = 2)
+grid.arrange(Q3_Q2A_bar, Q4_Q2A_bar, ncol = 2)
 
 #
-# Subgroup 4
+# Question 2B
 #
 
-# Create the data table and display
-es_table <- with(grpfactors, table(Surveyed, EventSvcs))
+# Q1 Gather data
+qbq_q1_q2b_df <- transform(as.data.frame(full_year$Q1)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q1_Q2B <- data.frame(Group = 1:6, Avg = 1:6)
 
-cat("Data Summary - All Surveys")
-kable(es_table) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+Q1_Q2B[1,  1] <- qbq_q1_q2b_df[5,  3]
+Q1_Q2B[1,  2] <- qbq_q1_q2b_df[5,  4]
+Q1_Q2B[2,  1] <- qbq_q1_q2b_df[5,  5]
+Q1_Q2B[2,  2] <- qbq_q1_q2b_df[5,  6]
+Q1_Q2B[3,  1] <- qbq_q1_q2b_df[5,  7]
+Q1_Q2B[3,  2] <- qbq_q1_q2b_df[5,  8]
+Q1_Q2B[4,  1] <- qbq_q1_q2b_df[5,  9]
+Q1_Q2B[4,  2] <- qbq_q1_q2b_df[5, 10]
+Q1_Q2B[5,  1] <- qbq_q1_q2b_df[5, 11]
+Q1_Q2B[5,  2] <- qbq_q1_q2b_df[5, 12]
+Q1_Q2B[6,  1] <- qbq_q1_q2b_df[5, 13]
+Q1_Q2B[6,  2] <- qbq_q1_q2b_df[5, 14]
 
-# Convert to dataframe and set frequency position
-df <- as.data.frame(es_table)
-df <- ddply(df, .(EventSvcs),
-            transform, pos = cumsum(Freq))
+Q1_Q2B_ms <- round(mean(Q1_Q2B[2]), digits = 2)
 
-# Calc the number of "Always" responses
-es_trends <- with(grpfactors, table(EventSvcs, Surveyed))
-es_trends <- as.data.frame(es_trends)
-es_trends <- es_trends %>% filter(EventSvcs == "1-Very Satisfied")
-
-# Plot stacked bar for the group results
-es_plot <- ggplot() +
-  geom_bar(aes(x = EventSvcs, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = EventSvcs, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 2) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+# Q1 Build plot
+Q1_Q2B_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q1_Q2B, stat = "identity") +
+  geom_text(data = Q1_Q2B, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Event Services", subtitle = "All Attributes / All Surveys")
+  labs(title = "Question Q2B", subtitle = paste("Q1 (Fall 2019) Averages by Group - OA =", Q1_Q2B_ms)) 
 
-# Calc the percentage of "Always" responses
-es_table_perc <- data.frame(Survey   = 1:length(unique(dat$Surveyed)),
-                            Very_Sat = 1:length(unique(dat$Surveyed)),
-                            PAS      = 1:length(unique(dat$Surveyed)),
-                            PCS      = 1:length(unique(dat$Surveyed)))
+# Q2 Gather data
+qbq_q2_q2b_df <- transform(as.data.frame(full_year$Q2)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q2_Q2B <- data.frame(Group = 1:6, Avg = 1:6)
 
-# Run through the data and summarize each survey; log number and %'s of "Always'
-for(i in 1:length(unique(dat$Surveyed))) {
-  es_table_perc[i,1] <- unique(dat$Surveyed)[i]
-  es_table_perc[i,2] <- es_table[i,1]
-  es_table_perc[i,3] <- round((es_table[i,1] / nrow(dat)), digits = 3) * 100
-  # Subtract 2 from ncol to drop NA/DNU and NR responses
-  es_table_perc[i,4] <- round((es_table[i,1] / sum(es_table[i, 1:(ncol(es_table)-2)])), digits = 3) * 100
-}
+Q2_Q2B[1,  1] <- qbq_q2_q2b_df[5,  3]
+Q2_Q2B[1,  2] <- qbq_q2_q2b_df[5,  4]
+Q2_Q2B[2,  1] <- qbq_q2_q2b_df[5,  5]
+Q2_Q2B[2,  2] <- qbq_q2_q2b_df[5,  6]
+Q2_Q2B[3,  1] <- qbq_q2_q2b_df[5,  7]
+Q2_Q2B[3,  2] <- qbq_q2_q2b_df[5,  8]
+Q2_Q2B[4,  1] <- qbq_q2_q2b_df[5,  9]
+Q2_Q2B[4,  2] <- qbq_q2_q2b_df[5, 10]
+Q2_Q2B[5,  1] <- qbq_q2_q2b_df[5, 11]
+Q2_Q2B[5,  2] <- qbq_q2_q2b_df[5, 12]
+Q2_Q2B[6,  1] <- qbq_q2_q2b_df[5, 13]
+Q2_Q2B[6,  2] <- qbq_q2_q2b_df[5, 14]
 
-# Plot stacked bar and "Always" results for all surveys
-es_trends_plot_pas <- ggplot() +
-  geom_bar(aes(x = Survey, y = PAS, fill = Survey),
-           data = es_table_perc, stat = "identity") +
-  geom_text(data = es_table_perc, aes(x = Survey, y = PAS, label = PAS), 
-            vjust = 1.5, color = "black", size = 3) + 
+Q2_Q2B_ms <- round(mean(Q2_Q2B[2]), digits = 2)
+
+# Q2 Build plot
+Q2_Q2B_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q2_Q2B, stat = "identity") +
+  geom_text(data = Q2_Q2B, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Event Services", subtitle = "% Very Sat (All Surveys)")
+  labs(title = "Question Q2B", subtitle = paste("Q2 (Winter 2020) Averages by Group - OA =", Q2_Q2B_ms)) 
 
-# Plot stacked bar for the group results
-es_trends_plot_pcs <- ggplot() +
-  geom_bar(aes(x = Survey, y = PCS, fill = Survey),
-           data = es_table_perc, stat = "identity") +
-  geom_text(data = es_table_perc, aes(x = Survey, y = PCS, label = PCS), 
-            vjust = 1.5, color = "black", size = 3) + 
+# Q3 Gather data
+qbq_q3_q2b_df <- transform(as.data.frame(full_year$Q3)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q3_Q2B <- data.frame(Group = 1:6, Avg = 1:6)
+
+Q3_Q2B[1,  1] <- qbq_q3_q2b_df[5,  3]
+Q3_Q2B[1,  2] <- qbq_q3_q2b_df[5,  4]
+Q3_Q2B[2,  1] <- qbq_q3_q2b_df[5,  5]
+Q3_Q2B[2,  2] <- qbq_q3_q2b_df[5,  6]
+Q3_Q2B[3,  1] <- qbq_q3_q2b_df[5,  7]
+Q3_Q2B[3,  2] <- qbq_q3_q2b_df[5,  8]
+Q3_Q2B[4,  1] <- qbq_q3_q2b_df[5,  9]
+Q3_Q2B[4,  2] <- qbq_q3_q2b_df[5, 10]
+Q3_Q2B[5,  1] <- qbq_q3_q2b_df[5, 11]
+Q3_Q2B[5,  2] <- qbq_q3_q2b_df[5, 12]
+Q3_Q2B[6,  1] <- qbq_q3_q2b_df[5, 13]
+Q3_Q2B[6,  2] <- qbq_q3_q2b_df[5, 14]
+
+Q3_Q2B_ms <- round(mean(Q3_Q2B[2]), digits = 2)
+
+# Q3 Build plot
+Q3_Q2B_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q3_Q2B, stat = "identity") +
+  geom_text(data = Q3_Q2B, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Event Services", subtitle = "% Very Sat (By Survey, no NR/DNU)")
+  labs(title = "Question Q2B", subtitle = paste("Q3 (Spring 2020) Averages by Group - OA =", Q3_Q2B_ms)) 
 
-# Arrange and display the two plots for pasting into deck
-grid.arrange(es_plot, es_trends_plot_pcs, ncol = 2)
+# Q4 Gather data
+qbq_q4_q2b_df <- transform(as.data.frame(full_year$Q4)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q4_Q2B <- data.frame(Group = 1:6, Avg = 1:6)
 
-# Display the % improvement in "Always" to date
-es_imp <- es_table_perc[nrow(es_table_perc),4] - es_table_perc[1,4]
-cat("Change in 'Always' rating over period:", es_imp,"%")
+Q4_Q2B[1,  1] <- qbq_q4_q2b_df[5,  3]
+Q4_Q2B[1,  2] <- qbq_q4_q2b_df[5,  4]
+Q4_Q2B[2,  1] <- qbq_q4_q2b_df[5,  5]
+Q4_Q2B[2,  2] <- qbq_q4_q2b_df[5,  6]
+Q4_Q2B[3,  1] <- qbq_q4_q2b_df[5,  7]
+Q4_Q2B[3,  2] <- qbq_q4_q2b_df[5,  8]
+Q4_Q2B[4,  1] <- qbq_q4_q2b_df[5,  9]
+Q4_Q2B[4,  2] <- qbq_q4_q2b_df[5, 10]
+Q4_Q2B[5,  1] <- qbq_q4_q2b_df[5, 11]
+Q4_Q2B[5,  2] <- qbq_q4_q2b_df[5, 12]
+Q4_Q2B[6,  1] <- qbq_q4_q2b_df[5, 13]
+Q4_Q2B[6,  2] <- qbq_q4_q2b_df[5, 14]
+
+Q4_Q2B_ms <- round(mean(Q4_Q2B[2]), digits = 2)
+
+# Q4 Build plot
+Q4_Q2B_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q4_Q2B, stat = "identity") +
+  geom_text(data = Q4_Q2B, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Question Q2B", subtitle = paste("Q4 (Summer 2020) Averages by Group - OA =", Q4_Q2B_ms)) 
+
+# Arrange the Q2B grids
+grid.arrange(Q1_Q2B_bar, Q2_Q2B_bar, ncol = 2)
+grid.arrange(Q3_Q2B_bar, Q4_Q2B_bar, ncol = 2)
 
 #
-# Subgroup 5
+# Question 3x
 #
 
-# Create the data table and display
-ps_table <- with(grpfactors, table(Surveyed, ProjSupp))
+# Q1 Gather data
+qbq_q1_q3x_df <- transform(as.data.frame(full_year$Q1)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q1_Q3x <- data.frame(Group = 1:6, Avg = 1:6)
 
-cat("Data Summary - All Surveys")
-kable(ps_table) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+Q1_Q3x[1,  1] <- qbq_q1_q3x_df[6,  3]
+Q1_Q3x[1,  2] <- qbq_q1_q3x_df[6,  4]
+Q1_Q3x[2,  1] <- qbq_q1_q3x_df[6,  5]
+Q1_Q3x[2,  2] <- qbq_q1_q3x_df[6,  6]
+Q1_Q3x[3,  1] <- qbq_q1_q3x_df[6,  7]
+Q1_Q3x[3,  2] <- qbq_q1_q3x_df[6,  8]
+Q1_Q3x[4,  1] <- qbq_q1_q3x_df[6,  9]
+Q1_Q3x[4,  2] <- qbq_q1_q3x_df[6, 10]
+Q1_Q3x[5,  1] <- qbq_q1_q3x_df[6, 11]
+Q1_Q3x[5,  2] <- qbq_q1_q3x_df[6, 12]
+Q1_Q3x[6,  1] <- qbq_q1_q3x_df[6, 13]
+Q1_Q3x[6,  2] <- qbq_q1_q3x_df[6, 14]
 
-# Convert to dataframe and set frequency position
-df <- as.data.frame(ps_table)
-df <- ddply(df, .(ProjSupp),
-            transform, pos = cumsum(Freq))
+Q1_Q3x_ms <- round(mean(Q1_Q3x[2]), digits = 2)
 
-# Calc the number of "Always" responses
-ps_trends <- with(grpfactors, table(ProjSupp, Surveyed))
-ps_trends <- as.data.frame(ps_trends)
-ps_trends <- ps_trends %>% filter(ProjSupp == "1-Very Satisfied")
-
-# Plot stacked bar for the group results
-ps_plot <- ggplot() +
-  geom_bar(aes(x = ProjSupp, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = ProjSupp, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 2) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+# Q1 Build plot
+Q1_Q3x_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q1_Q3x, stat = "identity") +
+  geom_text(data = Q1_Q3x, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = "All Attributes / All Surveys")
+  labs(title = "Question 3x", subtitle = paste("Q1 (Fall 2019) Averages by Group - OA =", Q1_Q3x_ms)) 
 
-# Calc the percentage of "Always" responses
-ps_table_perc <- data.frame(Survey   = 1:length(unique(dat$Surveyed)),
-                            Very_Sat = 1:length(unique(dat$Surveyed)),
-                            PAS      = 1:length(unique(dat$Surveyed)),
-                            PCS      = 1:length(unique(dat$Surveyed)))
+# Q2 Gather data
+qbq_q2_q3x_df <- transform(as.data.frame(full_year$Q2)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q2_Q3x <- data.frame(Group = 1:6, Avg = 1:6)
 
-# Run through the data and summarize each survey; log number and %'s of "Always'
-for(i in 1:length(unique(dat$Surveyed))) {
-  ps_table_perc[i,1] <- unique(dat$Surveyed)[i]
-  ps_table_perc[i,2] <- ps_table[i,1]
-  ps_table_perc[i,3] <- round((ps_table[i,1] / nrow(dat)), digits = 3) * 100
-  # Subtract 2 from ncol to drop NA/DNU and NR responses
-  ps_table_perc[i,4] <- round((ps_table[i,1] / sum(ps_table[i, 1:(ncol(ps_table)-2)])), digits = 3) * 100
-}
+Q2_Q3x[1,  1] <- qbq_q2_q3x_df[6,  3]
+Q2_Q3x[1,  2] <- qbq_q2_q3x_df[6,  4]
+Q2_Q3x[2,  1] <- qbq_q2_q3x_df[6,  5]
+Q2_Q3x[2,  2] <- qbq_q2_q3x_df[6,  6]
+Q2_Q3x[3,  1] <- qbq_q2_q3x_df[6,  7]
+Q2_Q3x[3,  2] <- qbq_q2_q3x_df[6,  8]
+Q2_Q3x[4,  1] <- qbq_q2_q3x_df[6,  9]
+Q2_Q3x[4,  2] <- qbq_q2_q3x_df[6, 10]
+Q2_Q3x[5,  1] <- qbq_q2_q3x_df[6, 11]
+Q2_Q3x[5,  2] <- qbq_q2_q3x_df[6, 12]
+Q2_Q3x[6,  1] <- qbq_q2_q3x_df[6, 13]
+Q2_Q3x[6,  2] <- qbq_q2_q3x_df[6, 14]
 
-# Plot stacked bar and "Always" results for all surveys
-ps_trends_plot_pas <- ggplot() +
-  geom_bar(aes(x = Survey, y = PAS, fill = Survey),
-           data = ps_table_perc, stat = "identity") +
-  geom_text(data = ps_table_perc, aes(x = Survey, y = PAS, label = PAS), 
-            vjust = 1.5, color = "black", size = 3) + 
+Q2_Q3x_ms <- round(mean(Q2_Q3x[2]), digits = 2)
+
+# Q2 Build plot
+Q2_Q3x_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q2_Q3x, stat = "identity") +
+  geom_text(data = Q2_Q3x, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = "% Very Sat (All Surveys)")
+  labs(title = "Question 3x", subtitle = paste("Q2 (Winter 2020) Averages by Group - OA =", Q2_Q3x_ms)) 
 
-# Plot stacked bar for the group results
-ps_trends_plot_pcs <- ggplot() +
-  geom_bar(aes(x = Survey, y = PCS, fill = Survey),
-           data = ps_table_perc, stat = "identity") +
-  geom_text(data = ps_table_perc, aes(x = Survey, y = PCS, label = PCS), 
-            vjust = 1.5, color = "black", size = 3) + 
+# Q3 Gather data
+qbq_q3_q3x_df <- transform(as.data.frame(full_year$Q3)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q3_Q3x <- data.frame(Group = 1:6, Avg = 1:6)
+
+Q3_Q3x[1,  1] <- qbq_q3_q3x_df[6,  3]
+Q3_Q3x[1,  2] <- qbq_q3_q3x_df[6,  4]
+Q3_Q3x[2,  1] <- qbq_q3_q3x_df[6,  5]
+Q3_Q3x[2,  2] <- qbq_q3_q3x_df[6,  6]
+Q3_Q3x[3,  1] <- qbq_q3_q3x_df[6,  7]
+Q3_Q3x[3,  2] <- qbq_q3_q3x_df[6,  8]
+Q3_Q3x[4,  1] <- qbq_q3_q3x_df[6,  9]
+Q3_Q3x[4,  2] <- qbq_q3_q3x_df[6, 10]
+Q3_Q3x[5,  1] <- qbq_q3_q3x_df[6, 11]
+Q3_Q3x[5,  2] <- qbq_q3_q3x_df[6, 12]
+Q3_Q3x[6,  1] <- qbq_q3_q3x_df[6, 13]
+Q3_Q3x[6,  2] <- qbq_q3_q3x_df[6, 14]
+
+Q3_Q3x_ms <- round(mean(Q3_Q3x[2]), digits = 2)
+
+# Q3 Build plot
+Q3_Q3x_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q3_Q3x, stat = "identity") +
+  geom_text(data = Q3_Q3x, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = "% Very Sat (By Survey, no NR/DNU)")
+  labs(title = "Question 3x", subtitle = paste("Q3 (Spring 2020) Averages by Group - OA =", Q3_Q3x_ms)) 
 
-# Arrange and display the two plots for pasting into deck
-grid.arrange(ps_plot, ps_trends_plot_pcs, ncol = 2)
+# Q4 Gather data
+qbq_q4_q3x_df <- transform(as.data.frame(full_year$Q1)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q4_Q3x <- data.frame(Group = 1:6, Avg = 1:6)
 
-# Display the % improvement in "Always" to date
-ps_imp <- ps_table_perc[nrow(ps_table_perc),4] - ps_table_perc[1,4]
-cat("Change in 'Always' rating over period:", ps_imp,"%")
+Q4_Q3x[1,  1] <- qbq_q4_q3x_df[6,  3]
+Q4_Q3x[1,  2] <- qbq_q4_q3x_df[6,  4]
+Q4_Q3x[2,  1] <- qbq_q4_q3x_df[6,  5]
+Q4_Q3x[2,  2] <- qbq_q4_q3x_df[6,  6]
+Q4_Q3x[3,  1] <- qbq_q4_q3x_df[6,  7]
+Q4_Q3x[3,  2] <- qbq_q4_q3x_df[6,  8]
+Q4_Q3x[4,  1] <- qbq_q4_q3x_df[6,  9]
+Q4_Q3x[4,  2] <- qbq_q4_q3x_df[6, 10]
+Q4_Q3x[5,  1] <- qbq_q4_q3x_df[6, 11]
+Q4_Q3x[5,  2] <- qbq_q4_q3x_df[6, 12]
+Q4_Q3x[6,  1] <- qbq_q4_q3x_df[6, 13]
+Q4_Q3x[6,  2] <- qbq_q4_q3x_df[6, 14]
 
-#
-# Subgroup 6
-#
+Q4_Q3x_ms <- round(mean(Q4_Q3x[2]), digits = 2)
 
-# Create the data table and display
-sd_table <- with(grpfactors, table(Surveyed, ServDesk))
-
-cat("Data Summary - All Surveys")
-kable(sd_table) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(sd_table)
-df <- ddply(df, .(ServDesk),
-            transform, pos = cumsum(Freq))
-
-# Calc the number of "Always" responses
-sd_trends <- with(grpfactors, table(ServDesk, Surveyed))
-sd_trends <- as.data.frame(sd_trends)
-sd_trends <- sd_trends %>% filter(ServDesk == "1-Very Satisfied")
-
-# Plot stacked bar for the group results
-sd_plot <- ggplot() +
-  geom_bar(aes(x = ServDesk, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = ServDesk, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 2) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+# Q4 Build plot
+Q4_Q3x_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+           data = Q4_Q3x, stat = "identity") +
+  geom_text(data = Q4_Q3x, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = "All Attributes / All Surveys")
+  labs(title = "Question 3x", subtitle = paste("Q4 (Summer 2020) Averages by Group - OA =", Q4_Q3x_ms)) 
 
-# Calc the percentage of "Always" responses
-sd_table_perc <- data.frame(Survey   = 1:length(unique(dat$Surveyed)),
-                            Very_Sat = 1:length(unique(dat$Surveyed)),
-                            PAS      = 1:length(unique(dat$Surveyed)),
-                            PCS      = 1:length(unique(dat$Surveyed)))
-
-# Run through the data and summarize each survey; log number and %'s of "Always'
-for(i in 1:length(unique(dat$Surveyed))) {
-  sd_table_perc[i,1] <- unique(dat$Surveyed)[i]
-  sd_table_perc[i,2] <- sd_table[i,1]
-  sd_table_perc[i,3] <- round((sd_table[i,1] / nrow(dat)), digits = 3) * 100
-  # Subtract 2 from ncol to drop NA/DNU and NR responses
-  sd_table_perc[i,4] <- round((sd_table[i,1] / sum(sd_table[i, 1:(ncol(sd_table)-2)])), digits = 3) * 100
-}
-
-# Plot stacked bar and "Always" results for all surveys
-sd_trends_plot_pas <- ggplot() +
-  geom_bar(aes(x = Survey, y = PAS, fill = Survey),
-           data = sd_table_perc, stat = "identity") +
-  geom_text(data = sd_table_perc, aes(x = Survey, y = PAS, label = PAS), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = "% Very Sat (All Surveys)")
-
-# Plot stacked bar for the group results
-sd_trends_plot_pcs <- ggplot() +
-  geom_bar(aes(x = Survey, y = PCS, fill = Survey),
-           data = sd_table_perc, stat = "identity") +
-  geom_text(data = sd_table_perc, aes(x = Survey, y = PCS, label = PCS), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = "% Very Sat (By Survey, no NR/DNU)")
-
-# Arrange and display the two plots for pasting into deck
-grid.arrange(sd_plot, sd_trends_plot_pcs, ncol = 2)
-
-# Display the % improvement in "Always" to date
-sd_imp <- sd_table_perc[nrow(sd_table_perc),4] - sd_table_perc[1,4]
-cat("Change in 'Always' rating over period:", sd_imp,"%")
-
-#
-# Subgroup 7
-#
-
-# Create the data table and display
-ss_table <- with(grpfactors, table(Surveyed, StudioSvcs))
-
-cat("Data Summary - All Surveys")
-kable(ss_table) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(ss_table)
-df <- ddply(df, .(StudioSvcs),
-            transform, pos = cumsum(Freq))
-
-# Calc the number of "Always" responses
-ss_trends <- with(grpfactors, table(StudioSvcs, Surveyed))
-ss_trends <- as.data.frame(ss_trends)
-ss_trends <- ss_trends %>% filter(StudioSvcs == "1-Very Satisfied")
-
-# Plot stacked bar for the group results
-ss_plot <- ggplot() +
-  geom_bar(aes(x = StudioSvcs, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = StudioSvcs, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 2) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  theme(legend.position = "none") +
-  labs(title = "Studio Services", subtitle = "All Attributes / All Surveys")
-
-# Calc the percentage of "Always" responses
-ss_table_perc <- data.frame(Survey   = 1:length(unique(dat$Surveyed)),
-                            Very_Sat = 1:length(unique(dat$Surveyed)),
-                            PAS      = 1:length(unique(dat$Surveyed)),
-                            PCS      = 1:length(unique(dat$Surveyed)))
-
-# Run through the data and summarize each survey; log number and %'s of "Always'
-for(i in 1:length(unique(dat$Surveyed))) {
-  ss_table_perc[i,1] <- unique(dat$Surveyed)[i]
-  ss_table_perc[i,2] <- ss_table[i,1]
-  ss_table_perc[i,3] <- round((ss_table[i,1] / nrow(dat)), digits = 3) * 100
-  # Subtract 2 from ncol to drop NA/DNU and NR responses
-  ss_table_perc[i,4] <- round((ss_table[i,1] / sum(ss_table[i, 1:(ncol(ss_table)-2)])), digits = 3) * 100
-}
-
-# Plot stacked bar and "Always" results for all surveys
-ss_trends_plot_pas <- ggplot() +
-  geom_bar(aes(x = Survey, y = PAS, fill = Survey),
-           data = ss_table_perc, stat = "identity") +
-  geom_text(data = ss_table_perc, aes(x = Survey, y = PAS, label = PAS), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Studio Services", subtitle = "% Very Sat (All Surveys)")
-
-# Plot stacked bar for the group results
-ss_trends_plot_pcs <- ggplot() +
-  geom_bar(aes(x = Survey, y = PCS, fill = Survey),
-           data = ss_table_perc, stat = "identity") +
-  geom_text(data = ss_table_perc, aes(x = Survey, y = PCS, label = PCS), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Studio Services", subtitle = "% Very Sat (By Survey, no NR/DNU)")
-
-# Arrange and display the two plots for pasting into deck
-grid.arrange(ss_plot, ss_trends_plot_pcs, ncol = 2)
-
-# Display the % improvement in "Always" to date
-ss_imp <- ss_table_perc[nrow(ss_table_perc),4] - ss_table_perc[1,4]
-cat("Change in 'Always' rating over period:", ss_imp,"%")
-
-#
-# Subgroup 8
-#
-
-# Create the data table and display
-vm_table <- with(grpfactors, table(Surveyed, VenMgmt))
-
-cat("Data Summary - All Surveys")
-kable(vm_table) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
-
-# Convert to dataframe and set frequency position
-df <- as.data.frame(vm_table)
-df <- ddply(df, .(VenMgmt),
-            transform, pos = cumsum(Freq))
-
-# Calc the number of "Always" responses
-vm_trends <- with(grpfactors, table(VenMgmt, Surveyed))
-vm_trends <- as.data.frame(vm_trends)
-vm_trends <- vm_trends %>% filter(VenMgmt == "1-Very Satisfied")
-
-# Plot stacked bar for the group results
-vm_plot <- ggplot() +
-  geom_bar(aes(x = VenMgmt, y = Freq, fill = Surveyed), 
-           position = position_stack(reverse = TRUE), data = df, stat = "identity") +
-  geom_text(data = df, aes(x = VenMgmt, y = pos, label = Freq), 
-            vjust = 1.5, color = "black", size = 2) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  theme(legend.position = "none") +
-  labs(title = "Vendor Management", subtitle = "All Attributes / All Surveys")
-
-# Calc the percentage of "Always" responses
-vm_table_perc <- data.frame(Survey   = 1:length(unique(dat$Surveyed)),
-                            Very_Sat = 1:length(unique(dat$Surveyed)),
-                            PAS      = 1:length(unique(dat$Surveyed)),
-                            PCS      = 1:length(unique(dat$Surveyed)))
-
-# Run through the data and summarize each survey; log number and %'s of "Always'
-for(i in 1:length(unique(dat$Surveyed))) {
-  vm_table_perc[i,1] <- unique(dat$Surveyed)[i]
-  vm_table_perc[i,2] <- vm_table[i,1]
-  vm_table_perc[i,3] <- round((vm_table[i,1] / nrow(dat)), digits = 3) * 100
-  # Subtract 2 from ncol to drop NA/DNU and NR responses
-  vm_table_perc[i,4] <- round((vm_table[i,1] / sum(vm_table[i, 1:(ncol(vm_table)-2)])), digits = 3) * 100
-}
-
-# Plot stacked bar and "Always" results for all surveys
-vm_trends_plot_pas <- ggplot() +
-  geom_bar(aes(x = Survey, y = PAS, fill = Survey),
-           data = vm_table_perc, stat = "identity") +
-  geom_text(data = vm_table_perc, aes(x = Survey, y = PAS, label = PAS), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Vendor Management", subtitle = "% Very Sat (All Surveys)")
-
-# Plot stacked bar for the group results
-vm_trends_plot_pcs <- ggplot() +
-  geom_bar(aes(x = Survey, y = PCS, fill = Survey),
-           data = vm_table_perc, stat = "identity") +
-  geom_text(data = vm_table_perc, aes(x = Survey, y = PCS, label = PCS), 
-            vjust = 1.5, color = "black", size = 3) + 
-  theme(legend.position = "none") +
-  labs(title = "Vendor Management", subtitle = "% Very Sat (By Survey, no NR/DNU)")
-
-# Arrange and display the two plots for pasting into deck
-grid.arrange(vm_plot, vm_trends_plot_pcs, ncol = 2)
-
-# Display the % improvement in "Always" to date
-vm_imp <- vm_table_perc[nrow(vm_table_perc),4] - vm_table_perc[1,4]
-cat("Change in 'Always' rating over period:", vm_imp,"%")
-
-#
-# Create summary grids for groups
-#
-
-# Arrange the 8 subgroup plots in two 2x2 formatted pieces - by survey
-grid.arrange(
-  am_trends_plot_pcs,
-  bmps_trends_plot_pcs,
-  ba_trends_plot_pcs,
-  es_trends_plot_pcs, ncol = 2)
-
-grid.arrange(
-  ps_trends_plot_pcs,
-  sd_trends_plot_pcs,
-  ss_trends_plot_pcs,
-  vm_trends_plot_pcs, ncol = 2)
-
-# Arrange the 8 subgroup plots in two 2x2 formatted pieces - all surveys
-# grid.arrange(
-#   am_trends_plot_pas,
-#   bmps_trends_plot_pas,
-#   ba_trends_plot_pas,
-#   es_trends_plot_pas, ncol = 2)
-# 
-# grid.arrange(
-#   ps_trends_plot_pas,
-#   sd_trends_plot_pas,
-#   ss_trends_plot_pas,
-#   vm_trends_plot_pas, ncol = 2)
-
-cat("Account Managers improvement to date:     ", am_imp,"%")
-cat("BMPS improvement to date:                 ", bmps_imp,"%")
-cat("Business Applications improvement to date:", ba_imp,"%")
-cat("Event Services improvement to date:       ", es_imp,"%")
-cat("Project Support improvement to date:      ", ps_imp,"%")
-cat("Service Desk improvement to date:         ", sd_imp,"%")
-cat("Studio Services improvement to date:      ", ss_imp,"%")
-cat("Vendor Management improvement to date:    ", vm_imp,"%")
+# Arrange the Q3x grids
+grid.arrange(Q1_Q3x_bar, Q2_Q3x_bar, ncol = 2)
+grid.arrange(Q3_Q3x_bar, Q4_Q3x_bar, ncol = 2)
 
 #--------------------------------------------------------------------
 #
 # End
 #
 #--------------------------------------------------------------------
-
-# By survey question
-q1a_results <- transform(dat[c(1,  2, 3, 4, 5, 6, 7)])
-q1b_results <- transform(dat[c(1,  8, 9,10,11,12,13)])
-q1c_results <- transform(dat[c(1, 14,15,16,17,18,19)])
-q2a_results <- transform(dat[c(1, 20,21,22,23,24,25)])
-q2b_results <- transform(dat[c(1, 26,27,28,29,30,31)])
-q3x_results  <- transform(dat[c(1, 32,33,34,35,36,37)])
-
-# Survey 1 (Fall) Group 1 Question 1A
-q1_results_AM <- transform(q1_results[c(1, 2, 8,14,20,26,32)])
-q2_results_AM <- transform(q2_results[c(1, 2, 8,14,20,26,32)])
-q3_results_AM <- transform(q3_results[c(1, 2, 8,14,20,26,32)])
-q4_results_AM <- transform(q4_results[c(1, 2, 8,14,20,26,32)])
-
-
