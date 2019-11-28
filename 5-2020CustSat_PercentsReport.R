@@ -1690,8 +1690,41 @@ Q4_Q3x_bar <- ggplot() +
 grid.arrange(Q1_Q3x_bar, Q2_Q3x_bar, ncol = 2)
 grid.arrange(Q3_Q3x_bar, Q4_Q3x_bar, ncol = 2)
 
+#-------------------------------------------------------------------------------
+#
+# Full Year Summary stacked bar charts
+#
+#-------------------------------------------------------------------------------
+
+# Groiups Chart
+full_year_groups <- ggplot(data = fy_df, aes(x = Group, y = Avg, fill = Qtr)) +
+  geom_bar(stat="identity", position=position_dodge()) +
+  geom_text(aes(label = Avg), angle = 90, color="black",
+            position = position_dodge(0.9), size=3.5) +
+  labs(title = "Full Year Average Scores by Group") +
+  scale_fill_brewer(palette="Reds")
+
+# Questions Chart
+fy_q1 <- qbq_q1_df %>% mutate(Quarter = unique(dat$Surveyed)[1])
+fy_q2 <- qbq_q2_df %>% mutate(Quarter = unique(dat$Surveyed)[2])
+fy_q3 <- qbq_q3_df %>% mutate(Quarter = unique(dat$Surveyed)[3])
+fy_q4 <- qbq_q4_df %>% mutate(Quarter = unique(dat$Surveyed)[4])
+fy_questions <- fy_q1
+fy_questions <- rbind(fy_questions, fy_q2)
+fy_questions <- rbind(fy_questions, fy_q3)
+fy_questions <- rbind(fy_questions, fy_q4)
+
+full_year_questions <- ggplot(data = fy_questions, aes(x = Question, y = Avg, fill = Quarter)) +
+  geom_bar(stat="identity", position=position_dodge()) +
+  geom_text(aes(label = Avg), angle = 90, color="black",
+            position = position_dodge(0.9), size=3.5) +
+  labs(title = "Full Year Average Scores by Question") +
+  scale_fill_brewer(palette="Reds")
+
 #--------------------------------------------------------------------
 #
 # End
 #
 #--------------------------------------------------------------------
+
+
