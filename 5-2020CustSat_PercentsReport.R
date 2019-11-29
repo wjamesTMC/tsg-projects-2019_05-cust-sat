@@ -44,6 +44,7 @@ library(purrr)
 
 # Import and Open the data file / Establish the data set
 data_filename <- gs_title("Test 2020 Survey")
+data_filename <- gs_title("2019-2020 TSG Satisfaction Survey")
 dat <- gs_read(data_filename, stringsAsFactors = FALSE)
 
 #
@@ -532,7 +533,7 @@ am_bar_Q1 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Account Managers", subtitle = paste("Q1 (Fall 2019) Average Score by Question - OA =",ms))
+  labs(title = "Account Managers", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
 
 #
 # business Analysts
@@ -549,7 +550,7 @@ ba_bar_Q1 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Business Analysts", subtitle = paste("Q1 (Fall 2019) Average Score by Question - OA =",ms))
+  labs(title = "Business Analysts", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
 
 #
 # B&MPS
@@ -566,7 +567,7 @@ bm_bar_Q1 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = paste("Q1 (Fall 2019) Average Score by Question - OA =",ms))
+  labs(title = "B&MPS", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
 
 #
 # Project Support
@@ -583,7 +584,7 @@ ps_bar_Q1 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = paste("Q1 (Fall 2019) Average Score by Question - OA =",ms))
+  labs(title = "Project Support", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
 
 #
 # Service Desk
@@ -600,7 +601,7 @@ sd_bar_Q1 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = paste("Q1 (Fall 2019) Average Score by Question - OA =",ms))
+  labs(title = "Service Desk", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
 
 #
 # Vendor Managers
@@ -617,7 +618,11 @@ vm_bar_Q1 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Vendor Managers", subtitle = paste("Q1 (Fall 2019) Average Score by Question - OA =",ms))
+  labs(title = "Vendor Managers", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
+
+grid.arrange(am_bar_Q1, ba_bar_Q1, ncol = 2)
+grid.arrange(bm_bar_Q1, ps_bar_Q1, ncol = 2)
+grid.arrange(sd_bar_Q1, vm_bar_Q1, ncol = 2)
 
 #-------------------------------------------------------------------------------
 #  Quarter 2
@@ -641,7 +646,7 @@ am_bar_Q2 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Account Managers", subtitle = paste("Q2 (Winter 2020) Average Score by Question - OA =",ms))
+  labs(title = "Account Managers", subtitle = paste("Q2 (Winter) Average Score =",ms))
 
 #
 # business Analysts
@@ -658,7 +663,7 @@ ba_bar_Q2 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Business Analysts", subtitle = paste("Q2 (Winter 2020) Average Score by Question - OA =",ms))
+  labs(title = "Business Analysts", subtitle = paste("Q2 (Winter) Average Score =",ms))
 
 #
 # B&MPS
@@ -675,7 +680,7 @@ bm_bar_Q2 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = paste("Q2 (Winter 2020) Average Score by Question - OA =",ms))
+  labs(title = "B&MPS", subtitle = paste("Q2 (Winter) Average Score =",ms))
 
 #
 # Project Support
@@ -692,7 +697,7 @@ ps_bar_Q2 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = paste("Q2 (Winter 2020) Average Score by Question - OA =",ms))
+  labs(title = "Project Support", subtitle = paste("Q2 (Winter) Average Score =",ms))
 
 #
 # Service Desk
@@ -709,7 +714,7 @@ sd_bar_Q2 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = paste("Q2 (Winter 2020) Average Score by Question - OA =",ms))
+  labs(title = "Service Desk", subtitle = paste("Q2 (Winter) Average Score =",ms))
 
 
 #
@@ -727,7 +732,11 @@ vm_bar_Q2 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Vendor Managers", subtitle = paste("Q2 (Winter 2020) Average Score by Question - OA =",ms))
+  labs(title = "Vendor Managers", subtitle = paste("Q2 (Winter) Average Score =",ms))
+
+grid.arrange(am_bar_Q2, ba_bar_Q2, ncol = 2)
+grid.arrange(bm_bar_Q2, ps_bar_Q2, ncol = 2)
+grid.arrange(sd_bar_Q2, vm_bar_Q2, ncol = 2)
 
 #-------------------------------------------------------------------------------
 #  Quarter 3
@@ -751,7 +760,7 @@ am_bar_Q3 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Account Managers", subtitle = paste("Q3 (Spring 2020) Average Score by Question - OA =",ms))
+  labs(title = "Account Managers", subtitle = paste("Q3 (Spring) Average Score =",ms))
 
 #
 # business Analysts
@@ -768,7 +777,7 @@ ba_bar_Q3 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Business Analysts", subtitle = paste("Q3 (Spring 2020) Average Score by Question - OA =",ms))
+  labs(title = "Business Analysts", subtitle = paste("Q3 (Spring) Average Score =",ms))
 
 #
 # B&MPS
@@ -785,7 +794,7 @@ bm_bar_Q3 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = paste("Q3 (Spring 2020) Average Score by Question - OA =",ms))
+  labs(title = "B&MPS", subtitle = paste("Q3 (Spring) Average Score =",ms))
 
 #
 # Project Support
@@ -802,7 +811,7 @@ ps_bar_Q3 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = paste("Q3 (Spring 2020) Average Score by Question - OA =",ms))
+  labs(title = "Project Support", subtitle = paste("Q3 (Spring) Average Score =",ms))
 
 #
 # Service Desk
@@ -819,7 +828,7 @@ sd_bar_Q3 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = paste("Q3 (Spring 2020) Average Score by Question - OA =",ms))
+  labs(title = "Service Desk", subtitle = paste("Q3 (Spring) Average Score =",ms))
 
 
 #
@@ -837,8 +846,11 @@ vm_bar_Q3 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Vendor Managers", subtitle = paste("Q3 (Spring 2020) Average Score by Question - OA =",ms))
+  labs(title = "Vendor Managers", subtitle = paste("Q3 (Spring) Average Score =",ms))
 
+grid.arrange(am_bar_Q3, ba_bar_Q3, ncol = 2)
+grid.arrange(bm_bar_Q3, ps_bar_Q3, ncol = 2)
+grid.arrange(sd_bar_Q3, vm_bar_Q3, ncol = 2)
 
 #-------------------------------------------------------------------------------
 #  Quarter 4
@@ -862,7 +874,7 @@ am_bar_Q4 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Account Managers", subtitle = paste("Q4 (Summer 2020) Average Score by Question - OA =",ms))
+  labs(title = "Account Managers", subtitle = paste("Q4 (Summer) Average Score =",ms))
 
 #
 # business Analysts
@@ -879,7 +891,7 @@ ba_bar_Q4 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Business Analysts", subtitle = paste("Q4 (Summer 2020) Average Score by Question - OA =",ms))
+  labs(title = "Business Analysts", subtitle = paste("Q4 (Summer) Average Score =",ms))
 
 #
 # B&MPS
@@ -896,7 +908,7 @@ bm_bar_Q4 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = paste("Q4 (Summer 2020) Average Score by Question - OA =",ms))
+  labs(title = "B&MPS", subtitle = paste("Q4 (Summer) Average Score =",ms))
 
 #
 # Project Support
@@ -913,7 +925,7 @@ ps_bar_Q4 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = paste("Q4 (Summer 2020) Average Score by Question - OA =",ms))
+  labs(title = "Project Support", subtitle = paste("Q4 (Summer) Average Score =",ms))
 
 #
 # Service Desk
@@ -930,7 +942,7 @@ sd_bar_Q4 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = paste("Q4 (Summer 2020) Average Score by Question - OA =",ms))
+  labs(title = "Service Desk", subtitle = paste("Q4 (Summer) Average Score =",ms))
 
 
 #
@@ -948,7 +960,11 @@ vm_bar_Q4 <- ggplot() +
   geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
-  labs(title = "Vendor Managers", subtitle = paste("Q4 (Summer 2020) Average Score by Question - OA =",ms))
+  labs(title = "Vendor Managers", subtitle = paste("Q4 (Summer) Average Score =",ms))
+
+grid.arrange(am_bar_Q4, ba_bar_Q4, ncol = 2)
+grid.arrange(bm_bar_Q4, ps_bar_Q4, ncol = 2)
+grid.arrange(sd_bar_Q4, vm_bar_Q4, ncol = 2)
 
 #-------------------------------------------------------------------------------
 #
@@ -1689,6 +1705,30 @@ Q4_Q3x_bar <- ggplot() +
 # Arrange the Q3x grids
 grid.arrange(Q1_Q3x_bar, Q2_Q3x_bar, ncol = 2)
 grid.arrange(Q3_Q3x_bar, Q4_Q3x_bar, ncol = 2)
+
+#
+# Quarterly summary grids by question
+#
+
+# Arrange the quarterly grids - Q1
+grid.arrange(Q1_Q1A_bar, Q1_Q1B_bar, ncol = 2)
+grid.arrange(Q1_Q1C_bar, Q1_Q2A_bar, ncol = 2)
+grid.arrange(Q1_Q2B_bar, Q1_Q3x_bar, ncol = 2)
+
+# Arrange the quarterly grids - Q2
+grid.arrange(Q2_Q1A_bar, Q2_Q1B_bar, ncol = 2)
+grid.arrange(Q2_Q1C_bar, Q2_Q2A_bar, ncol = 2)
+grid.arrange(Q2_Q2B_bar, Q2_Q3x_bar, ncol = 2)
+
+# Arrange the quarterly grids - Q3
+grid.arrange(Q3_Q1A_bar, Q3_Q1B_bar, ncol = 2)
+grid.arrange(Q3_Q1C_bar, Q3_Q2A_bar, ncol = 2)
+grid.arrange(Q3_Q2B_bar, Q3_Q3x_bar, ncol = 2)
+
+# Arrange the quarterly grids - Q4
+grid.arrange(Q4_Q1A_bar, Q4_Q1B_bar, ncol = 2)
+grid.arrange(Q4_Q1C_bar, Q4_Q2A_bar, ncol = 2)
+grid.arrange(Q4_Q2B_bar, Q4_Q3x_bar, ncol = 2)
 
 #-------------------------------------------------------------------------------
 #
