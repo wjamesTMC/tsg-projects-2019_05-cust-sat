@@ -44,7 +44,7 @@ library(purrr)
 
 # Import and Open the data file / Establish the data set
 data_filename <- gs_title("Test 2020 Survey")
-data_filename <- gs_title("2019-2020 TSG Satisfaction Survey")
+data_filename <- gs_title("2019-2020 TSG Satisfaction Survey_T")
 dat <- gs_read(data_filename, stringsAsFactors = FALSE)
 
 #
@@ -134,14 +134,14 @@ dat[dat == ""]                       <- 0
 ################################################################################
 
 # Create the dataframes to hold all the results
-res_df     <- data.frame(Qtr = 1:6,   Grp = 1:6,   Q = 1:6,   Avg = 1:6)
+res_df     <- data.frame(Quarter = 1:6,   Grp = 1:6,   Question = 1:6,   Avg = 1:6)
 
-res_df_am  <- data.frame(Qtr = 1:6,   Grp = 1:6,   Q = 1:6,   Avg = 1:6)
-res_df_ba  <- data.frame(Qtr = 1:6,   Grp = 1:6,   Q = 1:6,   Avg = 1:6)
-res_df_bm  <- data.frame(Qtr = 1:6,   Grp = 1:6,   Q = 1:6,   Avg = 1:6)
-res_df_ps  <- data.frame(Qtr = 1:6,   Grp = 1:6,   Q = 1:6,   Avg = 1:6)
-res_df_sd  <- data.frame(Qtr = 1:6,   Grp = 1:6,   Q = 1:6,   Avg = 1:6)
-res_df_vm  <- data.frame(Qtr = 1:6,   Grp = 1:6,   Q = 1:6,   Avg = 1:6)
+res_df_am  <- data.frame(Quarter = 1:6,   Grp = 1:6,   Question = 1:6,   Avg = 1:6)
+res_df_ba  <- data.frame(Quarter = 1:6,   Grp = 1:6,   Question = 1:6,   Avg = 1:6)
+res_df_bm  <- data.frame(Quarter = 1:6,   Grp = 1:6,   Question = 1:6,   Avg = 1:6)
+res_df_ps  <- data.frame(Quarter = 1:6,   Grp = 1:6,   Question = 1:6,   Avg = 1:6)
+res_df_sd  <- data.frame(Quarter = 1:6,   Grp = 1:6,   Question = 1:6,   Avg = 1:6)
+res_df_vm  <- data.frame(Quarter = 1:6,   Grp = 1:6,   Question = 1:6,   Avg = 1:6)
 
 grp_x_qtr  <- list(res_df_am, res_df_ba, res_df_bm, res_df_ps, res_df_sd, res_df_vm)
 full_year  <- list(Q1 = grp_x_qtr, Q2 = grp_x_qtr, Q3 = grp_x_qtr, Q4 = grp_x_qtr)
@@ -158,12 +158,10 @@ am_results  <- transform(dat[c(1, 2, 8,14,20,26,32)])
 ba_results  <- transform(dat[c(1, 3, 9,15,21,27,33)])
 bm_results  <- transform(dat[c(1, 4,10,16,22,28,34)])
 ps_results  <- transform(dat[c(1, 5,11,17,23,29,35)])
-sd_results  <- transform(dat[c(1, 6,12,18,24,30,36)])
+vm_results  <- transform(dat[c(1, 6,12,18,24,30,36)])
 vm_results  <- transform(dat[c(1, 7,13,19,25,31,37)])
 
 results_list <- list(am_results, ba_results, bm_results, ps_results, sd_results, vm_results)
-
-
 
 #
 # Process each group, quarter by quarter
@@ -291,7 +289,7 @@ sapply(dat, function(x)length(unique(x)))
 # Set up dataframe to collect the mean for each question by group
 #
 
-fy_df <- data.frame(Qtr = 1:24, Group = 1:24, Avg = 1:24)
+fy_df <- data.frame(Quarter = 1:24, Group = 1:24, Avg = 1:24)
 
 # Populate the first two colums
 fy_df[ 1:6, 1]  <- unique(dat$Surveyed)[1]
@@ -308,7 +306,7 @@ fy_df[19:24,2] <- t(groups)[ ,1:6]
 # Set up the dataframe to collect data for summary of questions
 #
 
-qs_df <- data.frame(Group = 1:24, Q1A = 1:24, Q1B = 1:24, Q1C = 1:24, Q2A = 1:24, Q2B = 1:24, Q3x = 1:24)
+qs_df <- data.frame(Grp = 1:24, Q1A = 1:24, Q1B = 1:24, Q1C = 1:24, Q2A = 1:24, Q2B = 1:24, Q3x = 1:24)
 qs_df[ 1:6, 1] <- t(groups)[ ,1:6]
 qs_df[ 7:12,1] <- t(groups)[ ,1:6]
 qs_df[13:18,1] <- t(groups)[ ,1:6]
@@ -336,7 +334,7 @@ qs_df[19:24,1] <- t(groups)[ ,1:6]
 #-------------------------------------------------------------------------------
 
 # Q1 Assemble data
-gbq_q1_df <- fy_df %>% filter(Qtr == unique(dat$Surveyed)[1])
+gbq_q1_df <- fy_df %>% filter(Quarter == unique(dat$Surveyed)[1])
 for(i in 1:6) {
   gbq_q1_df[i,3] <- round(mean(full_year$Q1[[i]]$Avg), digits = 2)
 }
@@ -347,11 +345,11 @@ gbq_q1_bar <- ggplot() +
            data = gbq_q1_df, stat = "identity") +
   geom_text(data = gbq_q1_df, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
+  theme(legend.position = "none")  +
   labs(title = "Response Averages", subtitle = "Q1 (Fall 2019) - By Group")     
 
 # Q2 Assemble data
-gbq_q2_df <- fy_df %>% filter(Qtr == unique(dat$Surveyed)[2])
+gbq_q2_df <- fy_df %>% filter(Quarter == unique(dat$Surveyed)[2])
 for(i in 1:6) {
   gbq_q2_df[i,3] <- round(mean(full_year$Q2[[i]]$Avg), digits = 2)
 }
@@ -366,14 +364,14 @@ gbq_q2_bar <- ggplot() +
   labs(title = "Response Averages", subtitle = "Q2 (Winter 2020) - By Group")  
 
 # Q3 Assemble data
-gbq_q3_df <- fy_df %>% filter(Qtr == unique(dat$Surveyed)[3])
+gbq_q3_df <- fy_df %>% filter(Quarter == unique(dat$Surveyed)[3])
 for(i in 1:6) {
   gbq_q3_df[i,3] <- round(mean(full_year$Q3[[i]]$Avg), digits = 2)
 }
 
 # Q3 Build plot
 gbq_q3_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = gbq_q3_df, stat = "identity") +
   geom_text(data = gbq_q3_df, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -381,14 +379,14 @@ gbq_q3_bar <- ggplot() +
   labs(title = "Response Averages", subtitle = "Q3 (Spring 2020) - By Group") 
 
 # Q4 Assemble data
-gbq_q4_df <- fy_df %>% filter(Qtr == unique(dat$Surveyed)[4])
+gbq_q4_df <- fy_df %>% filter(Quarter == unique(dat$Surveyed)[4])
 for(i in 1:6) {
   gbq_q4_df[i,3] <- round(mean(full_year$Q4[[i]]$Avg), digits = 2)
 }
 
 # Q4 Build plot
 gbq_q4_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = gbq_q4_df, stat = "identity") +
   geom_text(data = gbq_q4_df, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -397,27 +395,49 @@ gbq_q4_bar <- ggplot() +
 
 #-------------------------------------------------------------------------------
 #
+# Assemble grouped bar charts for quarter to quarter comparisons of Groups
+#
+#-------------------------------------------------------------------------------
+
+# Add quarters as the data becomes available
+df_mq_by_group <- gbq_q1_df
+df_mq_by_group <- rbind(df_mq_by_group, gbq_q2_df)
+# df_mq_by_group <- rbind(df_mq_by_group, gbq_q3_df)
+# df_mq_by_group <- rbind(df_mq_by_group, gbq_q4_df)
+
+ggplot(data = df_mq_by_group, aes(x = Group, y = Avg, fill = Quarter)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(data = df_mq_by_group, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.6, color = "white",
+            position = position_dodge(0.9), size=3.5) +
+  scale_fill_brewer(palette="Paired")+
+  theme_minimal() +
+  labs(title = "Response Averages", subtitle = "Q1 / Q2 - By Group") 
+
+#-------------------------------------------------------------------------------
+#
 #  Response Averages by Question
 #
 #-------------------------------------------------------------------------------
 
 # Q1 Gather data
-qbq_q1_df <- data.frame(Question = 1:6, Avg = 1:6)
+qbq_q1_df <- data.frame(Quarter = 1:6, Question = 1:6, Avg = 1:6)
 
 x = 0
 for(i in 1:6) {
-  qbq_q1_df[i,1] <- questions[i]
+  qbq_q1_df[i,1] <- "Q1-F19"
+  qbq_q1_df[i,2] <- questions[i]
   for(j in 1:6) {
     x <- x + full_year$Q1[[j]]$Avg[i]
   }
   x <- x / 6
-  qbq_q1_df[i,2] <- round(x, digits = 2)
+  qbq_q1_df[i,3] <- round(x, digits = 2)
   x = 0
 }
 
 # Q1 Build plot
 qbq_q1_bar <- ggplot() +
-  geom_bar(aes(x = Question, y = Avg, fill = "red"),
+  geom_bar(aes(x = Question, y = Avg, fill = "Quarter"),
            data = qbq_q1_df, stat = "identity") +
   geom_text(data = qbq_q1_df, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -425,16 +445,17 @@ qbq_q1_bar <- ggplot() +
   labs(title = "Response Averages", subtitle = "Q1 (Fall 2019) - By Question") 
 
 # Q2 Gather data
-qbq_q2_df <- data.frame(Question = 1:6, Avg = 1:6)
+qbq_q2_df <- data.frame(Quarter = 1:6, Question = 1:6, Avg = 1:6)
 
 x = 0
 for(i in 1:6) {
-  qbq_q2_df[i,1] <- questions[i]
+  qbq_q2_df[i,1] <- "Q2-W20"
+  qbq_q2_df[i,2] <- questions[i]
   for(j in 1:6) {
     x <- x + full_year$Q2[[j]]$Avg[i]
   }
   x <- x / 6
-  qbq_q2_df[i,2] <- round(x, digits = 2)
+  qbq_q2_df[i,3] <- round(x, digits = 2)
   x = 0
 }
 
@@ -464,7 +485,7 @@ for(i in 1:6) {
 
 # Q3 Build plot
 qbq_q3_bar <- ggplot() +
-  geom_bar(aes(x = Question, y = Avg, fill = "red"),
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
            data = qbq_q3_df, stat = "identity") +
   geom_text(data = qbq_q3_df, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -488,7 +509,7 @@ for(i in 1:6) {
 
 # Q4 Build plot
 qbq_q4_bar <- ggplot() +
-  geom_bar(aes(x = Question, y = Avg, fill = "red"),
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
            data = qbq_q4_df, stat = "identity") +
   geom_text(data = qbq_q4_df, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -496,12 +517,31 @@ qbq_q4_bar <- ggplot() +
   labs(title = "Response Averages", subtitle = "Q4 (Summer 2020) - By Question") 
 
 
-# Arrange the grids
+# Arrange the grids if the single side-by-side comparison is desired
 grid.arrange(gbq_q1_bar, gbq_q2_bar, ncol = 2)
 grid.arrange(gbq_q3_bar, gbq_q4_bar, ncol = 2)
 
-grid.arrange(qbq_q1_bar, qbq_q2_bar, ncol = 2)
-grid.arrange(qbq_q3_bar, qbq_q4_bar, ncol = 2)
+#-------------------------------------------------------------------------------
+#
+# Assemble grouped bar charts for quarter to quarter comparisons of Questions
+#
+#-------------------------------------------------------------------------------
+
+# Add quarters as the data becomes available
+df_mq_by_question <- qbq_q1_df
+df_mq_by_question <- rbind(df_mq_by_question, qbq_q2_df)
+# df_mq_by_question <- rbind(df_mq_by_question, qbq_q3_df)
+# df_mq_by_question <- rbind(df_mq_by_question, qbq_q4_df)
+
+ggplot(data = df_mq_by_question, aes(x = Question, y = Avg, fill = Quarter)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(data = df_mq_by_question, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.6, color = "white",
+            position = position_dodge(0.9), size=3.5) +
+  scale_fill_brewer(palette="Paired")+
+  theme_minimal() +
+  labs(title = "Response Averages", subtitle = "Q1 / Q2 - By Question") 
+
 
 #-------------------------------------------------------------------------------
 #
@@ -513,458 +553,487 @@ grid.arrange(qbq_q3_bar, qbq_q4_bar, ncol = 2)
 #
 #-------------------------------------------------------------------------------
 
-#-------------------------------------------------------------------------------
-#  Quarter 1
-#    One chart per group
-#-------------------------------------------------------------------------------
-
 #
 # Account Managers
 #
 
-grp_df <- as.data.frame(full_year$Q1[1])
-ms <- round(mean(grp_df$Avg), digits = 2)
+# Q1
+am_df_q1 <- as.data.frame(full_year$Q1[1])
+ms <- round(mean(am_df_q1$Avg), digits = 2)
 fy_df[1,2] <- "AM"
 fy_df[1,3] <- ms
 
 am_bar_Q1 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+  geom_bar(aes(x = Question, y = Avg, fill = "red"),
+           data = am_df_q1, stat = "identity") +
+  geom_text(data = am_df_q1, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
   labs(title = "Account Managers", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
 
-#
-# business Analysts
-#
-
-grp_df <- as.data.frame(full_year$Q1[2])
-ms <- round(mean(grp_df$Avg), digits = 2)
-fy_df[2,2] <- "BA"
-fy_df[2,3] <- ms
-
-ba_bar_Q1 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Business Analysts", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
-
-#
-# B&MPS
-#
-
-grp_df <- as.data.frame(full_year$Q1[3])
-ms <- round(mean(grp_df$Avg), digits = 2)
-fy_df[3,2] <- "B&MPS"
-fy_df[3,3] <- ms
-
-bm_bar_Q1 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
-
-#
-# Project Support
-#
-
-grp_df <- as.data.frame(full_year$Q1[4])
-ms <- round(mean(grp_df$Avg), digits = 2)
-fy_df[4,2] <- "PS"
-fy_df[4,3] <- ms
-
-ps_bar_Q1 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
-
-#
-# Service Desk
-#
-
-grp_df <- as.data.frame(full_year$Q1[5])
-ms <- round(mean(grp_df$Avg), digits = 2)
-fy_df[5,2] <- "SD"
-fy_df[5,3] <- ms
-
-sd_bar_Q1 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
-
-#
-# Vendor Managers
-#
-
-grp_df <- as.data.frame(full_year$Q1[6])
-ms <- round(mean(grp_df$Avg), digits = 2)
-fy_df[6,2] <- "VM"
-fy_df[6,3] <- ms
-
-vm_bar_Q1 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Vendor Managers", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
-
-grid.arrange(am_bar_Q1, ba_bar_Q1, ncol = 2)
-grid.arrange(bm_bar_Q1, ps_bar_Q1, ncol = 2)
-grid.arrange(sd_bar_Q1, vm_bar_Q1, ncol = 2)
-
-#-------------------------------------------------------------------------------
-#  Quarter 2
-#    One chart per group
-#    X = Question
-#    Y - Average Score
-#-------------------------------------------------------------------------------
-
-#
-# Account Managers
-#
-
-grp_df <- as.data.frame(full_year$Q2[1])
-ms <- round(mean(grp_df$Avg), digits = 2)
+# Q2
+am_df_q2 <- as.data.frame(full_year$Q2[1])
+ms <- round(mean(am_df_q2$Avg), digits = 2)
 fy_df[7,2] <- "AM"
 fy_df[7,3] <- ms
 
 am_bar_Q2 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = am_df_q2, stat = "identity") +
+  geom_text(data = am_df_q2, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
   labs(title = "Account Managers", subtitle = paste("Q2 (Winter) Average Score =",ms))
 
-#
-# business Analysts
-#
-
-grp_df <- as.data.frame(full_year$Q2[2])
-ms <- round(mean(grp_df$Avg), digits = 2)
-fy_df[8,2] <- "BA"
-fy_df[8,3] <- ms
-
-ba_bar_Q2 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Business Analysts", subtitle = paste("Q2 (Winter) Average Score =",ms))
-
-#
-# B&MPS
-#
-
-grp_df <- as.data.frame(full_year$Q2[3])
-ms <- round(mean(grp_df$Avg), digits = 2)
-fy_df[9,2] <- "B&MPS"
-fy_df[9,3] <- ms
-
-bm_bar_Q2 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = paste("Q2 (Winter) Average Score =",ms))
-
-#
-# Project Support
-#
-
-grp_df <- as.data.frame(full_year$Q2[4])
-ms <- round(mean(grp_df$Avg), digits = 2)
-fy_df[10,2] <- "PS"
-fy_df[10,3] <- ms
-
-ps_bar_Q2 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = paste("Q2 (Winter) Average Score =",ms))
-
-#
-# Service Desk
-#
-
-grp_df <- as.data.frame(full_year$Q2[5])
-ms <- round(mean(grp_df$Avg), digits = 2)
-fy_df[11,2] <- "SD"
-fy_df[11,3] <- ms
-
-sd_bar_Q2 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = paste("Q2 (Winter) Average Score =",ms))
-
-
-#
-# Vendor Managers
-#
-
-grp_df <- as.data.frame(full_year$Q2[6])
-ms <- round(mean(grp_df$Avg), digits = 2)
-fy_df[12,2] <- "VM"
-fy_df[12,3] <- ms
-
-vm_bar_Q2 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Vendor Managers", subtitle = paste("Q2 (Winter) Average Score =",ms))
-
-grid.arrange(am_bar_Q2, ba_bar_Q2, ncol = 2)
-grid.arrange(bm_bar_Q2, ps_bar_Q2, ncol = 2)
-grid.arrange(sd_bar_Q2, vm_bar_Q2, ncol = 2)
-
-#-------------------------------------------------------------------------------
-#  Quarter 3
-#    One chart per group
-#    X = Question
-#    Y - Average Score
-#-------------------------------------------------------------------------------
-
-#
-# Account Managers
-#
-
-grp_df <- as.data.frame(full_year$Q3[1])
-ms <- round(mean(grp_df$Avg), digits = 2)
+# Q3
+am_df_q3 <- as.data.frame(full_year$Q3[1])
+ms <- round(mean(am_df_q3$Avg), digits = 2)
 fy_df[13,2] <- "AM"
 fy_df[13,3] <- ms
 
 am_bar_Q3 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = am_df_q3, stat = "identity") +
+  geom_text(data = am_df_q3, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
   labs(title = "Account Managers", subtitle = paste("Q3 (Spring) Average Score =",ms))
 
-#
-# business Analysts
-#
-
-grp_df <- as.data.frame(full_year$Q3[2])
-ms <- round(mean(grp_df$Avg), digits = 2)
-fy_df[14,2] <- "BA"
-fy_df[14,3] <- ms
-
-ba_bar_Q3 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Business Analysts", subtitle = paste("Q3 (Spring) Average Score =",ms))
-
-#
-# B&MPS
-#
-
-grp_df <- as.data.frame(full_year$Q3[3])
-ms <- round(mean(grp_df$Avg), digits = 2)
-fy_df[15,2] <- "B&MPS"
-fy_df[15,3] <- ms
-
-bm_bar_Q3 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "B&MPS", subtitle = paste("Q3 (Spring) Average Score =",ms))
-
-#
-# Project Support
-#
-
-grp_df <- as.data.frame(full_year$Q3[4])
-ms <- round(mean(grp_df$Avg), digits = 2)
-fy_df[16,2] <- "PS"
-fy_df[16,3] <- ms
-
-ps_bar_Q3 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Project Support", subtitle = paste("Q3 (Spring) Average Score =",ms))
-
-#
-# Service Desk
-#
-
-grp_df <- as.data.frame(full_year$Q3[5])
-ms <- round(mean(grp_df$Avg), digits = 2)
-fy_df[17,2] <- "SD"
-fy_df[17,3] <- ms
-
-sd_bar_Q3 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Service Desk", subtitle = paste("Q3 (Spring) Average Score =",ms))
-
-
-#
-# Vendor Managers
-#
-
-grp_df <- as.data.frame(full_year$Q3[6])
-ms <- round(mean(grp_df$Avg), digits = 2)
-fy_df[18,2] <- "VM"
-fy_df[18,3] <- ms
-
-vm_bar_Q3 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Vendor Managers", subtitle = paste("Q3 (Spring) Average Score =",ms))
-
-grid.arrange(am_bar_Q3, ba_bar_Q3, ncol = 2)
-grid.arrange(bm_bar_Q3, ps_bar_Q3, ncol = 2)
-grid.arrange(sd_bar_Q3, vm_bar_Q3, ncol = 2)
-
-#-------------------------------------------------------------------------------
-#  Quarter 4
-#    One chart per group
-#    X = Question
-#    Y - Average Score
-#-------------------------------------------------------------------------------
-
-#
-# Account Managers
-#
-
-grp_df <- as.data.frame(full_year$Q4[1])
-ms <- round(mean(grp_df$Avg), digits = 2)
+# Q4
+am_df_q4 <- as.data.frame(full_year$Q4[1])
+ms <- round(mean(am_df_q4$Avg), digits = 2)
 fy_df[19,2] <- "AM"
-fy_df[19,3] <- ms
+fy_df[19,3] <-  ms 
 
 am_bar_Q4 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = am_df_q4, stat = "identity") +
+  geom_text(data = am_df_q4, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
   labs(title = "Account Managers", subtitle = paste("Q4 (Summer) Average Score =",ms))
 
 #
+# Assemble grouped bar charts for quarter to quarter comparisons of Questions
+#
+
+# Add quarters as the data becomes available
+am_bar_df <- am_df_q1
+am_bar_df <- rbind(am_bar_df, am_df_q2)
+# am_bar_df <- rbind(am_bar_df, am_df_q3)
+# am_bar_df <- rbind(am_bar_df, am_df_q4)
+
+ggplot(data = am_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(data = am_bar_df, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.6, color = "white",
+            position = position_dodge(0.9), size=3.5) +
+  scale_fill_brewer(palette="Paired")+
+  theme_minimal() +
+  labs(title = "Account Managers", subtitle = "Response Averages by Question - Quarter-to-Quarter Comparison") 
+
+
+#
 # business Analysts
 #
 
-grp_df <- as.data.frame(full_year$Q4[2])
-ms <- round(mean(grp_df$Avg), digits = 2)
+# Q1
+ba_df_q1 <- as.data.frame(full_year$Q1[2])
+ms <- round(mean(ba_df_q1$Avg), digits = 2)
+fy_df[2,2] <- "BA"
+fy_df[2,3] <-  ms
+
+ba_bar_Q1 <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = ba_df_q1, stat = "identity") +
+  geom_text(data = ba_df_q1, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Business Analysts", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
+
+# Q2
+ba_df_q2 <- as.data.frame(full_year$Q2[2])
+ms <- round(mean(ba_df_q2$Avg), digits = 2)
+fy_df[8,2] <- "BA"
+fy_df[8,3] <-  ms
+
+ba_bar_Q2 <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = ba_df_q2, stat = "identity") +
+  geom_text(data = ba_df_q2, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Business Analysts", subtitle = paste("Q2 (Winter) Average Score =",ms))
+
+# Q3
+ba_df_q3 <- as.data.frame(full_year$Q3[2])
+ms <- round(mean(ba_df_q3$Avg), digits = 2)
+fy_df[14,2] <- "BA"
+fy_df[14,3] <-  ms
+
+ba_bar_Q3 <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = ba_df_q3, stat = "identity") +
+  geom_text(data = ba_df_q3, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Business Analysts", subtitle = paste("Q3 (Spring) Average Score =",ms))
+
+# Q4
+ba_df_q4 <- as.data.frame(full_year$Q4[2])
+ms <- round(mean(ba_df_q4$Avg), digits = 2)
 fy_df[20,2] <- "BA"
 fy_df[20,3] <- ms
 
 ba_bar_Q4 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = ba_df_q4, stat = "identity") +
+  geom_text(data = ba_df_q4, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
   labs(title = "Business Analysts", subtitle = paste("Q4 (Summer) Average Score =",ms))
+
+
+#
+# Assemble grouped bar charts for quarter to quarter comparisons of Questions
+#
+
+# Add quarters as the data becomes available
+ba_bar_df <- ba_df_q1
+ba_bar_df <- rbind(ba_bar_df, ba_df_q2)
+# ba_bar_df <- rbind(ba_bar_df, ba_df_q3)
+# ba_bar_df <- rbind(ba_bar_df, ba_df_q4)
+
+ggplot(data = ba_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(data = ba_bar_df, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.6, color = "white",
+            position = position_dodge(0.9), size=3.5) +
+  scale_fill_brewer(palette="Paired")+
+  theme_minimal() +
+  labs(title = "Business Analysts", subtitle = "Response Averages by Question - Quarter-to-Quarter Comparison") 
+
 
 #
 # B&MPS
 #
 
-grp_df <- as.data.frame(full_year$Q4[3])
-ms <- round(mean(grp_df$Avg), digits = 2)
+bm_df_q1 <- as.data.frame(full_year$Q1[3])
+ms <- round(mean(bm_df_q1$Avg), digits = 2)
+fy_df[3,2] <- "B&MPS"
+fy_df[3,3] <-  ms
+
+bm_bar_Q1 <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = bm_df_q1, stat = "identity") +
+  geom_text(data = bm_df_q1, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "B&MPS", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
+
+# Q2
+bm_df_q2 <- as.data.frame(full_year$Q2[3])
+ms <- round(mean(bm_df_q2$Avg), digits = 2)
+fy_df[9,2] <- "B&MPS"
+fy_df[9,3] <- ms
+
+bm_bar_Q2 <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = bm_df_q2, stat = "identity") +
+  geom_text(data = bm_df_q2, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "B&MPS", subtitle = paste("Q2 (Winter) Average Score =",ms))
+
+# Q3
+bm_df_q3 <- as.data.frame(full_year$Q3[3])
+ms <- round(mean(bm_df_q3$Avg), digits = 2)
+fy_df[15,2] <- "B&MPS"
+fy_df[15,3] <- ms
+
+bm_bar_Q3 <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = bm_df_q3, stat = "identity") +
+  geom_text(data = bm_df_q3, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "B&MPS", subtitle = paste("Q3 (Spring) Average Score =",ms))
+
+bm_df_q4 <- as.data.frame(full_year$Q4[3])
+ms <- round(mean(bm_df_q4$Avg), digits = 2)
 fy_df[21,2] <- "B&MPS"
 fy_df[21,3] <- ms
 
+# Q4
 bm_bar_Q4 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = bm_df_q4, stat = "identity") +
+  geom_text(data = bm_df_q4, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
   labs(title = "B&MPS", subtitle = paste("Q4 (Summer) Average Score =",ms))
 
 #
+# Assemble grouped bar charts for quarter to quarter comparisons of Questions
+#
+
+# Add quarters as the data becomes available
+bm_bar_df <- bm_df_q1
+bm_bar_df <- rbind(bm_bar_df, bm_df_q2)
+# bm_bar_df <- rbind(bm_bar_df, bm_df_q3)
+# bm_bar_df <- rbind(bm_bar_df, bm_df_q4)
+
+ggplot(data = bm_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(data = bm_bar_df, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.6, color = "white",
+            position = position_dodge(0.9), size=3.5) +
+  scale_fill_brewer(palette="Paired")+
+  theme_minimal() +
+  labs(title = "B&MPS", subtitle = "Response Averages by Question - Quarter-to-Quarter Comparison") 
+
+#
 # Project Support
 #
 
-grp_df <- as.data.frame(full_year$Q4[4])
-ms <- round(mean(grp_df$Avg), digits = 2)
+# Q1
+ps_df_q1 <- as.data.frame(full_year$Q1[4])
+ms <- round(mean(ps_df_q1$Avg), digits = 2)
+fy_df[4,2] <- "PS"
+fy_df[4,3] <- ms
+
+ps_bar_Q1 <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = ps_df_q1, stat = "identity") +
+  geom_text(data = ps_df_q1, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Project Support", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
+
+# Q2
+ps_df_q2 <- as.data.frame(full_year$Q2[4])
+ms <- round(mean(ps_df_q2$Avg), digits = 2)
+fy_df[10,2] <- "PS"
+fy_df[10,3] <- ms
+
+ps_bar_Q2 <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = ps_df_q2, stat = "identity") +
+  geom_text(data = ps_df_q2, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Project Support", subtitle = paste("Q2 (Winter) Average Score =",ms))
+
+# Q3
+ps_df_q3 <- as.data.frame(full_year$Q3[4])
+ms <- round(mean(ps_df_q3$Avg), digits = 2)
+fy_df[16,2] <- "PS"
+fy_df[16,3] <- ms
+
+ps_bar_Q3 <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = ps_df_q3, stat = "identity") +
+  geom_text(data = ps_df_q3, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Project Support", subtitle = paste("Q3 (Spring) Average Score =",ms))
+
+# Q4
+ps_df_q4 <- as.data.frame(full_year$Q4[4])
+ms <- round(mean(ps_df_q4$Avg), digits = 2)
 fy_df[22,2] <- "PS"
 fy_df[22,3] <- ms
 
 ps_bar_Q4 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = ps_df_q4, stat = "identity") +
+  geom_text(data = ps_df_q4, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
   labs(title = "Project Support", subtitle = paste("Q4 (Summer) Average Score =",ms))
 
 #
+# Assemble grouped bar charts for quarter to quarter comparisons of Questions
+#
+
+# Add quarters as the data becomes available
+ps_bar_df <- ps_df_q1
+ps_bar_df <- rbind(ps_bar_df, ps_df_q2)
+# ps_bar_df <- rbind(ps_bar_df, ps_df_q3)
+# ps_bar_df <- rbind(ps_bar_df, ps_df_q4)
+
+ggplot(data = ps_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(data = ps_bar_df, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.6, color = "white",
+            position = position_dodge(0.9), size=3.5) +
+  scale_fill_brewer(palette="Paired")+
+  theme_minimal() +
+  labs(title = "Project Support", subtitle = "Response Averages by Question - Quarter-to-Quarter Comparison") 
+
+
+#
 # Service Desk
 #
 
-grp_df <- as.data.frame(full_year$Q4[5])
-ms <- round(mean(grp_df$Avg), digits = 2)
+# Q1
+sd_df_q1 <- as.data.frame(full_year$Q1[5])
+ms <- round(mean(sd_df_q1$Avg), digits = 2)
+fy_df[5,2] <- "SD"
+fy_df[5,3] <-  ms
+
+sd_bar_Q1 <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = sd_df_q1, stat = "identity") +
+  geom_text(data = sd_df_q1, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Service Desk", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
+
+# Q2
+sd_df_q2 <- as.data.frame(full_year$Q2[5])
+ms <- round(mean(sd_df_q2$Avg), digits = 2)
+fy_df[11,2] <- "SD"
+fy_df[11,3] <- ms
+
+sd_bar_Q2 <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = sd_df_q2, stat = "identity") +
+  geom_text(data = sd_df_q2, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Service Desk", subtitle = paste("Q2 (Winter) Average Score =",ms))
+
+
+
+# Q3
+sd_df_q3 <- as.data.frame(full_year$Q3[5])
+ms <- round(mean(sd_df_q3$Avg), digits = 2)
+fy_df[17,2] <- "SD"
+fy_df[17,3] <- ms
+
+sd_bar_Q3 <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = sd_df_q3, stat = "identity") +
+  geom_text(data = sd_df_q3, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Service Desk", subtitle = paste("Q3 (Spring) Average Score =",ms))
+
+# Q4
+sd_df_q4 <- as.data.frame(full_year$Q4[5])
+ms <- round(mean(sd_df_q4$Avg), digits = 2)
 fy_df[23,2] <- "SD"
 fy_df[23,3] <- ms
 
 sd_bar_Q4 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = sd_df_q4, stat = "identity") +
+  geom_text(data = sd_df_q4, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
   labs(title = "Service Desk", subtitle = paste("Q4 (Summer) Average Score =",ms))
+
+#
+# Assemble grouped bar charts for quarter to quarter comparisons of Questions
+#
+
+# Add quarters as the data becomes available
+sd_bar_df <- sd_df_q1
+sd_bar_df <- rbind(sd_bar_df, sd_df_q2)
+# sd_bar_df <- rbind(sd_bar_df, sd_df_q3)
+# sd_bar_df <- rbind(sd_bar_df, sd_df_q4)
+
+ggplot(data = sd_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(data = sd_bar_df, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.6, color = "white",
+            position = position_dodge(0.9), size=3.5) +
+  scale_fill_brewer(palette="Paired")+
+  theme_minimal() +
+  labs(title = "Service Desk", subtitle = "Response Averages by Question - Quarter-to-Quarter Comparison") 
 
 
 #
 # Vendor Managers
 #
 
-grp_df <- as.data.frame(full_year$Q4[6])
-ms <- round(mean(grp_df$Avg), digits = 2)
+# Q1
+vm_df_q1 <- as.data.frame(full_year$Q1[6])
+ms <- round(mean(vm_df_q1$Avg), digits = 2)
+fy_df[6,2] <- "VM"
+fy_df[6,3] <- ms
+
+vm_bar_Q1 <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = vm_df_q1, stat = "identity") +
+  geom_text(data = vm_df_q1, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Vendor Managers", subtitle = paste("Q1 (Fall 2019) Average Score =",ms))
+
+# Q2
+vm_df_q2 <- as.data.frame(full_year$Q2[6])
+ms <- round(mean(vm_df_q2$Avg), digits = 2)
+fy_df[12,2] <- "VM"
+fy_df[12,3] <- ms
+
+vm_bar_Q2 <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = vm_df_q2, stat = "identity") +
+  geom_text(data = vm_df_q2, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Vendor Managers", subtitle = paste("Q2 (Winter) Average Score =",ms))
+
+# Q3
+vm_df_q3 <- as.data.frame(full_year$Q3[6])
+ms <- round(mean(vm_df_q3$Avg), digits = 2)
+fy_df[18,2] <- "VM"
+fy_df[18,3] <- ms
+
+vm_bar_Q3 <- ggplot() +
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = vm_df_q3, stat = "identity") +
+  geom_text(data = vm_df_q3, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Vendor Managers", subtitle = paste("Q3 (Spring) Average Score =",ms))
+
+
+# Q4
+vm_df_q4 <- as.data.frame(full_year$Q4[6])
+ms <- round(mean(vm_df_q4$Avg), digits = 2)
 fy_df[24,2] <- "VM"
 fy_df[24,3] <- ms
 
 vm_bar_Q4 <- ggplot() +
-  geom_bar(aes(x = Q, y = Avg, fill = "red"),
-           data = grp_df, stat = "identity") +
-  geom_text(data = grp_df, aes(x = Q, y = Avg, label = Avg), 
+  geom_bar(aes(x = Question, y = Avg, fill = "blue"),
+           data = vm_df_q4, stat = "identity") +
+  geom_text(data = vm_df_q4, aes(x = Question, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
   labs(title = "Vendor Managers", subtitle = paste("Q4 (Summer) Average Score =",ms))
 
-grid.arrange(am_bar_Q4, ba_bar_Q4, ncol = 2)
-grid.arrange(bm_bar_Q4, ps_bar_Q4, ncol = 2)
-grid.arrange(sd_bar_Q4, vm_bar_Q4, ncol = 2)
+#
+# Assemble grouped bar charts for quarter to quarter comparisons of Questions
+#
+
+# Add quarters as the data becomes available
+vm_bar_df <- vm_df_q1
+vm_bar_df <- rbind(vm_bar_df, vm_df_q2)
+# vm_bar_df <- rbind(vm_bar_df, vm_df_q3)
+# vm_bar_df <- rbind(vm_bar_df, vm_df_q4)
+
+ggplot(data = vm_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(data = vm_bar_df, aes(x = Question, y = Avg, label = Avg), 
+            vjust = 1.6, color = "white",
+            position = position_dodge(0.9), size=3.5) +
+  scale_fill_brewer(palette="Paired")+
+  theme_minimal() +
+  labs(title = "Vendor Managers", subtitle = "Response Averages by Question - Quarter-to-Quarter Comparison") 
+
 
 #-------------------------------------------------------------------------------
 #
@@ -1007,7 +1076,7 @@ Q1_Q1A_ms <- round(mean(Q1_Q1A[2]), digits = 2)
   
 # Q1 Build plot
 Q1_Q1A_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q1_Q1A, stat = "identity") +
   geom_text(data = Q1_Q1A, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1035,7 +1104,7 @@ Q2_Q1A_ms <- round(mean(Q2_Q1A[2]), digits = 2)
 
 # Q2 Build plot
 Q2_Q1A_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q2_Q1A, stat = "identity") +
   geom_text(data = Q2_Q1A, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1063,7 +1132,7 @@ Q3_Q1A_ms <- round(mean(Q3_Q1A[2]), digits = 2)
 
 # Q3 Build plot
 Q3_Q1A_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q3_Q1A, stat = "identity") +
   geom_text(data = Q3_Q1A, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1091,7 +1160,7 @@ Q4_Q1A_ms <- round(mean(Q4_Q1A[2]), digits = 2)
 
 # Q4 Build plot
 Q4_Q1A_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q4_Q1A, stat = "identity") +
   geom_text(data = Q4_Q1A, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1127,7 +1196,7 @@ Q1_Q1B_ms <- round(mean(Q1_Q1B[2]), digits = 2)
 
 # Q1 Build plot
 Q1_Q1B_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q1_Q1B, stat = "identity") +
   geom_text(data = Q1_Q1B, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1155,7 +1224,7 @@ Q2_Q1B_ms <- round(mean(Q2_Q1B[2]), digits = 2)
 
 # Q2 Build plot
 Q2_Q1B_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q2_Q1B, stat = "identity") +
   geom_text(data = Q2_Q1B, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1183,7 +1252,7 @@ Q3_Q1B_ms <- round(mean(Q3_Q1B[2]), digits = 2)
 
 # Q3 Build plot
 Q3_Q1B_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q3_Q1B, stat = "identity") +
   geom_text(data = Q3_Q1B, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1211,7 +1280,7 @@ Q4_Q1B_ms <- round(mean(Q4_Q1B[2]), digits = 2)
 
 # Q4 Build plot
 Q4_Q1B_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q4_Q1B, stat = "identity") +
   geom_text(data = Q4_Q1B, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1247,7 +1316,7 @@ Q1_Q1C_ms <- round(mean(Q1_Q1C[2]), digits = 2)
 
 # Q1 Build plot
 Q1_Q1C_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q1_Q1C, stat = "identity") +
   geom_text(data = Q1_Q1C, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1275,7 +1344,7 @@ Q2_Q1C_ms <- round(mean(Q2_Q1C[2]), digits = 2)
 
 # Q2 Build plot
 Q2_Q1C_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q2_Q1C, stat = "identity") +
   geom_text(data = Q2_Q1C, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1304,7 +1373,7 @@ Q3_Q1C_ms <- round(mean(Q3_Q1C[2]), digits = 2)
 
 # Q3 Build plot
 Q3_Q1C_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q3_Q1C, stat = "identity") +
   geom_text(data = Q3_Q1C, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1333,7 +1402,7 @@ Q4_Q1C_ms <- round(mean(Q4_Q1C[2]), digits = 2)
 
 # Q4 Build plot
 Q4_Q1C_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q4_Q1C, stat = "identity") +
   geom_text(data = Q4_Q1C, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1370,7 +1439,7 @@ Q1_Q2A_ms <- round(mean(Q1_Q2A[2]), digits = 2)
 
 # Q1 Build plot
 Q1_Q2A_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q1_Q2A, stat = "identity") +
   geom_text(data = Q1_Q2A, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1398,7 +1467,7 @@ Q2_Q2A_ms <- round(mean(Q2_Q2A[2]), digits = 2)
 
 # Q2 Build plot
 Q2_Q2A_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q2_Q2A, stat = "identity") +
   geom_text(data = Q2_Q2A, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1426,7 +1495,7 @@ Q3_Q2A_ms <- round(mean(Q3_Q2A[2]), digits = 2)
 
 # Q3 Build plot
 Q3_Q2A_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q3_Q2A, stat = "identity") +
   geom_text(data = Q3_Q2A, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1454,7 +1523,7 @@ Q4_Q2A_ms <- round(mean(Q4_Q2A[2]), digits = 2)
 
 # Q4 Build plot
 Q4_Q2A_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q4_Q2A, stat = "identity") +
   geom_text(data = Q4_Q2A, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1491,7 +1560,7 @@ Q1_Q2B_ms <- round(mean(Q1_Q2B[2]), digits = 2)
 
 # Q1 Build plot
 Q1_Q2B_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q1_Q2B, stat = "identity") +
   geom_text(data = Q1_Q2B, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1519,7 +1588,7 @@ Q2_Q2B_ms <- round(mean(Q2_Q2B[2]), digits = 2)
 
 # Q2 Build plot
 Q2_Q2B_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q2_Q2B, stat = "identity") +
   geom_text(data = Q2_Q2B, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1547,7 +1616,7 @@ Q3_Q2B_ms <- round(mean(Q3_Q2B[2]), digits = 2)
 
 # Q3 Build plot
 Q3_Q2B_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q3_Q2B, stat = "identity") +
   geom_text(data = Q3_Q2B, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1575,7 +1644,7 @@ Q4_Q2B_ms <- round(mean(Q4_Q2B[2]), digits = 2)
 
 # Q4 Build plot
 Q4_Q2B_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q4_Q2B, stat = "identity") +
   geom_text(data = Q4_Q2B, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1611,7 +1680,7 @@ Q1_Q3x_ms <- round(mean(Q1_Q3x[2]), digits = 2)
 
 # Q1 Build plot
 Q1_Q3x_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q1_Q3x, stat = "identity") +
   geom_text(data = Q1_Q3x, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1639,7 +1708,7 @@ Q2_Q3x_ms <- round(mean(Q2_Q3x[2]), digits = 2)
 
 # Q2 Build plot
 Q2_Q3x_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q2_Q3x, stat = "identity") +
   geom_text(data = Q2_Q3x, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1667,7 +1736,7 @@ Q3_Q3x_ms <- round(mean(Q3_Q3x[2]), digits = 2)
 
 # Q3 Build plot
 Q3_Q3x_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q3_Q3x, stat = "identity") +
   geom_text(data = Q3_Q3x, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1695,7 +1764,7 @@ Q4_Q3x_ms <- round(mean(Q4_Q3x[2]), digits = 2)
 
 # Q4 Build plot
 Q4_Q3x_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "red"),
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
            data = Q4_Q3x, stat = "identity") +
   geom_text(data = Q4_Q3x, aes(x = Group, y = Avg, label = Avg), 
             vjust = 1.5, color = "black", size = 4) + 
@@ -1737,12 +1806,12 @@ grid.arrange(Q4_Q2B_bar, Q4_Q3x_bar, ncol = 2)
 #-------------------------------------------------------------------------------
 
 # Groiups Chart
-full_year_groups <- ggplot(data = fy_df, aes(x = Group, y = Avg, fill = Qtr)) +
+full_year_groups <- ggplot(data = fy_df, aes(x = Group, y = Avg, fill = Quarter), color = "blue") +
   geom_bar(stat="identity", position=position_dodge()) +
   geom_text(aes(label = Avg), angle = 90, color="black",
             position = position_dodge(0.9), size=3.5) +
   labs(title = "Full Year Average Scores by Group") +
-  scale_fill_brewer(palette="Reds")
+  scale_fill_brewer(palette="Blues")
 
 # Questions Chart
 fy_q1 <- qbq_q1_df %>% mutate(Quarter = unique(dat$Surveyed)[1])
@@ -1754,12 +1823,12 @@ fy_questions <- rbind(fy_questions, fy_q2)
 fy_questions <- rbind(fy_questions, fy_q3)
 fy_questions <- rbind(fy_questions, fy_q4)
 
-full_year_questions <- ggplot(data = fy_questions, aes(x = Question, y = Avg, fill = Quarter)) +
+full_year_questions <- ggplot(data = fy_questions, aes(x = Question, y = Avg, fill = Quarter, color = "blue")) +
   geom_bar(stat="identity", position=position_dodge()) +
   geom_text(aes(label = Avg), angle = 90, color="black",
             position = position_dodge(0.9), size=3.5) +
   labs(title = "Full Year Average Scores by Question") +
-  scale_fill_brewer(palette="Reds")
+  scale_fill_brewer(palette="Blues")
 
 #--------------------------------------------------------------------
 #
