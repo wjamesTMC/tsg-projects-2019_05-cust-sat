@@ -43,7 +43,6 @@ library(purrr)
 #
 
 # Import and Open the data file / Establish the data set
-data_filename <- gs_title("Test 2020 Survey")
 data_filename <- gs_title("2019-2020 TSG Satisfaction Survey_T")
 dat <- gs_read(data_filename, stringsAsFactors = FALSE)
 
@@ -145,7 +144,7 @@ res_df_vm  <- data.frame(Quarter = 1:6,   Grp = 1:6,   Question = 1:6,   Avg = 1
 
 grp_x_qtr  <- list(res_df_am, res_df_ba, res_df_bm, res_df_ps, res_df_sd, res_df_vm)
 full_year  <- list(Q1 = grp_x_qtr, Q2 = grp_x_qtr, Q3 = grp_x_qtr, Q4 = grp_x_qtr)
-groups <- c("AM", "BA", "BM", "PS", "SD", "VM")
+groups <- c("AM", "BA", "BMPS", "PS", "SD", "VM")
 questions <- c("1A", "1B", "1C", "2A", "2B", "3x")
 
 #-------------------------------------------------------------------------------
@@ -158,7 +157,7 @@ am_results  <- transform(dat[c(1, 2, 8,14,20,26,32)])
 ba_results  <- transform(dat[c(1, 3, 9,15,21,27,33)])
 bm_results  <- transform(dat[c(1, 4,10,16,22,28,34)])
 ps_results  <- transform(dat[c(1, 5,11,17,23,29,35)])
-vm_results  <- transform(dat[c(1, 6,12,18,24,30,36)])
+sd_results  <- transform(dat[c(1, 6,12,18,24,30,36)])
 vm_results  <- transform(dat[c(1, 7,13,19,25,31,37)])
 
 results_list <- list(am_results, ba_results, bm_results, ps_results, sd_results, vm_results)
@@ -229,7 +228,7 @@ for(a in 1:length(unique(dat$Surveyed))) {
       z <- length(y[y == TRUE])
       
       # Calculate the mean
-      mean_new_df <- round(sum(new_df[m]) / (x - z), digits = 2)
+      mean_new_df <- round(sum(new_df[m]) / (x - z), digits = 1)
       
       # write the results to the dataframe
       res_df[m,1]  <- quarter
@@ -315,7 +314,6 @@ qs_df[19:24,1] <- t(groups)[ ,1:6]
 #-------------------------------------------------------------------------------
 #
 # Part 1 - Quarterly Summaries
-#    8 charts total (2 / quarter)
 #
 #    For each Quarter (4) Question Response Averages by group 
 #    X = Group
@@ -329,14 +327,14 @@ qs_df[19:24,1] <- t(groups)[ ,1:6]
 
 #-------------------------------------------------------------------------------
 #
-#  Response Averages by Group
+#  Group Averages Summary
 #
 #-------------------------------------------------------------------------------
 
 # Q1 Assemble data
 gbq_q1_df <- fy_df %>% filter(Quarter == unique(dat$Surveyed)[1])
 for(i in 1:6) {
-  gbq_q1_df[i,3] <- round(mean(full_year$Q1[[i]]$Avg), digits = 2)
+  gbq_q1_df[i,3] <- round(mean(full_year$Q1[[i]]$Avg), digits = 1)
 }
 
 # Q1 Build plot
@@ -351,7 +349,7 @@ gbq_q1_bar <- ggplot() +
 # Q2 Assemble data
 gbq_q2_df <- fy_df %>% filter(Quarter == unique(dat$Surveyed)[2])
 for(i in 1:6) {
-  gbq_q2_df[i,3] <- round(mean(full_year$Q2[[i]]$Avg), digits = 2)
+  gbq_q2_df[i,3] <- round(mean(full_year$Q2[[i]]$Avg), digits = 1)
 }
 
 # Q2 Build plot
@@ -366,7 +364,7 @@ gbq_q2_bar <- ggplot() +
 # Q3 Assemble data
 gbq_q3_df <- fy_df %>% filter(Quarter == unique(dat$Surveyed)[3])
 for(i in 1:6) {
-  gbq_q3_df[i,3] <- round(mean(full_year$Q3[[i]]$Avg), digits = 2)
+  gbq_q3_df[i,3] <- round(mean(full_year$Q3[[i]]$Avg), digits = 1)
 }
 
 # Q3 Build plot
@@ -381,7 +379,7 @@ gbq_q3_bar <- ggplot() +
 # Q4 Assemble data
 gbq_q4_df <- fy_df %>% filter(Quarter == unique(dat$Surveyed)[4])
 for(i in 1:6) {
-  gbq_q4_df[i,3] <- round(mean(full_year$Q4[[i]]$Avg), digits = 2)
+  gbq_q4_df[i,3] <- round(mean(full_year$Q4[[i]]$Avg), digits = 1)
 }
 
 # Q4 Build plot
@@ -395,45 +393,65 @@ gbq_q4_bar <- ggplot() +
 
 #-------------------------------------------------------------------------------
 #
-# Assemble grouped bar charts for quarter to quarter comparisons of Groups
+# Quarter-to_Quarter Response Averages by Group
 #
 #-------------------------------------------------------------------------------
 
 # Add quarters as the data becomes available
 df_mq_by_group <- gbq_q1_df
 df_mq_by_group <- rbind(df_mq_by_group, gbq_q2_df)
-# df_mq_by_group <- rbind(df_mq_by_group, gbq_q3_df)
-# df_mq_by_group <- rbind(df_mq_by_group, gbq_q4_df)
+df_mq_by_group <- rbind(df_mq_by_group, gbq_q3_df)
+df_mq_by_group <- rbind(df_mq_by_group, gbq_q4_df)
 
 ggplot(data = df_mq_by_group, aes(x = Group, y = Avg, fill = Quarter)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   geom_text(data = df_mq_by_group, aes(x = Group, y = Avg, label = Avg), 
-            vjust = 1.6, color = "white",
-            position = position_dodge(0.9), size=3.5) +
-  scale_fill_brewer(palette="Paired")+
+            vjust = 1.6, color = "black",
+            position = position_dodge(0.9), size = 3) +
+  scale_fill_brewer(palette="Blues") + ylab("Average Rating") +
   theme_minimal() +
-  labs(title = "Response Averages", subtitle = "Q1 / Q2 - By Group") 
+  labs(title = "Response Averages By Group - Quarter-to-Quarter Comparisons") 
 
 #-------------------------------------------------------------------------------
 #
-#  Response Averages by Question
+#  Quarter-to_Quarter Response Averages by Question
 #
 #-------------------------------------------------------------------------------
 
 # Q1 Gather data
 qbq_q1_df <- data.frame(Quarter = 1:6, Question = 1:6, Avg = 1:6)
 
+# Loop to populate data frame
 x = 0
 for(i in 1:6) {
+  # Data is all Q1 - so column 1 is always Q1-F19
   qbq_q1_df[i,1] <- "Q1-F19"
+  
+  # Take each of the 6 questions in order
   qbq_q1_df[i,2] <- questions[i]
   for(j in 1:6) {
+    
+    # For each group, compute the totals for each question
     x <- x + full_year$Q1[[j]]$Avg[i]
   }
+  
+  # Compute the average of scores and assign to the data frame 
   x <- x / 6
-  qbq_q1_df[i,3] <- round(x, digits = 2)
+  qbq_q1_df[i,3] <- round(x, digits = 1)
+  
+  # Reset x so that we can compute the next total and average
   x = 0
 }
+
+# We now have a Q1 dataframe that looks something like this:
+# > qbq_q1_df
+# Quarter Question  Avg
+# 1  Q1-F19       1A 8.64
+# 2  Q1-F19       1B 8.49
+# 3  Q1-F19       1C 8.46
+# 4  Q1-F19       2A 8.33
+# 5  Q1-F19       2B 8.56
+# 6  Q1-F19       3x 8.19
 
 # Q1 Build plot
 qbq_q1_bar <- ggplot() +
@@ -443,6 +461,9 @@ qbq_q1_bar <- ggplot() +
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
   labs(title = "Response Averages", subtitle = "Q1 (Fall 2019) - By Question") 
+
+# We now have a bar chart summarizing the averages of each question across all 
+# groups for Q1
 
 # Q2 Gather data
 qbq_q2_df <- data.frame(Quarter = 1:6, Question = 1:6, Avg = 1:6)
@@ -455,7 +476,7 @@ for(i in 1:6) {
     x <- x + full_year$Q2[[j]]$Avg[i]
   }
   x <- x / 6
-  qbq_q2_df[i,3] <- round(x, digits = 2)
+  qbq_q2_df[i,3] <- round(x, digits = 1)
   x = 0
 }
 
@@ -470,16 +491,17 @@ qbq_q2_bar <- ggplot() +
 
 
 # Q3 Gather data
-qbq_q3_df <- data.frame(Question = 1:6, Avg = 1:6)
+qbq_q3_df <- data.frame(Quarter = 1:6, Question = 1:6, Avg = 1:6)
 
 x = 0
 for(i in 1:6) {
-  qbq_q3_df[i,1] <- questions[i]
+  qbq_q3_df[i,1] <- "Q3-S20"
+  qbq_q3_df[i,2] <- questions[i]
   for(j in 1:6) {
     x <- x + full_year$Q3[[j]]$Avg[i]
   }
   x <- x / 6
-  qbq_q3_df[i,2] <- round(x, digits = 2)
+  qbq_q3_df[i,3] <- round(x, digits = 1)
   x = 0
 }
 
@@ -494,16 +516,17 @@ qbq_q3_bar <- ggplot() +
 
 
 # Q4 Gather data
-qbq_q4_df <- data.frame(Question = 1:6, Avg = 1:6)
+qbq_q4_df <- data.frame(Quarter = 1:6, Question = 1:6, Avg = 1:6)
 
 x = 0
 for(i in 1:6) {
-  qbq_q4_df[i,1] <- questions[i]
+  qbq_q4_df[i,1] <- "Q4-S20"
+  qbq_q4_df[i,2] <- questions[i]
   for(j in 1:6) {
     x <- x + full_year$Q4[[j]]$Avg[i]
   }
   x <- x / 6
-  qbq_q4_df[i,2] <- round(x, digits = 2)
+  qbq_q4_df[i,3] <- round(x, digits = 1)
   x = 0
 }
 
@@ -515,7 +538,6 @@ qbq_q4_bar <- ggplot() +
             vjust = 1.5, color = "black", size = 4) + 
   theme(legend.position = "none") +
   labs(title = "Response Averages", subtitle = "Q4 (Summer 2020) - By Question") 
-
 
 # Arrange the grids if the single side-by-side comparison is desired
 grid.arrange(gbq_q1_bar, gbq_q2_bar, ncol = 2)
@@ -536,11 +558,11 @@ df_mq_by_question <- rbind(df_mq_by_question, qbq_q2_df)
 ggplot(data = df_mq_by_question, aes(x = Question, y = Avg, fill = Quarter)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   geom_text(data = df_mq_by_question, aes(x = Question, y = Avg, label = Avg), 
-            vjust = 1.6, color = "white",
-            position = position_dodge(0.9), size=3.5) +
-  scale_fill_brewer(palette="Paired")+
+            vjust = 1.6, color = "black",
+            position = position_dodge(0.9), size = 3) +
+  scale_fill_brewer(palette="Blues") + ylab("Average Rating") +
   theme_minimal() +
-  labs(title = "Response Averages", subtitle = "Q1 / Q2 - By Question") 
+  labs(title = "Response Averages By Question - Quarter-to-Quarter Comparisons") 
 
 
 #-------------------------------------------------------------------------------
@@ -559,9 +581,9 @@ ggplot(data = df_mq_by_question, aes(x = Question, y = Avg, fill = Quarter)) +
 
 # Q1
 am_df_q1 <- as.data.frame(full_year$Q1[1])
-ms <- round(mean(am_df_q1$Avg), digits = 2)
+ms <- round(mean(am_df_q1$Avg), digits = 1)
 fy_df[1,2] <- "AM"
-fy_df[1,3] <- ms
+fy_df[1,3] <-  ms
 
 am_bar_Q1 <- ggplot() +
   geom_bar(aes(x = Question, y = Avg, fill = "red"),
@@ -573,7 +595,7 @@ am_bar_Q1 <- ggplot() +
 
 # Q2
 am_df_q2 <- as.data.frame(full_year$Q2[1])
-ms <- round(mean(am_df_q2$Avg), digits = 2)
+ms <- round(mean(am_df_q2$Avg), digits = 1)
 fy_df[7,2] <- "AM"
 fy_df[7,3] <- ms
 
@@ -587,7 +609,7 @@ am_bar_Q2 <- ggplot() +
 
 # Q3
 am_df_q3 <- as.data.frame(full_year$Q3[1])
-ms <- round(mean(am_df_q3$Avg), digits = 2)
+ms <- round(mean(am_df_q3$Avg), digits = 1)
 fy_df[13,2] <- "AM"
 fy_df[13,3] <- ms
 
@@ -601,7 +623,7 @@ am_bar_Q3 <- ggplot() +
 
 # Q4
 am_df_q4 <- as.data.frame(full_year$Q4[1])
-ms <- round(mean(am_df_q4$Avg), digits = 2)
+ms <- round(mean(am_df_q4$Avg), digits = 1)
 fy_df[19,2] <- "AM"
 fy_df[19,3] <-  ms 
 
@@ -626,9 +648,9 @@ am_bar_df <- rbind(am_bar_df, am_df_q2)
 ggplot(data = am_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   geom_text(data = am_bar_df, aes(x = Question, y = Avg, label = Avg), 
-            vjust = 1.6, color = "white",
-            position = position_dodge(0.9), size=3.5) +
-  scale_fill_brewer(palette="Paired")+
+            vjust = 1.6, color = "black",
+            position = position_dodge(0.9), size = 3) +
+  scale_fill_brewer(palette="Blues") + ylab("Average Rating") +
   theme_minimal() +
   labs(title = "Account Managers", subtitle = "Response Averages by Question - Quarter-to-Quarter Comparison") 
 
@@ -639,7 +661,7 @@ ggplot(data = am_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
 
 # Q1
 ba_df_q1 <- as.data.frame(full_year$Q1[2])
-ms <- round(mean(ba_df_q1$Avg), digits = 2)
+ms <- round(mean(ba_df_q1$Avg), digits = 1)
 fy_df[2,2] <- "BA"
 fy_df[2,3] <-  ms
 
@@ -653,7 +675,7 @@ ba_bar_Q1 <- ggplot() +
 
 # Q2
 ba_df_q2 <- as.data.frame(full_year$Q2[2])
-ms <- round(mean(ba_df_q2$Avg), digits = 2)
+ms <- round(mean(ba_df_q2$Avg), digits = 1)
 fy_df[8,2] <- "BA"
 fy_df[8,3] <-  ms
 
@@ -667,7 +689,7 @@ ba_bar_Q2 <- ggplot() +
 
 # Q3
 ba_df_q3 <- as.data.frame(full_year$Q3[2])
-ms <- round(mean(ba_df_q3$Avg), digits = 2)
+ms <- round(mean(ba_df_q3$Avg), digits = 1)
 fy_df[14,2] <- "BA"
 fy_df[14,3] <-  ms
 
@@ -681,7 +703,7 @@ ba_bar_Q3 <- ggplot() +
 
 # Q4
 ba_df_q4 <- as.data.frame(full_year$Q4[2])
-ms <- round(mean(ba_df_q4$Avg), digits = 2)
+ms <- round(mean(ba_df_q4$Avg), digits = 1)
 fy_df[20,2] <- "BA"
 fy_df[20,3] <- ms
 
@@ -707,9 +729,9 @@ ba_bar_df <- rbind(ba_bar_df, ba_df_q2)
 ggplot(data = ba_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   geom_text(data = ba_bar_df, aes(x = Question, y = Avg, label = Avg), 
-            vjust = 1.6, color = "white",
-            position = position_dodge(0.9), size=3.5) +
-  scale_fill_brewer(palette="Paired")+
+            vjust = 1.6, color = "black",
+            position = position_dodge(0.9), size = 3) +
+  scale_fill_brewer(palette="Blues") + ylab("Average Rating") +
   theme_minimal() +
   labs(title = "Business Analysts", subtitle = "Response Averages by Question - Quarter-to-Quarter Comparison") 
 
@@ -719,7 +741,7 @@ ggplot(data = ba_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
 #
 
 bm_df_q1 <- as.data.frame(full_year$Q1[3])
-ms <- round(mean(bm_df_q1$Avg), digits = 2)
+ms <- round(mean(bm_df_q1$Avg), digits = 1)
 fy_df[3,2] <- "B&MPS"
 fy_df[3,3] <-  ms
 
@@ -733,7 +755,7 @@ bm_bar_Q1 <- ggplot() +
 
 # Q2
 bm_df_q2 <- as.data.frame(full_year$Q2[3])
-ms <- round(mean(bm_df_q2$Avg), digits = 2)
+ms <- round(mean(bm_df_q2$Avg), digits = 1)
 fy_df[9,2] <- "B&MPS"
 fy_df[9,3] <- ms
 
@@ -747,7 +769,7 @@ bm_bar_Q2 <- ggplot() +
 
 # Q3
 bm_df_q3 <- as.data.frame(full_year$Q3[3])
-ms <- round(mean(bm_df_q3$Avg), digits = 2)
+ms <- round(mean(bm_df_q3$Avg), digits = 1)
 fy_df[15,2] <- "B&MPS"
 fy_df[15,3] <- ms
 
@@ -760,7 +782,7 @@ bm_bar_Q3 <- ggplot() +
   labs(title = "B&MPS", subtitle = paste("Q3 (Spring) Average Score =",ms))
 
 bm_df_q4 <- as.data.frame(full_year$Q4[3])
-ms <- round(mean(bm_df_q4$Avg), digits = 2)
+ms <- round(mean(bm_df_q4$Avg), digits = 1)
 fy_df[21,2] <- "B&MPS"
 fy_df[21,3] <- ms
 
@@ -786,9 +808,9 @@ bm_bar_df <- rbind(bm_bar_df, bm_df_q2)
 ggplot(data = bm_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   geom_text(data = bm_bar_df, aes(x = Question, y = Avg, label = Avg), 
-            vjust = 1.6, color = "white",
-            position = position_dodge(0.9), size=3.5) +
-  scale_fill_brewer(palette="Paired")+
+            vjust = 1.6, color = "black",
+            position = position_dodge(0.9), size = 3) +
+  scale_fill_brewer(palette="Blues") + ylab("Average Rating") +
   theme_minimal() +
   labs(title = "B&MPS", subtitle = "Response Averages by Question - Quarter-to-Quarter Comparison") 
 
@@ -798,7 +820,7 @@ ggplot(data = bm_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
 
 # Q1
 ps_df_q1 <- as.data.frame(full_year$Q1[4])
-ms <- round(mean(ps_df_q1$Avg), digits = 2)
+ms <- round(mean(ps_df_q1$Avg), digits = 1)
 fy_df[4,2] <- "PS"
 fy_df[4,3] <- ms
 
@@ -812,7 +834,7 @@ ps_bar_Q1 <- ggplot() +
 
 # Q2
 ps_df_q2 <- as.data.frame(full_year$Q2[4])
-ms <- round(mean(ps_df_q2$Avg), digits = 2)
+ms <- round(mean(ps_df_q2$Avg), digits = 1)
 fy_df[10,2] <- "PS"
 fy_df[10,3] <- ms
 
@@ -826,7 +848,7 @@ ps_bar_Q2 <- ggplot() +
 
 # Q3
 ps_df_q3 <- as.data.frame(full_year$Q3[4])
-ms <- round(mean(ps_df_q3$Avg), digits = 2)
+ms <- round(mean(ps_df_q3$Avg), digits = 1)
 fy_df[16,2] <- "PS"
 fy_df[16,3] <- ms
 
@@ -840,7 +862,7 @@ ps_bar_Q3 <- ggplot() +
 
 # Q4
 ps_df_q4 <- as.data.frame(full_year$Q4[4])
-ms <- round(mean(ps_df_q4$Avg), digits = 2)
+ms <- round(mean(ps_df_q4$Avg), digits = 1)
 fy_df[22,2] <- "PS"
 fy_df[22,3] <- ms
 
@@ -865,9 +887,9 @@ ps_bar_df <- rbind(ps_bar_df, ps_df_q2)
 ggplot(data = ps_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   geom_text(data = ps_bar_df, aes(x = Question, y = Avg, label = Avg), 
-            vjust = 1.6, color = "white",
-            position = position_dodge(0.9), size=3.5) +
-  scale_fill_brewer(palette="Paired")+
+            vjust = 1.6, color = "black",
+            position = position_dodge(0.9), size = 3) +
+  scale_fill_brewer(palette="Blues") + ylab("Average Rating") +
   theme_minimal() +
   labs(title = "Project Support", subtitle = "Response Averages by Question - Quarter-to-Quarter Comparison") 
 
@@ -878,7 +900,7 @@ ggplot(data = ps_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
 
 # Q1
 sd_df_q1 <- as.data.frame(full_year$Q1[5])
-ms <- round(mean(sd_df_q1$Avg), digits = 2)
+ms <- round(mean(sd_df_q1$Avg), digits = 1)
 fy_df[5,2] <- "SD"
 fy_df[5,3] <-  ms
 
@@ -892,7 +914,7 @@ sd_bar_Q1 <- ggplot() +
 
 # Q2
 sd_df_q2 <- as.data.frame(full_year$Q2[5])
-ms <- round(mean(sd_df_q2$Avg), digits = 2)
+ms <- round(mean(sd_df_q2$Avg), digits = 1)
 fy_df[11,2] <- "SD"
 fy_df[11,3] <- ms
 
@@ -908,7 +930,7 @@ sd_bar_Q2 <- ggplot() +
 
 # Q3
 sd_df_q3 <- as.data.frame(full_year$Q3[5])
-ms <- round(mean(sd_df_q3$Avg), digits = 2)
+ms <- round(mean(sd_df_q3$Avg), digits = 1)
 fy_df[17,2] <- "SD"
 fy_df[17,3] <- ms
 
@@ -922,7 +944,7 @@ sd_bar_Q3 <- ggplot() +
 
 # Q4
 sd_df_q4 <- as.data.frame(full_year$Q4[5])
-ms <- round(mean(sd_df_q4$Avg), digits = 2)
+ms <- round(mean(sd_df_q4$Avg), digits = 1)
 fy_df[23,2] <- "SD"
 fy_df[23,3] <- ms
 
@@ -947,9 +969,9 @@ sd_bar_df <- rbind(sd_bar_df, sd_df_q2)
 ggplot(data = sd_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   geom_text(data = sd_bar_df, aes(x = Question, y = Avg, label = Avg), 
-            vjust = 1.6, color = "white",
-            position = position_dodge(0.9), size=3.5) +
-  scale_fill_brewer(palette="Paired")+
+            vjust = 1.6, color = "black",
+            position = position_dodge(0.9), size = 3) +
+  scale_fill_brewer(palette="Blues") + ylab("Average Rating") +
   theme_minimal() +
   labs(title = "Service Desk", subtitle = "Response Averages by Question - Quarter-to-Quarter Comparison") 
 
@@ -960,7 +982,7 @@ ggplot(data = sd_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
 
 # Q1
 vm_df_q1 <- as.data.frame(full_year$Q1[6])
-ms <- round(mean(vm_df_q1$Avg), digits = 2)
+ms <- round(mean(vm_df_q1$Avg), digits = 1)
 fy_df[6,2] <- "VM"
 fy_df[6,3] <- ms
 
@@ -974,7 +996,7 @@ vm_bar_Q1 <- ggplot() +
 
 # Q2
 vm_df_q2 <- as.data.frame(full_year$Q2[6])
-ms <- round(mean(vm_df_q2$Avg), digits = 2)
+ms <- round(mean(vm_df_q2$Avg), digits = 1)
 fy_df[12,2] <- "VM"
 fy_df[12,3] <- ms
 
@@ -988,7 +1010,7 @@ vm_bar_Q2 <- ggplot() +
 
 # Q3
 vm_df_q3 <- as.data.frame(full_year$Q3[6])
-ms <- round(mean(vm_df_q3$Avg), digits = 2)
+ms <- round(mean(vm_df_q3$Avg), digits = 1)
 fy_df[18,2] <- "VM"
 fy_df[18,3] <- ms
 
@@ -1003,7 +1025,7 @@ vm_bar_Q3 <- ggplot() +
 
 # Q4
 vm_df_q4 <- as.data.frame(full_year$Q4[6])
-ms <- round(mean(vm_df_q4$Avg), digits = 2)
+ms <- round(mean(vm_df_q4$Avg), digits = 1)
 fy_df[24,2] <- "VM"
 fy_df[24,3] <- ms
 
@@ -1028,9 +1050,9 @@ vm_bar_df <- rbind(vm_bar_df, vm_df_q2)
 ggplot(data = vm_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   geom_text(data = vm_bar_df, aes(x = Question, y = Avg, label = Avg), 
-            vjust = 1.6, color = "white",
-            position = position_dodge(0.9), size=3.5) +
-  scale_fill_brewer(palette="Paired")+
+            vjust = 1.6, color = "black",
+            position = position_dodge(0.9), size = 3) +
+  scale_fill_brewer(palette="Blues") + ylab("Average Rating") +
   theme_minimal() +
   labs(title = "Vendor Managers", subtitle = "Response Averages by Question - Quarter-to-Quarter Comparison") 
 
@@ -1045,34 +1067,29 @@ ggplot(data = vm_bar_df, aes(x = Question, y = Avg, fill = Quarter)) +
 #
 #-------------------------------------------------------------------------------
 
-#-------------------------------------------------------------------------------
-#  Quarter 1
-#    One chart per Question
-#    For each of the 6 questions, X = Group, Y = Avg
-#-------------------------------------------------------------------------------
-
 #
 # Question 1A
 #
 
 # Q1 Gather data
 qbq_q1_q1a_df <- transform(as.data.frame(full_year$Q1)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q1_Q1A <- data.frame(Group = 1:6, Avg = 1:6)
+Q1_Q1A <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q1_Q1A[1,  1] <- qbq_q1_q1a_df[1,  3]
-Q1_Q1A[1,  2] <- qbq_q1_q1a_df[1,  4]
-Q1_Q1A[2,  1] <- qbq_q1_q1a_df[1,  5]
-Q1_Q1A[2,  2] <- qbq_q1_q1a_df[1,  6]
-Q1_Q1A[3,  1] <- qbq_q1_q1a_df[1,  7]
-Q1_Q1A[3,  2] <- qbq_q1_q1a_df[1,  8]
-Q1_Q1A[4,  1] <- qbq_q1_q1a_df[1,  9]
-Q1_Q1A[4,  2] <- qbq_q1_q1a_df[1, 10]
-Q1_Q1A[5,  1] <- qbq_q1_q1a_df[1, 11]
-Q1_Q1A[5,  2] <- qbq_q1_q1a_df[1, 12]
-Q1_Q1A[6,  1] <- qbq_q1_q1a_df[1, 13]
-Q1_Q1A[6,  2] <- qbq_q1_q1a_df[1, 14]
+Q1_Q1A[1:6,  1] <- "Q1-F19"
+Q1_Q1A[1,  2] <- qbq_q1_q1a_df[1,  3]
+Q1_Q1A[1,  3] <- qbq_q1_q1a_df[1,  4]
+Q1_Q1A[2,  2] <- qbq_q1_q1a_df[1,  5]
+Q1_Q1A[2,  3] <- qbq_q1_q1a_df[1,  6]
+Q1_Q1A[3,  2] <- qbq_q1_q1a_df[1,  7]
+Q1_Q1A[3,  3] <- qbq_q1_q1a_df[1,  8]
+Q1_Q1A[4,  2] <- qbq_q1_q1a_df[1,  9]
+Q1_Q1A[4,  3] <- qbq_q1_q1a_df[1, 10]
+Q1_Q1A[5,  2] <- qbq_q1_q1a_df[1, 11]
+Q1_Q1A[5,  3] <- qbq_q1_q1a_df[1, 12]
+Q1_Q1A[6,  2] <- qbq_q1_q1a_df[1, 13]
+Q1_Q1A[6,  3] <- qbq_q1_q1a_df[1, 14]
 
-Q1_Q1A_ms <- round(mean(Q1_Q1A[2]), digits = 2)
+Q1_Q1A_ms <- round(mean(Q1_Q1A[3]), digits = 1)
   
 # Q1 Build plot
 Q1_Q1A_bar <- ggplot() +
@@ -1085,22 +1102,23 @@ Q1_Q1A_bar <- ggplot() +
 
 # Q2 Gather data
 qbq_q2_q1a_df <- transform(as.data.frame(full_year$Q2)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q2_Q1A <- data.frame(Group = 1:6, Avg = 1:6)
+Q2_Q1A <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q2_Q1A[1,  1] <- qbq_q2_q1a_df[1,  3]
-Q2_Q1A[1,  2] <- qbq_q2_q1a_df[1,  4]
-Q2_Q1A[2,  1] <- qbq_q2_q1a_df[1,  5]
-Q2_Q1A[2,  2] <- qbq_q2_q1a_df[1,  6]
-Q2_Q1A[3,  1] <- qbq_q2_q1a_df[1,  7]
-Q2_Q1A[3,  2] <- qbq_q2_q1a_df[1,  8]
-Q2_Q1A[4,  1] <- qbq_q2_q1a_df[1,  9]
-Q2_Q1A[4,  2] <- qbq_q2_q1a_df[1, 10]
-Q2_Q1A[5,  1] <- qbq_q2_q1a_df[1, 11]
-Q2_Q1A[5,  2] <- qbq_q2_q1a_df[1, 12]
-Q2_Q1A[6,  1] <- qbq_q2_q1a_df[1, 13]
-Q2_Q1A[6,  2] <- qbq_q2_q1a_df[1, 14]
+Q2_Q1A[1:6,  1] <- "Q2-W20"
+Q2_Q1A[1,  2] <- qbq_q2_q1a_df[1,  3]
+Q2_Q1A[1,  3] <- qbq_q2_q1a_df[1,  4]
+Q2_Q1A[2,  2] <- qbq_q2_q1a_df[1,  5]
+Q2_Q1A[2,  3] <- qbq_q2_q1a_df[1,  6]
+Q2_Q1A[3,  2] <- qbq_q2_q1a_df[1,  7]
+Q2_Q1A[3,  3] <- qbq_q2_q1a_df[1,  8]
+Q2_Q1A[4,  2] <- qbq_q2_q1a_df[1,  9]
+Q2_Q1A[4,  3] <- qbq_q2_q1a_df[1, 10]
+Q2_Q1A[5,  2] <- qbq_q2_q1a_df[1, 11]
+Q2_Q1A[5,  3] <- qbq_q2_q1a_df[1, 12]
+Q2_Q1A[6,  2] <- qbq_q2_q1a_df[1, 13]
+Q2_Q1A[6,  3] <- qbq_q2_q1a_df[1, 14]
 
-Q2_Q1A_ms <- round(mean(Q2_Q1A[2]), digits = 2)
+Q2_Q1A_ms <- round(mean(Q2_Q1A[3]), digits = 1)
 
 # Q2 Build plot
 Q2_Q1A_bar <- ggplot() +
@@ -1113,22 +1131,23 @@ Q2_Q1A_bar <- ggplot() +
 
 # Q3 Gather data
 qbq_q3_q1a_df <- transform(as.data.frame(full_year$Q3)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q3_Q1A <- data.frame(Group = 1:6, Avg = 1:6)
+Q3_Q1A <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q3_Q1A[1,  1] <- qbq_q3_q1a_df[1,  3]
-Q3_Q1A[1,  2] <- qbq_q3_q1a_df[1,  4]
-Q3_Q1A[2,  1] <- qbq_q3_q1a_df[1,  5]
-Q3_Q1A[2,  2] <- qbq_q3_q1a_df[1,  6]
-Q3_Q1A[3,  1] <- qbq_q3_q1a_df[1,  7]
-Q3_Q1A[3,  2] <- qbq_q3_q1a_df[1,  8]
-Q3_Q1A[4,  1] <- qbq_q3_q1a_df[1,  9]
-Q3_Q1A[4,  2] <- qbq_q3_q1a_df[1, 10]
-Q3_Q1A[5,  1] <- qbq_q3_q1a_df[1, 11]
-Q3_Q1A[5,  2] <- qbq_q3_q1a_df[1, 12]
-Q3_Q1A[6,  1] <- qbq_q3_q1a_df[1, 13]
-Q3_Q1A[6,  2] <- qbq_q3_q1a_df[1, 14]
+Q3_Q1A[1:6,  1] <- "Q3-S20"
+Q3_Q1A[1,  2] <- qbq_q3_q1a_df[1,  3]
+Q3_Q1A[1,  3] <- qbq_q3_q1a_df[1,  4]
+Q3_Q1A[2,  2] <- qbq_q3_q1a_df[1,  5]
+Q3_Q1A[2,  3] <- qbq_q3_q1a_df[1,  6]
+Q3_Q1A[3,  2] <- qbq_q3_q1a_df[1,  7]
+Q3_Q1A[3,  3] <- qbq_q3_q1a_df[1,  8]
+Q3_Q1A[4,  2] <- qbq_q3_q1a_df[1,  9]
+Q3_Q1A[4,  3] <- qbq_q3_q1a_df[1, 10]
+Q3_Q1A[5,  2] <- qbq_q3_q1a_df[1, 11]
+Q3_Q1A[5,  3] <- qbq_q3_q1a_df[1, 12]
+Q3_Q1A[6,  2] <- qbq_q3_q1a_df[1, 13]
+Q3_Q1A[6,  3] <- qbq_q3_q1a_df[1, 14]
 
-Q3_Q1A_ms <- round(mean(Q3_Q1A[2]), digits = 2)
+Q3_Q1A_ms <- round(mean(Q3_Q1A[3]), digits = 1)
 
 # Q3 Build plot
 Q3_Q1A_bar <- ggplot() +
@@ -1141,22 +1160,23 @@ Q3_Q1A_bar <- ggplot() +
 
 # Q4 Gather data
 qbq_q4_q1a_df <- transform(as.data.frame(full_year$Q4)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q4_Q1A <- data.frame(Group = 1:6, Avg = 1:6)
+Q4_Q1A <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q4_Q1A[1,  1] <- qbq_q4_q1a_df[1,  3]
-Q4_Q1A[1,  2] <- qbq_q4_q1a_df[1,  4]
-Q4_Q1A[2,  1] <- qbq_q4_q1a_df[1,  5]
-Q4_Q1A[2,  2] <- qbq_q4_q1a_df[1,  6]
-Q4_Q1A[3,  1] <- qbq_q4_q1a_df[1,  7]
-Q4_Q1A[3,  2] <- qbq_q4_q1a_df[1,  8]
-Q4_Q1A[4,  1] <- qbq_q4_q1a_df[1,  9]
-Q4_Q1A[4,  2] <- qbq_q4_q1a_df[1, 10]
-Q4_Q1A[5,  1] <- qbq_q4_q1a_df[1, 11]
-Q4_Q1A[5,  2] <- qbq_q4_q1a_df[1, 12]
-Q4_Q1A[6,  1] <- qbq_q4_q1a_df[1, 13]
-Q4_Q1A[6,  2] <- qbq_q4_q1a_df[1, 14]
+Q4_Q1A[1:6,  1] <- "Q4-S20"
+Q4_Q1A[1,  2] <- qbq_q4_q1a_df[1,  3]
+Q4_Q1A[1,  3] <- qbq_q4_q1a_df[1,  4]
+Q4_Q1A[2,  2] <- qbq_q4_q1a_df[1,  5]
+Q4_Q1A[2,  3] <- qbq_q4_q1a_df[1,  6]
+Q4_Q1A[3,  2] <- qbq_q4_q1a_df[1,  7]
+Q4_Q1A[3,  3] <- qbq_q4_q1a_df[1,  8]
+Q4_Q1A[4,  2] <- qbq_q4_q1a_df[1,  9]
+Q4_Q1A[4,  3] <- qbq_q4_q1a_df[1, 10]
+Q4_Q1A[5,  2] <- qbq_q4_q1a_df[1, 11]
+Q4_Q1A[5,  3] <- qbq_q4_q1a_df[1, 12]
+Q4_Q1A[6,  2] <- qbq_q4_q1a_df[1, 13]
+Q4_Q1A[6,  3] <- qbq_q4_q1a_df[1, 14]
 
-Q4_Q1A_ms <- round(mean(Q4_Q1A[2]), digits = 2)
+Q4_Q1A_ms <- round(mean(Q4_Q1A[3]), digits = 1)
 
 # Q4 Build plot
 Q4_Q1A_bar <- ggplot() +
@@ -1172,27 +1192,48 @@ grid.arrange(Q1_Q1A_bar, Q2_Q1A_bar, ncol = 2)
 grid.arrange(Q3_Q1A_bar, Q4_Q1A_bar, ncol = 2)
 
 #
+# Assemble grouped bar charts for quarter to quarter comparisons of Questions
+#
+
+# Add quarters as the data becomes available
+Q1A_aq_df <- Q1_Q1A
+Q1A_aq_df <- rbind(Q1A_aq_df, Q2_Q1A)
+Q1A_aq_df <- rbind(Q1A_aq_df, Q3_Q1A)
+Q1A_aq_df <- rbind(Q1A_aq_df, Q4_Q1A)
+
+ggplot(data = Q1A_aq_df, aes(x = Group, y = Avg, fill = Quarter)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(data = Q1A_aq_df, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.6, color = "black",
+            position = position_dodge(0.9), size = 3) +
+  scale_fill_brewer(palette="Blues") + ylab("Average Rating") +
+  theme_minimal() +
+  labs(title = "Response Averages for Question Q1A - Quarter-to-Quarter Comparison by Group") 
+
+
+#
 # Question 1B
 #
 
 # Q1 Gather data
 qbq_q1_q1b_df <- transform(as.data.frame(full_year$Q1)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q1_Q1B <- data.frame(Group = 1:6, Avg = 1:6)
+Q1_Q1B <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q1_Q1B[1,  1] <- qbq_q1_q1b_df[2,  3]
-Q1_Q1B[1,  2] <- qbq_q1_q1b_df[2,  4]
-Q1_Q1B[2,  1] <- qbq_q1_q1b_df[2,  5]
-Q1_Q1B[2,  2] <- qbq_q1_q1b_df[2,  6]
-Q1_Q1B[3,  1] <- qbq_q1_q1b_df[2,  7]
-Q1_Q1B[3,  2] <- qbq_q1_q1b_df[2,  8]
-Q1_Q1B[4,  1] <- qbq_q1_q1b_df[2,  9]
-Q1_Q1B[4,  2] <- qbq_q1_q1b_df[2, 10]
-Q1_Q1B[5,  1] <- qbq_q1_q1b_df[2, 11]
-Q1_Q1B[5,  2] <- qbq_q1_q1b_df[2, 12]
-Q1_Q1B[6,  1] <- qbq_q1_q1b_df[2, 13]
-Q1_Q1B[6,  2] <- qbq_q1_q1b_df[2, 14]
+Q1_Q1B[1:6,  1] <- "Q1-F19"
+Q1_Q1B[1,  2] <- qbq_q1_q1b_df[2,  3]
+Q1_Q1B[1,  3] <- qbq_q1_q1b_df[2,  4]
+Q1_Q1B[2,  2] <- qbq_q1_q1b_df[2,  5]
+Q1_Q1B[2,  3] <- qbq_q1_q1b_df[2,  6]
+Q1_Q1B[3,  2] <- qbq_q1_q1b_df[2,  7]
+Q1_Q1B[3,  3] <- qbq_q1_q1b_df[2,  8]
+Q1_Q1B[4,  2] <- qbq_q1_q1b_df[2,  9]
+Q1_Q1B[4,  3] <- qbq_q1_q1b_df[2, 10]
+Q1_Q1B[5,  2] <- qbq_q1_q1b_df[2, 11]
+Q1_Q1B[5,  3] <- qbq_q1_q1b_df[2, 12]
+Q1_Q1B[6,  2] <- qbq_q1_q1b_df[2, 13]
+Q1_Q1B[6,  3] <- qbq_q1_q1b_df[2, 14]
 
-Q1_Q1B_ms <- round(mean(Q1_Q1B[2]), digits = 2)
+Q1_Q1B_ms <- round(mean(Q1_Q1B[3]), digits = 1)
 
 # Q1 Build plot
 Q1_Q1B_bar <- ggplot() +
@@ -1205,22 +1246,23 @@ Q1_Q1B_bar <- ggplot() +
 
 # Q2 Gather data
 qbq_q2_q1b_df <- transform(as.data.frame(full_year$Q2)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q2_Q1B <- data.frame(Group = 1:6, Avg = 1:6)
+Q2_Q1B <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q2_Q1B[1,  1] <- qbq_q2_q1b_df[2,  3]
-Q2_Q1B[1,  2] <- qbq_q2_q1b_df[2,  4]
-Q2_Q1B[2,  1] <- qbq_q2_q1b_df[2,  5]
-Q2_Q1B[2,  2] <- qbq_q2_q1b_df[2,  6]
-Q2_Q1B[3,  1] <- qbq_q2_q1b_df[2,  7]
-Q2_Q1B[3,  2] <- qbq_q2_q1b_df[2,  8]
-Q2_Q1B[4,  1] <- qbq_q2_q1b_df[2,  9]
-Q2_Q1B[4,  2] <- qbq_q2_q1b_df[2, 10]
-Q2_Q1B[5,  1] <- qbq_q2_q1b_df[2, 11]
-Q2_Q1B[5,  2] <- qbq_q2_q1b_df[2, 12]
-Q2_Q1B[6,  1] <- qbq_q2_q1b_df[2, 13]
-Q2_Q1B[6,  2] <- qbq_q2_q1b_df[2, 14]
+Q2_Q1B[1:6,  1] <- "Q2-W20"
+Q2_Q1B[1,  2] <- qbq_q2_q1b_df[2,  3]
+Q2_Q1B[1,  3] <- qbq_q2_q1b_df[2,  4]
+Q2_Q1B[2,  2] <- qbq_q2_q1b_df[2,  5]
+Q2_Q1B[2,  3] <- qbq_q2_q1b_df[2,  6]
+Q2_Q1B[3,  2] <- qbq_q2_q1b_df[2,  7]
+Q2_Q1B[3,  3] <- qbq_q2_q1b_df[2,  8]
+Q2_Q1B[4,  2] <- qbq_q2_q1b_df[2,  9]
+Q2_Q1B[4,  3] <- qbq_q2_q1b_df[2, 10]
+Q2_Q1B[5,  2] <- qbq_q2_q1b_df[2, 11]
+Q2_Q1B[5,  3] <- qbq_q2_q1b_df[2, 12]
+Q2_Q1B[6,  2] <- qbq_q2_q1b_df[2, 13]
+Q2_Q1B[6,  3] <- qbq_q2_q1b_df[2, 14]
 
-Q2_Q1B_ms <- round(mean(Q2_Q1B[2]), digits = 2)
+Q2_Q1B_ms <- round(mean(Q2_Q1B[3]), digits = 1)
 
 # Q2 Build plot
 Q2_Q1B_bar <- ggplot() +
@@ -1233,22 +1275,23 @@ Q2_Q1B_bar <- ggplot() +
 
 # Q3 Gather data
 qbq_q3_q1b_df <- transform(as.data.frame(full_year$Q3)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q3_Q1B <- data.frame(Group = 1:6, Avg = 1:6)
+Q3_Q1B <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q3_Q1B[1,  1] <- qbq_q3_q1b_df[2,  3]
-Q3_Q1B[1,  2] <- qbq_q3_q1b_df[2,  4]
-Q3_Q1B[2,  1] <- qbq_q3_q1b_df[2,  5]
-Q3_Q1B[2,  2] <- qbq_q3_q1b_df[2,  6]
-Q3_Q1B[3,  1] <- qbq_q3_q1b_df[2,  7]
-Q3_Q1B[3,  2] <- qbq_q3_q1b_df[2,  8]
-Q3_Q1B[4,  1] <- qbq_q3_q1b_df[2,  9]
-Q3_Q1B[4,  2] <- qbq_q3_q1b_df[2, 10]
-Q3_Q1B[5,  1] <- qbq_q3_q1b_df[2, 11]
-Q3_Q1B[5,  2] <- qbq_q3_q1b_df[2, 12]
-Q3_Q1B[6,  1] <- qbq_q3_q1b_df[2, 13]
-Q3_Q1B[6,  2] <- qbq_q3_q1b_df[2, 14]
+Q3_Q1B[1:6,  1] <- "Q3-S20"
+Q3_Q1B[1,  2] <- qbq_q3_q1b_df[2,  3]
+Q3_Q1B[1,  3] <- qbq_q3_q1b_df[2,  4]
+Q3_Q1B[2,  2] <- qbq_q3_q1b_df[2,  5]
+Q3_Q1B[2,  3] <- qbq_q3_q1b_df[2,  6]
+Q3_Q1B[3,  2] <- qbq_q3_q1b_df[2,  7]
+Q3_Q1B[3,  3] <- qbq_q3_q1b_df[2,  8]
+Q3_Q1B[4,  2] <- qbq_q3_q1b_df[2,  9]
+Q3_Q1B[4,  3] <- qbq_q3_q1b_df[2, 10]
+Q3_Q1B[5,  2] <- qbq_q3_q1b_df[2, 11]
+Q3_Q1B[5,  3] <- qbq_q3_q1b_df[2, 12]
+Q3_Q1B[6,  2] <- qbq_q3_q1b_df[2, 13]
+Q3_Q1B[6,  3] <- qbq_q3_q1b_df[2, 14]
 
-Q3_Q1B_ms <- round(mean(Q3_Q1B[2]), digits = 2)
+Q3_Q1B_ms <- round(mean(Q3_Q1B[3]), digits = 1)
 
 # Q3 Build plot
 Q3_Q1B_bar <- ggplot() +
@@ -1261,22 +1304,23 @@ Q3_Q1B_bar <- ggplot() +
 
 # Q4 Gather data
 qbq_q4_q1b_df <- transform(as.data.frame(full_year$Q4)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q4_Q1B <- data.frame(Group = 1:6, Avg = 1:6)
+Q4_Q1B <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q4_Q1B[1,  1] <- qbq_q4_q1b_df[2,  3]
-Q4_Q1B[1,  2] <- qbq_q4_q1b_df[2,  4]
-Q4_Q1B[2,  1] <- qbq_q4_q1b_df[2,  5]
-Q4_Q1B[2,  2] <- qbq_q4_q1b_df[2,  6]
-Q4_Q1B[3,  1] <- qbq_q4_q1b_df[2,  7]
-Q4_Q1B[3,  2] <- qbq_q4_q1b_df[2,  8]
-Q4_Q1B[4,  1] <- qbq_q4_q1b_df[2,  9]
-Q4_Q1B[4,  2] <- qbq_q4_q1b_df[2, 10]
-Q4_Q1B[5,  1] <- qbq_q4_q1b_df[2, 11]
-Q4_Q1B[5,  2] <- qbq_q4_q1b_df[2, 12]
-Q4_Q1B[6,  1] <- qbq_q4_q1b_df[2, 13]
-Q4_Q1B[6,  2] <- qbq_q4_q1b_df[2, 14]
+Q4_Q1B[1:6,  1] <- "Q4-S20"
+Q4_Q1B[1,  2] <- qbq_q4_q1b_df[2,  3]
+Q4_Q1B[1,  3] <- qbq_q4_q1b_df[2,  4]
+Q4_Q1B[2,  2] <- qbq_q4_q1b_df[2,  5]
+Q4_Q1B[2,  3] <- qbq_q4_q1b_df[2,  6]
+Q4_Q1B[3,  2] <- qbq_q4_q1b_df[2,  7]
+Q4_Q1B[3,  3] <- qbq_q4_q1b_df[2,  8]
+Q4_Q1B[4,  2] <- qbq_q4_q1b_df[2,  9]
+Q4_Q1B[4,  3] <- qbq_q4_q1b_df[2, 10]
+Q4_Q1B[5,  2] <- qbq_q4_q1b_df[2, 11]
+Q4_Q1B[5,  3] <- qbq_q4_q1b_df[2, 12]
+Q4_Q1B[6,  2] <- qbq_q4_q1b_df[2, 13]
+Q4_Q1B[6,  3] <- qbq_q4_q1b_df[2, 14]
 
-Q4_Q1B_ms <- round(mean(Q4_Q1B[2]), digits = 2)
+Q4_Q1B_ms <- round(mean(Q4_Q1B[3]), digits = 1)
 
 # Q4 Build plot
 Q4_Q1B_bar <- ggplot() +
@@ -1292,27 +1336,48 @@ grid.arrange(Q1_Q1B_bar, Q2_Q1B_bar, ncol = 2)
 grid.arrange(Q3_Q1B_bar, Q4_Q1B_bar, ncol = 2)
 
 #
+# Assemble grouped bar charts for quarter to quarter comparisons of Questions
+#
+
+# Add quarters as the data becomes available
+Q1B_aq_df <- Q1_Q1B
+Q1B_aq_df <- rbind(Q1B_aq_df, Q2_Q1B)
+Q1B_aq_df <- rbind(Q1B_aq_df, Q3_Q1B)
+Q1B_aq_df <- rbind(Q1B_aq_df, Q4_Q1B)
+
+ggplot(data = Q1B_aq_df, aes(x = Group, y = Avg, fill = Quarter)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(data = Q1B_aq_df, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.6, color = "black",
+            position = position_dodge(0.9), size = 3) +
+  scale_fill_brewer(palette="Blues") + ylab("Average Rating") +
+  theme_minimal() +
+  labs(title = "Response Averages for Question Q1B - Quarter-to-Quarter Comparison by Group") 
+
+
+#
 # Question 1c
 #
 
 # Q1 Gather data
 qbq_q1_q1c_df <- transform(as.data.frame(full_year$Q1)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q1_Q1C <- data.frame(Group = 1:6, Avg = 1:6)
+Q1_Q1C <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q1_Q1C[1,  1] <- qbq_q1_q1c_df[3,  3]
-Q1_Q1C[1,  2] <- qbq_q1_q1c_df[3,  4]
-Q1_Q1C[2,  1] <- qbq_q1_q1c_df[3,  5]
-Q1_Q1C[2,  2] <- qbq_q1_q1c_df[3,  6]
-Q1_Q1C[3,  1] <- qbq_q1_q1c_df[3,  7]
-Q1_Q1C[3,  2] <- qbq_q1_q1c_df[3,  8]
-Q1_Q1C[4,  1] <- qbq_q1_q1c_df[3,  9]
-Q1_Q1C[4,  2] <- qbq_q1_q1c_df[3, 10]
-Q1_Q1C[5,  1] <- qbq_q1_q1c_df[3, 11]
-Q1_Q1C[5,  2] <- qbq_q1_q1c_df[3, 12]
-Q1_Q1C[6,  1] <- qbq_q1_q1c_df[3, 13]
-Q1_Q1C[6,  2] <- qbq_q1_q1c_df[3, 14]
+Q1_Q1C[1:6,  1] <- "Q1-F19"
+Q1_Q1C[1,  2] <- qbq_q1_q1c_df[3,  3]
+Q1_Q1C[1,  3] <- qbq_q1_q1c_df[3,  4]
+Q1_Q1C[2,  2] <- qbq_q1_q1c_df[3,  5]
+Q1_Q1C[2,  3] <- qbq_q1_q1c_df[3,  6]
+Q1_Q1C[3,  2] <- qbq_q1_q1c_df[3,  7]
+Q1_Q1C[3,  3] <- qbq_q1_q1c_df[3,  8]
+Q1_Q1C[4,  2] <- qbq_q1_q1c_df[3,  9]
+Q1_Q1C[4,  3] <- qbq_q1_q1c_df[3, 10]
+Q1_Q1C[5,  2] <- qbq_q1_q1c_df[3, 11]
+Q1_Q1C[5,  3] <- qbq_q1_q1c_df[3, 12]
+Q1_Q1C[6,  2] <- qbq_q1_q1c_df[3, 13]
+Q1_Q1C[6,  3] <- qbq_q1_q1c_df[3, 14]
 
-Q1_Q1C_ms <- round(mean(Q1_Q1C[2]), digits = 2)
+Q1_Q1C_ms <- round(mean(Q1_Q1C[3]), digits = 1)
 
 # Q1 Build plot
 Q1_Q1C_bar <- ggplot() +
@@ -1325,22 +1390,23 @@ Q1_Q1C_bar <- ggplot() +
 
 # Q2 Gather data
 qbq_q2_q1c_df <- transform(as.data.frame(full_year$Q2)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q2_Q1C <- data.frame(Group = 1:6, Avg = 1:6)
+Q2_Q1C <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q2_Q1C[1,  1] <- qbq_q2_q1c_df[3,  3]
-Q2_Q1C[1,  2] <- qbq_q2_q1c_df[3,  4]
-Q2_Q1C[2,  1] <- qbq_q2_q1c_df[3,  5]
-Q2_Q1C[2,  2] <- qbq_q2_q1c_df[3,  6]
-Q2_Q1C[3,  1] <- qbq_q2_q1c_df[3,  7]
-Q2_Q1C[3,  2] <- qbq_q2_q1c_df[3,  8]
-Q2_Q1C[4,  1] <- qbq_q2_q1c_df[3,  9]
-Q2_Q1C[4,  2] <- qbq_q2_q1c_df[3, 10]
-Q2_Q1C[5,  1] <- qbq_q2_q1c_df[3, 11]
-Q2_Q1C[5,  2] <- qbq_q2_q1c_df[3, 12]
-Q2_Q1C[6,  1] <- qbq_q2_q1c_df[3, 13]
-Q2_Q1C[6,  2] <- qbq_q2_q1c_df[3, 14]
+Q2_Q1C[1:6,  1] <- "Q2-W20"
+Q2_Q1C[1,  2] <- qbq_q2_q1c_df[3,  3]
+Q2_Q1C[1,  3] <- qbq_q2_q1c_df[3,  4]
+Q2_Q1C[2,  2] <- qbq_q2_q1c_df[3,  5]
+Q2_Q1C[2,  3] <- qbq_q2_q1c_df[3,  6]
+Q2_Q1C[3,  2] <- qbq_q2_q1c_df[3,  7]
+Q2_Q1C[3,  3] <- qbq_q2_q1c_df[3,  8]
+Q2_Q1C[4,  2] <- qbq_q2_q1c_df[3,  9]
+Q2_Q1C[4,  3] <- qbq_q2_q1c_df[3, 10]
+Q2_Q1C[5,  2] <- qbq_q2_q1c_df[3, 11]
+Q2_Q1C[5,  3] <- qbq_q2_q1c_df[3, 12]
+Q2_Q1C[6,  2] <- qbq_q2_q1c_df[3, 13]
+Q2_Q1C[6,  3] <- qbq_q2_q1c_df[3, 14]
 
-Q2_Q1C_ms <- round(mean(Q2_Q1C[2]), digits = 2)
+Q2_Q1C_ms <- round(mean(Q2_Q1C[3]), digits = 1)
 
 # Q2 Build plot
 Q2_Q1C_bar <- ggplot() +
@@ -1354,22 +1420,23 @@ Q2_Q1C_bar <- ggplot() +
 
 # Q3 Gather data
 qbq_q3_q1c_df <- transform(as.data.frame(full_year$Q3)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q3_Q1C <- data.frame(Group = 1:6, Avg = 1:6)
+Q3_Q1C <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q3_Q1C[1,  1] <- qbq_q3_q1c_df[3,  3]
-Q3_Q1C[1,  2] <- qbq_q3_q1c_df[3,  4]
-Q3_Q1C[2,  1] <- qbq_q3_q1c_df[3,  5]
-Q3_Q1C[2,  2] <- qbq_q3_q1c_df[3,  6]
-Q3_Q1C[3,  1] <- qbq_q3_q1c_df[3,  7]
-Q3_Q1C[3,  2] <- qbq_q3_q1c_df[3,  8]
-Q3_Q1C[4,  1] <- qbq_q3_q1c_df[3,  9]
-Q3_Q1C[4,  2] <- qbq_q3_q1c_df[3, 10]
-Q3_Q1C[5,  1] <- qbq_q3_q1c_df[3, 11]
-Q3_Q1C[5,  2] <- qbq_q3_q1c_df[3, 12]
-Q3_Q1C[6,  1] <- qbq_q3_q1c_df[3, 13]
-Q3_Q1C[6,  2] <- qbq_q3_q1c_df[3, 14]
+Q3_Q1C[1:6,  1] <- "Q3-S20"
+Q3_Q1C[1,  2] <- qbq_q3_q1c_df[3,  3]
+Q3_Q1C[1,  3] <- qbq_q3_q1c_df[3,  4]
+Q3_Q1C[2,  2] <- qbq_q3_q1c_df[3,  5]
+Q3_Q1C[2,  3] <- qbq_q3_q1c_df[3,  6]
+Q3_Q1C[3,  2] <- qbq_q3_q1c_df[3,  7]
+Q3_Q1C[3,  3] <- qbq_q3_q1c_df[3,  8]
+Q3_Q1C[4,  2] <- qbq_q3_q1c_df[3,  9]
+Q3_Q1C[4,  3] <- qbq_q3_q1c_df[3, 10]
+Q3_Q1C[5,  2] <- qbq_q3_q1c_df[3, 11]
+Q3_Q1C[5,  3] <- qbq_q3_q1c_df[3, 12]
+Q3_Q1C[6,  2] <- qbq_q3_q1c_df[3, 13]
+Q3_Q1C[6,  3] <- qbq_q3_q1c_df[3, 14]
 
-Q3_Q1C_ms <- round(mean(Q3_Q1C[2]), digits = 2)
+Q3_Q1C_ms <- round(mean(Q3_Q1C[3]), digits = 1)
 
 # Q3 Build plot
 Q3_Q1C_bar <- ggplot() +
@@ -1383,22 +1450,23 @@ Q3_Q1C_bar <- ggplot() +
 
 # Q4 Gather data
 qbq_q4_q1c_df <- transform(as.data.frame(full_year$Q4)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q4_Q1C <- data.frame(Group = 1:6, Avg = 1:6)
+Q4_Q1C <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q4_Q1C[1,  1] <- qbq_q4_q1c_df[3,  3]
-Q4_Q1C[1,  2] <- qbq_q4_q1c_df[3,  4]
-Q4_Q1C[2,  1] <- qbq_q4_q1c_df[3,  5]
-Q4_Q1C[2,  2] <- qbq_q4_q1c_df[3,  6]
-Q4_Q1C[3,  1] <- qbq_q4_q1c_df[3,  7]
-Q4_Q1C[3,  2] <- qbq_q4_q1c_df[3,  8]
-Q4_Q1C[4,  1] <- qbq_q4_q1c_df[3,  9]
-Q4_Q1C[4,  2] <- qbq_q4_q1c_df[3, 10]
-Q4_Q1C[5,  1] <- qbq_q4_q1c_df[3, 11]
-Q4_Q1C[5,  2] <- qbq_q4_q1c_df[3, 12]
-Q4_Q1C[6,  1] <- qbq_q4_q1c_df[3, 13]
-Q4_Q1C[6,  2] <- qbq_q4_q1c_df[3, 14]
+Q4_Q1C[1:6,  1] <- "Q4-S20"
+Q4_Q1C[1,  2] <- qbq_q4_q1c_df[3,  3]
+Q4_Q1C[1,  3] <- qbq_q4_q1c_df[3,  4]
+Q4_Q1C[2,  2] <- qbq_q4_q1c_df[3,  5]
+Q4_Q1C[2,  3] <- qbq_q4_q1c_df[3,  6]
+Q4_Q1C[3,  2] <- qbq_q4_q1c_df[3,  7]
+Q4_Q1C[3,  3] <- qbq_q4_q1c_df[3,  8]
+Q4_Q1C[4,  2] <- qbq_q4_q1c_df[3,  9]
+Q4_Q1C[4,  3] <- qbq_q4_q1c_df[3, 10]
+Q4_Q1C[5,  2] <- qbq_q4_q1c_df[3, 11]
+Q4_Q1C[5,  3] <- qbq_q4_q1c_df[3, 12]
+Q4_Q1C[6,  2] <- qbq_q4_q1c_df[3, 13]
+Q4_Q1C[6,  3] <- qbq_q4_q1c_df[3, 14]
 
-Q4_Q1C_ms <- round(mean(Q4_Q1C[2]), digits = 2)
+Q4_Q1C_ms <- round(mean(Q4_Q1C[3]), digits = 1)
 
 # Q4 Build plot
 Q4_Q1C_bar <- ggplot() +
@@ -1415,27 +1483,48 @@ grid.arrange(Q1_Q1C_bar, Q2_Q1C_bar, ncol = 2)
 grid.arrange(Q3_Q1C_bar, Q4_Q1C_bar, ncol = 2)
 
 #
+# Assemble grouped bar charts for quarter to quarter comparisons of Questions
+#
+
+# Add quarters as the data becomes available
+Q1C_aq_df <- Q1_Q1C
+Q1C_aq_df <- rbind(Q1C_aq_df, Q2_Q1C)
+Q1C_aq_df <- rbind(Q1C_aq_df, Q3_Q1C)
+Q1C_aq_df <- rbind(Q1C_aq_df, Q4_Q1C)
+
+ggplot(data = Q1C_aq_df, aes(x = Group, y = Avg, fill = Quarter)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(data = Q1C_aq_df, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.6, color = "black",
+            position = position_dodge(0.9), size = 3) +
+  scale_fill_brewer(palette="Blues") + ylab("Average Rating") +
+  theme_minimal() +
+  labs(title = "Response Averages for Question Q1C - Quarter-to-Quarter Comparison by Group") 
+
+
+#
 # Question 2A
 #
 
 # Q1 Gather data
 qbq_q1_q2a_df <- transform(as.data.frame(full_year$Q1)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q1_Q2A <- data.frame(Group = 1:6, Avg = 1:6)
+Q1_Q2A <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q1_Q2A[1,  1] <- qbq_q1_q2a_df[4,  3]
-Q1_Q2A[1,  2] <- qbq_q1_q2a_df[4,  4]
-Q1_Q2A[2,  1] <- qbq_q1_q2a_df[4,  5]
-Q1_Q2A[2,  2] <- qbq_q1_q2a_df[4,  6]
-Q1_Q2A[3,  1] <- qbq_q1_q2a_df[4,  7]
-Q1_Q2A[3,  2] <- qbq_q1_q2a_df[4,  8]
-Q1_Q2A[4,  1] <- qbq_q1_q2a_df[4,  9]
-Q1_Q2A[4,  2] <- qbq_q1_q2a_df[4, 10]
-Q1_Q2A[5,  1] <- qbq_q1_q2a_df[4, 11]
-Q1_Q2A[5,  2] <- qbq_q1_q2a_df[4, 12]
-Q1_Q2A[6,  1] <- qbq_q1_q2a_df[4, 13]
-Q1_Q2A[6,  2] <- qbq_q1_q2a_df[4, 14]
+Q1_Q2A[1:6,1] <- "Q1-F19"
+Q1_Q2A[1,  2] <- qbq_q1_q2a_df[4,  3]
+Q1_Q2A[1,  3] <- qbq_q1_q2a_df[4,  4]
+Q1_Q2A[2,  2] <- qbq_q1_q2a_df[4,  5]
+Q1_Q2A[2,  3] <- qbq_q1_q2a_df[4,  6]
+Q1_Q2A[3,  2] <- qbq_q1_q2a_df[4,  7]
+Q1_Q2A[3,  3] <- qbq_q1_q2a_df[4,  8]
+Q1_Q2A[4,  2] <- qbq_q1_q2a_df[4,  9]
+Q1_Q2A[4,  3] <- qbq_q1_q2a_df[4, 10]
+Q1_Q2A[5,  2] <- qbq_q1_q2a_df[4, 11]
+Q1_Q2A[5,  3] <- qbq_q1_q2a_df[4, 12]
+Q1_Q2A[6,  2] <- qbq_q1_q2a_df[4, 13]
+Q1_Q2A[6,  3] <- qbq_q1_q2a_df[4, 14]
 
-Q1_Q2A_ms <- round(mean(Q1_Q2A[2]), digits = 2)
+Q1_Q2A_ms <- round(mean(Q1_Q2A[3]), digits = 1)
 
 # Q1 Build plot
 Q1_Q2A_bar <- ggplot() +
@@ -1448,22 +1537,23 @@ Q1_Q2A_bar <- ggplot() +
 
 # Q2 Gather data
 qbq_q2_q2a_df <- transform(as.data.frame(full_year$Q2)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q2_Q2A <- data.frame(Group = 1:6, Avg = 1:6)
+Q2_Q2A <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q2_Q2A[1,  1] <- qbq_q2_q2a_df[4,  3]
-Q2_Q2A[1,  2] <- qbq_q2_q2a_df[4,  4]
-Q2_Q2A[2,  1] <- qbq_q2_q2a_df[4,  5]
-Q2_Q2A[2,  2] <- qbq_q2_q2a_df[4,  6]
-Q2_Q2A[3,  1] <- qbq_q2_q2a_df[4,  7]
-Q2_Q2A[3,  2] <- qbq_q2_q2a_df[4,  8]
-Q2_Q2A[4,  1] <- qbq_q2_q2a_df[4,  9]
-Q2_Q2A[4,  2] <- qbq_q2_q2a_df[4, 10]
-Q2_Q2A[5,  1] <- qbq_q2_q2a_df[4, 11]
-Q2_Q2A[5,  2] <- qbq_q2_q2a_df[4, 12]
-Q2_Q2A[6,  1] <- qbq_q2_q2a_df[4, 13]
-Q2_Q2A[6,  2] <- qbq_q2_q2a_df[4, 14]
+Q2_Q2A[1:6,1] <- "Q2-W20"
+Q2_Q2A[1,  2] <- qbq_q2_q2a_df[4,  3]
+Q2_Q2A[1,  3] <- qbq_q2_q2a_df[4,  4]
+Q2_Q2A[2,  2] <- qbq_q2_q2a_df[4,  5]
+Q2_Q2A[2,  3] <- qbq_q2_q2a_df[4,  6]
+Q2_Q2A[3,  2] <- qbq_q2_q2a_df[4,  7]
+Q2_Q2A[3,  3] <- qbq_q2_q2a_df[4,  8]
+Q2_Q2A[4,  2] <- qbq_q2_q2a_df[4,  9]
+Q2_Q2A[4,  3] <- qbq_q2_q2a_df[4, 10]
+Q2_Q2A[5,  2] <- qbq_q2_q2a_df[4, 11]
+Q2_Q2A[5,  3] <- qbq_q2_q2a_df[4, 12]
+Q2_Q2A[6,  2] <- qbq_q2_q2a_df[4, 13]
+Q2_Q2A[6,  3] <- qbq_q2_q2a_df[4, 14]
 
-Q2_Q2A_ms <- round(mean(Q2_Q2A[2]), digits = 2)
+Q2_Q2A_ms <- round(mean(Q2_Q2A[3]), digits = 1)
 
 # Q2 Build plot
 Q2_Q2A_bar <- ggplot() +
@@ -1476,22 +1566,23 @@ Q2_Q2A_bar <- ggplot() +
        
 # Q3 Gather data
 qbq_q3_q2a_df <- transform(as.data.frame(full_year$Q3)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q3_Q2A <- data.frame(Group = 1:6, Avg = 1:6)
+Q3_Q2A <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q3_Q2A[1,  1] <- qbq_q3_q2a_df[4,  3]
-Q3_Q2A[1,  2] <- qbq_q3_q2a_df[4,  4]
-Q3_Q2A[2,  1] <- qbq_q3_q2a_df[4,  5]
-Q3_Q2A[2,  2] <- qbq_q3_q2a_df[4,  6]
-Q3_Q2A[3,  1] <- qbq_q3_q2a_df[4,  7]
-Q3_Q2A[3,  2] <- qbq_q3_q2a_df[4,  8]
-Q3_Q2A[4,  1] <- qbq_q3_q2a_df[4,  9]
-Q3_Q2A[4,  2] <- qbq_q3_q2a_df[4, 10]
-Q3_Q2A[5,  1] <- qbq_q3_q2a_df[4, 11]
-Q3_Q2A[5,  2] <- qbq_q3_q2a_df[4, 12]
-Q3_Q2A[6,  1] <- qbq_q3_q2a_df[4, 13]
-Q3_Q2A[6,  2] <- qbq_q3_q2a_df[4, 14]
+Q3_Q2A[1:6,1] <- "Q3-S20"
+Q3_Q2A[1,  2] <- qbq_q3_q2a_df[4,  3]
+Q3_Q2A[1,  3] <- qbq_q3_q2a_df[4,  4]
+Q3_Q2A[2,  2] <- qbq_q3_q2a_df[4,  5]
+Q3_Q2A[2,  3] <- qbq_q3_q2a_df[4,  6]
+Q3_Q2A[3,  2] <- qbq_q3_q2a_df[4,  7]
+Q3_Q2A[3,  3] <- qbq_q3_q2a_df[4,  8]
+Q3_Q2A[4,  2] <- qbq_q3_q2a_df[4,  9]
+Q3_Q2A[4,  3] <- qbq_q3_q2a_df[4, 10]
+Q3_Q2A[5,  2] <- qbq_q3_q2a_df[4, 11]
+Q3_Q2A[5,  3] <- qbq_q3_q2a_df[4, 12]
+Q3_Q2A[6,  2] <- qbq_q3_q2a_df[4, 13]
+Q3_Q2A[6,  3] <- qbq_q3_q2a_df[4, 14]
 
-Q3_Q2A_ms <- round(mean(Q3_Q2A[2]), digits = 2)
+Q3_Q2A_ms <- round(mean(Q3_Q2A[3]), digits = 1)
 
 # Q3 Build plot
 Q3_Q2A_bar <- ggplot() +
@@ -1504,22 +1595,23 @@ Q3_Q2A_bar <- ggplot() +
 
 # Q4 Gather data
 qbq_q4_q2a_df <- transform(as.data.frame(full_year$Q4)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q4_Q2A <- data.frame(Group = 1:6, Avg = 1:6)
+Q4_Q2A <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q4_Q2A[1,  1] <- qbq_q4_q2a_df[4,  3]
-Q4_Q2A[1,  2] <- qbq_q4_q2a_df[4,  4]
-Q4_Q2A[2,  1] <- qbq_q4_q2a_df[4,  5]
-Q4_Q2A[2,  2] <- qbq_q4_q2a_df[4,  6]
-Q4_Q2A[3,  1] <- qbq_q4_q2a_df[4,  7]
-Q4_Q2A[3,  2] <- qbq_q4_q2a_df[4,  8]
-Q4_Q2A[4,  1] <- qbq_q4_q2a_df[4,  9]
-Q4_Q2A[4,  2] <- qbq_q4_q2a_df[4, 10]
-Q4_Q2A[5,  1] <- qbq_q4_q2a_df[4, 11]
-Q4_Q2A[5,  2] <- qbq_q4_q2a_df[4, 12]
-Q4_Q2A[6,  1] <- qbq_q4_q2a_df[4, 13]
-Q4_Q2A[6,  2] <- qbq_q4_q2a_df[4, 14]
+Q4_Q2A[1:6,  1] <- "Q4-S20"
+Q4_Q2A[1,  2] <- qbq_q4_q2a_df[4,  3]
+Q4_Q2A[1,  3] <- qbq_q4_q2a_df[4,  4]
+Q4_Q2A[2,  2] <- qbq_q4_q2a_df[4,  5]
+Q4_Q2A[2,  3] <- qbq_q4_q2a_df[4,  6]
+Q4_Q2A[3,  2] <- qbq_q4_q2a_df[4,  7]
+Q4_Q2A[3,  3] <- qbq_q4_q2a_df[4,  8]
+Q4_Q2A[4,  2] <- qbq_q4_q2a_df[4,  9]
+Q4_Q2A[4,  3] <- qbq_q4_q2a_df[4, 10]
+Q4_Q2A[5,  2] <- qbq_q4_q2a_df[4, 11]
+Q4_Q2A[5,  3] <- qbq_q4_q2a_df[4, 12]
+Q4_Q2A[6,  2] <- qbq_q4_q2a_df[4, 13]
+Q4_Q2A[6,  3] <- qbq_q4_q2a_df[4, 14]
 
-Q4_Q2A_ms <- round(mean(Q4_Q2A[2]), digits = 2)
+Q4_Q2A_ms <- round(mean(Q4_Q2A[3]), digits = 1)
 
 # Q4 Build plot
 Q4_Q2A_bar <- ggplot() +
@@ -1536,27 +1628,47 @@ grid.arrange(Q1_Q2A_bar, Q2_Q2A_bar, ncol = 2)
 grid.arrange(Q3_Q2A_bar, Q4_Q2A_bar, ncol = 2)
 
 #
+# Assemble grouped bar charts for quarter to quarter comparisons of Questions
+#
+
+# Add quarters as the data becomes available
+Q2A_aq_df <- Q1_Q2A
+Q2A_aq_df <- rbind(Q2A_aq_df, Q2_Q2A)
+Q2A_aq_df <- rbind(Q2A_aq_df, Q3_Q2A)
+Q2A_aq_df <- rbind(Q2A_aq_df, Q4_Q2A)
+
+ggplot(data = Q2A_aq_df, aes(x = Group, y = Avg, fill = Quarter)) +
+  geom_bar(stat = "identity",position = position_dodge()) +
+  geom_text(data = Q2A_aq_df, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.6, color = "black",
+            position = position_dodge(0.9), size = 3) +
+  scale_fill_brewer(palette="Blues") + ylab("Average Rating") +
+  theme_minimal() +
+  labs(title = "Response Averages for Question Q2A - Quarter-to-Quarter Comparison by Group") 
+
+#
 # Question 2B
 #
 
 # Q1 Gather data
 qbq_q1_q2b_df <- transform(as.data.frame(full_year$Q1)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q1_Q2B <- data.frame(Group = 1:6, Avg = 1:6)
+Q1_Q2B <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q1_Q2B[1,  1] <- qbq_q1_q2b_df[5,  3]
-Q1_Q2B[1,  2] <- qbq_q1_q2b_df[5,  4]
-Q1_Q2B[2,  1] <- qbq_q1_q2b_df[5,  5]
-Q1_Q2B[2,  2] <- qbq_q1_q2b_df[5,  6]
-Q1_Q2B[3,  1] <- qbq_q1_q2b_df[5,  7]
-Q1_Q2B[3,  2] <- qbq_q1_q2b_df[5,  8]
-Q1_Q2B[4,  1] <- qbq_q1_q2b_df[5,  9]
-Q1_Q2B[4,  2] <- qbq_q1_q2b_df[5, 10]
-Q1_Q2B[5,  1] <- qbq_q1_q2b_df[5, 11]
-Q1_Q2B[5,  2] <- qbq_q1_q2b_df[5, 12]
-Q1_Q2B[6,  1] <- qbq_q1_q2b_df[5, 13]
-Q1_Q2B[6,  2] <- qbq_q1_q2b_df[5, 14]
+Q1_Q2B[1:6,1] <- "Q1-F19"
+Q1_Q2B[1,  2] <- qbq_q1_q2b_df[5,  3]
+Q1_Q2B[1,  3] <- qbq_q1_q2b_df[5,  4]
+Q1_Q2B[2,  2] <- qbq_q1_q2b_df[5,  5]
+Q1_Q2B[2,  3] <- qbq_q1_q2b_df[5,  6]
+Q1_Q2B[3,  2] <- qbq_q1_q2b_df[5,  7]
+Q1_Q2B[3,  3] <- qbq_q1_q2b_df[5,  8]
+Q1_Q2B[4,  2] <- qbq_q1_q2b_df[5,  9]
+Q1_Q2B[4,  3] <- qbq_q1_q2b_df[5, 10]
+Q1_Q2B[5,  2] <- qbq_q1_q2b_df[5, 11]
+Q1_Q2B[5,  3] <- qbq_q1_q2b_df[5, 12]
+Q1_Q2B[6,  2] <- qbq_q1_q2b_df[5, 13]
+Q1_Q2B[6,  3] <- qbq_q1_q2b_df[5, 14]
 
-Q1_Q2B_ms <- round(mean(Q1_Q2B[2]), digits = 2)
+Q1_Q2B_ms <- round(mean(Q1_Q2B[3]), digits = 1)
 
 # Q1 Build plot
 Q1_Q2B_bar <- ggplot() +
@@ -1569,22 +1681,23 @@ Q1_Q2B_bar <- ggplot() +
 
 # Q2 Gather data
 qbq_q2_q2b_df <- transform(as.data.frame(full_year$Q2)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q2_Q2B <- data.frame(Group = 1:6, Avg = 1:6)
+Q2_Q2B <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q2_Q2B[1,  1] <- qbq_q2_q2b_df[5,  3]
-Q2_Q2B[1,  2] <- qbq_q2_q2b_df[5,  4]
-Q2_Q2B[2,  1] <- qbq_q2_q2b_df[5,  5]
-Q2_Q2B[2,  2] <- qbq_q2_q2b_df[5,  6]
-Q2_Q2B[3,  1] <- qbq_q2_q2b_df[5,  7]
-Q2_Q2B[3,  2] <- qbq_q2_q2b_df[5,  8]
-Q2_Q2B[4,  1] <- qbq_q2_q2b_df[5,  9]
-Q2_Q2B[4,  2] <- qbq_q2_q2b_df[5, 10]
-Q2_Q2B[5,  1] <- qbq_q2_q2b_df[5, 11]
-Q2_Q2B[5,  2] <- qbq_q2_q2b_df[5, 12]
-Q2_Q2B[6,  1] <- qbq_q2_q2b_df[5, 13]
-Q2_Q2B[6,  2] <- qbq_q2_q2b_df[5, 14]
+Q2_Q2B[1:6,1] <- "Q2-W20"
+Q2_Q2B[1,  2] <- qbq_q2_q2b_df[5,  3]
+Q2_Q2B[1,  3] <- qbq_q2_q2b_df[5,  4]
+Q2_Q2B[2,  2] <- qbq_q2_q2b_df[5,  5]
+Q2_Q2B[2,  3] <- qbq_q2_q2b_df[5,  6]
+Q2_Q2B[3,  2] <- qbq_q2_q2b_df[5,  7]
+Q2_Q2B[3,  3] <- qbq_q2_q2b_df[5,  8]
+Q2_Q2B[4,  2] <- qbq_q2_q2b_df[5,  9]
+Q2_Q2B[4,  3] <- qbq_q2_q2b_df[5, 10]
+Q2_Q2B[5,  2] <- qbq_q2_q2b_df[5, 11]
+Q2_Q2B[5,  3] <- qbq_q2_q2b_df[5, 12]
+Q2_Q2B[6,  2] <- qbq_q2_q2b_df[5, 13]
+Q2_Q2B[6,  3] <- qbq_q2_q2b_df[5, 14]
 
-Q2_Q2B_ms <- round(mean(Q2_Q2B[2]), digits = 2)
+Q2_Q2B_ms <- round(mean(Q2_Q2B[3]), digits = 1)
 
 # Q2 Build plot
 Q2_Q2B_bar <- ggplot() +
@@ -1597,22 +1710,23 @@ Q2_Q2B_bar <- ggplot() +
 
 # Q3 Gather data
 qbq_q3_q2b_df <- transform(as.data.frame(full_year$Q3)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q3_Q2B <- data.frame(Group = 1:6, Avg = 1:6)
+Q3_Q2B <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q3_Q2B[1,  1] <- qbq_q3_q2b_df[5,  3]
-Q3_Q2B[1,  2] <- qbq_q3_q2b_df[5,  4]
-Q3_Q2B[2,  1] <- qbq_q3_q2b_df[5,  5]
-Q3_Q2B[2,  2] <- qbq_q3_q2b_df[5,  6]
-Q3_Q2B[3,  1] <- qbq_q3_q2b_df[5,  7]
-Q3_Q2B[3,  2] <- qbq_q3_q2b_df[5,  8]
-Q3_Q2B[4,  1] <- qbq_q3_q2b_df[5,  9]
-Q3_Q2B[4,  2] <- qbq_q3_q2b_df[5, 10]
-Q3_Q2B[5,  1] <- qbq_q3_q2b_df[5, 11]
-Q3_Q2B[5,  2] <- qbq_q3_q2b_df[5, 12]
-Q3_Q2B[6,  1] <- qbq_q3_q2b_df[5, 13]
-Q3_Q2B[6,  2] <- qbq_q3_q2b_df[5, 14]
+Q3_Q2B[1:6,1] <- "Q3-S20"
+Q3_Q2B[1,  2] <- qbq_q3_q2b_df[5,  3]
+Q3_Q2B[1,  3] <- qbq_q3_q2b_df[5,  4]
+Q3_Q2B[2,  2] <- qbq_q3_q2b_df[5,  5]
+Q3_Q2B[2,  3] <- qbq_q3_q2b_df[5,  6]
+Q3_Q2B[3,  2] <- qbq_q3_q2b_df[5,  7]
+Q3_Q2B[3,  3] <- qbq_q3_q2b_df[5,  8]
+Q3_Q2B[4,  2] <- qbq_q3_q2b_df[5,  9]
+Q3_Q2B[4,  3] <- qbq_q3_q2b_df[5, 10]
+Q3_Q2B[5,  2] <- qbq_q3_q2b_df[5, 11]
+Q3_Q2B[5,  3] <- qbq_q3_q2b_df[5, 12]
+Q3_Q2B[6,  2] <- qbq_q3_q2b_df[5, 13]
+Q3_Q2B[6,  3] <- qbq_q3_q2b_df[5, 14]
 
-Q3_Q2B_ms <- round(mean(Q3_Q2B[2]), digits = 2)
+Q3_Q2B_ms <- round(mean(Q3_Q2B[3]), digits = 1)
 
 # Q3 Build plot
 Q3_Q2B_bar <- ggplot() +
@@ -1625,22 +1739,23 @@ Q3_Q2B_bar <- ggplot() +
 
 # Q4 Gather data
 qbq_q4_q2b_df <- transform(as.data.frame(full_year$Q4)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q4_Q2B <- data.frame(Group = 1:6, Avg = 1:6)
+Q4_Q2B <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
 
-Q4_Q2B[1,  1] <- qbq_q4_q2b_df[5,  3]
-Q4_Q2B[1,  2] <- qbq_q4_q2b_df[5,  4]
-Q4_Q2B[2,  1] <- qbq_q4_q2b_df[5,  5]
-Q4_Q2B[2,  2] <- qbq_q4_q2b_df[5,  6]
-Q4_Q2B[3,  1] <- qbq_q4_q2b_df[5,  7]
-Q4_Q2B[3,  2] <- qbq_q4_q2b_df[5,  8]
-Q4_Q2B[4,  1] <- qbq_q4_q2b_df[5,  9]
-Q4_Q2B[4,  2] <- qbq_q4_q2b_df[5, 10]
-Q4_Q2B[5,  1] <- qbq_q4_q2b_df[5, 11]
-Q4_Q2B[5,  2] <- qbq_q4_q2b_df[5, 12]
-Q4_Q2B[6,  1] <- qbq_q4_q2b_df[5, 13]
-Q4_Q2B[6,  2] <- qbq_q4_q2b_df[5, 14]
+Q4_Q2B[1:6,1] <- "Q4-S20"
+Q4_Q2B[1,  2] <- qbq_q4_q2b_df[5,  3]
+Q4_Q2B[1,  3] <- qbq_q4_q2b_df[5,  4]
+Q4_Q2B[2,  2] <- qbq_q4_q2b_df[5,  5]
+Q4_Q2B[2,  3] <- qbq_q4_q2b_df[5,  6]
+Q4_Q2B[3,  2] <- qbq_q4_q2b_df[5,  7]
+Q4_Q2B[3,  3] <- qbq_q4_q2b_df[5,  8]
+Q4_Q2B[4,  2] <- qbq_q4_q2b_df[5,  9]
+Q4_Q2B[4,  3] <- qbq_q4_q2b_df[5, 10]
+Q4_Q2B[5,  2] <- qbq_q4_q2b_df[5, 11]
+Q4_Q2B[5,  3] <- qbq_q4_q2b_df[5, 12]
+Q4_Q2B[6,  2] <- qbq_q4_q2b_df[5, 13]
+Q4_Q2B[6,  3] <- qbq_q4_q2b_df[5, 14]
 
-Q4_Q2B_ms <- round(mean(Q4_Q2B[2]), digits = 2)
+Q4_Q2B_ms <- round(mean(Q4_Q2B[3]), digits = 1)
 
 # Q4 Build plot
 Q4_Q2B_bar <- ggplot() +
@@ -1653,128 +1768,29 @@ Q4_Q2B_bar <- ggplot() +
 
 # Arrange the Q2B grids
 grid.arrange(Q1_Q2B_bar, Q2_Q2B_bar, ncol = 2)
-grid.arrange(Q3_Q2B_bar, Q4_Q2B_bar, ncol = 2)
+grid.arrange
 
 #
-# Question 3x
+# Assemble grouped bar charts for quarter to quarter comparisons of Questions
 #
 
-# Q1 Gather data
-qbq_q1_q3x_df <- transform(as.data.frame(full_year$Q1)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q1_Q3x <- data.frame(Group = 1:6, Avg = 1:6)
+# Add quarters as the data becomes available
+Q2B_aq_df <- Q1_Q2B
+Q2B_aq_df <- rbind(Q2B_aq_df, Q2_Q2B)
+Q2B_aq_df <- rbind(Q2B_aq_df, Q3_Q2B)
+Q2B_aq_df <- rbind(Q2B_aq_df, Q4_Q2B)
 
-Q1_Q3x[1,  1] <- qbq_q1_q3x_df[6,  3]
-Q1_Q3x[1,  2] <- qbq_q1_q3x_df[6,  4]
-Q1_Q3x[2,  1] <- qbq_q1_q3x_df[6,  5]
-Q1_Q3x[2,  2] <- qbq_q1_q3x_df[6,  6]
-Q1_Q3x[3,  1] <- qbq_q1_q3x_df[6,  7]
-Q1_Q3x[3,  2] <- qbq_q1_q3x_df[6,  8]
-Q1_Q3x[4,  1] <- qbq_q1_q3x_df[6,  9]
-Q1_Q3x[4,  2] <- qbq_q1_q3x_df[6, 10]
-Q1_Q3x[5,  1] <- qbq_q1_q3x_df[6, 11]
-Q1_Q3x[5,  2] <- qbq_q1_q3x_df[6, 12]
-Q1_Q3x[6,  1] <- qbq_q1_q3x_df[6, 13]
-Q1_Q3x[6,  2] <- qbq_q1_q3x_df[6, 14]
+ggplot(data = Q2B_aq_df, aes(x = Group, y = Avg, fill = Quarter)) +
+  geom_bar(stat = "identity",position = position_dodge()) +
+  geom_text(data = Q2B_aq_df, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.6, color = "black",
+            position = position_dodge(0.9), size = 3) + 
+  scale_fill_brewer(palette="Blues") + ylab("Average Rating") +
+  theme_minimal() +
+  labs(title = "Response Averages for Question Q2B - Quarter-to-Quarter Comparison by Group") 
 
-Q1_Q3x_ms <- round(mean(Q1_Q3x[2]), digits = 2)
 
-# Q1 Build plot
-Q1_Q3x_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
-           data = Q1_Q3x, stat = "identity") +
-  geom_text(data = Q1_Q3x, aes(x = Group, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Question 3x", subtitle = paste("Q1 (Fall 2019) Averages by Group - OA =", Q1_Q3x_ms)) 
-
-# Q2 Gather data
-qbq_q2_q3x_df <- transform(as.data.frame(full_year$Q2)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q2_Q3x <- data.frame(Group = 1:6, Avg = 1:6)
-
-Q2_Q3x[1,  1] <- qbq_q2_q3x_df[6,  3]
-Q2_Q3x[1,  2] <- qbq_q2_q3x_df[6,  4]
-Q2_Q3x[2,  1] <- qbq_q2_q3x_df[6,  5]
-Q2_Q3x[2,  2] <- qbq_q2_q3x_df[6,  6]
-Q2_Q3x[3,  1] <- qbq_q2_q3x_df[6,  7]
-Q2_Q3x[3,  2] <- qbq_q2_q3x_df[6,  8]
-Q2_Q3x[4,  1] <- qbq_q2_q3x_df[6,  9]
-Q2_Q3x[4,  2] <- qbq_q2_q3x_df[6, 10]
-Q2_Q3x[5,  1] <- qbq_q2_q3x_df[6, 11]
-Q2_Q3x[5,  2] <- qbq_q2_q3x_df[6, 12]
-Q2_Q3x[6,  1] <- qbq_q2_q3x_df[6, 13]
-Q2_Q3x[6,  2] <- qbq_q2_q3x_df[6, 14]
-
-Q2_Q3x_ms <- round(mean(Q2_Q3x[2]), digits = 2)
-
-# Q2 Build plot
-Q2_Q3x_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
-           data = Q2_Q3x, stat = "identity") +
-  geom_text(data = Q2_Q3x, aes(x = Group, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Question 3x", subtitle = paste("Q2 (Winter 2020) Averages by Group - OA =", Q2_Q3x_ms)) 
-
-# Q3 Gather data
-qbq_q3_q3x_df <- transform(as.data.frame(full_year$Q3)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q3_Q3x <- data.frame(Group = 1:6, Avg = 1:6)
-
-Q3_Q3x[1,  1] <- qbq_q3_q3x_df[6,  3]
-Q3_Q3x[1,  2] <- qbq_q3_q3x_df[6,  4]
-Q3_Q3x[2,  1] <- qbq_q3_q3x_df[6,  5]
-Q3_Q3x[2,  2] <- qbq_q3_q3x_df[6,  6]
-Q3_Q3x[3,  1] <- qbq_q3_q3x_df[6,  7]
-Q3_Q3x[3,  2] <- qbq_q3_q3x_df[6,  8]
-Q3_Q3x[4,  1] <- qbq_q3_q3x_df[6,  9]
-Q3_Q3x[4,  2] <- qbq_q3_q3x_df[6, 10]
-Q3_Q3x[5,  1] <- qbq_q3_q3x_df[6, 11]
-Q3_Q3x[5,  2] <- qbq_q3_q3x_df[6, 12]
-Q3_Q3x[6,  1] <- qbq_q3_q3x_df[6, 13]
-Q3_Q3x[6,  2] <- qbq_q3_q3x_df[6, 14]
-
-Q3_Q3x_ms <- round(mean(Q3_Q3x[2]), digits = 2)
-
-# Q3 Build plot
-Q3_Q3x_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
-           data = Q3_Q3x, stat = "identity") +
-  geom_text(data = Q3_Q3x, aes(x = Group, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Question 3x", subtitle = paste("Q3 (Spring 2020) Averages by Group - OA =", Q3_Q3x_ms)) 
-
-# Q4 Gather data
-qbq_q4_q3x_df <- transform(as.data.frame(full_year$Q1)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
-Q4_Q3x <- data.frame(Group = 1:6, Avg = 1:6)
-
-Q4_Q3x[1,  1] <- qbq_q4_q3x_df[6,  3]
-Q4_Q3x[1,  2] <- qbq_q4_q3x_df[6,  4]
-Q4_Q3x[2,  1] <- qbq_q4_q3x_df[6,  5]
-Q4_Q3x[2,  2] <- qbq_q4_q3x_df[6,  6]
-Q4_Q3x[3,  1] <- qbq_q4_q3x_df[6,  7]
-Q4_Q3x[3,  2] <- qbq_q4_q3x_df[6,  8]
-Q4_Q3x[4,  1] <- qbq_q4_q3x_df[6,  9]
-Q4_Q3x[4,  2] <- qbq_q4_q3x_df[6, 10]
-Q4_Q3x[5,  1] <- qbq_q4_q3x_df[6, 11]
-Q4_Q3x[5,  2] <- qbq_q4_q3x_df[6, 12]
-Q4_Q3x[6,  1] <- qbq_q4_q3x_df[6, 13]
-Q4_Q3x[6,  2] <- qbq_q4_q3x_df[6, 14]
-
-Q4_Q3x_ms <- round(mean(Q4_Q3x[2]), digits = 2)
-
-# Q4 Build plot
-Q4_Q3x_bar <- ggplot() +
-  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
-           data = Q4_Q3x, stat = "identity") +
-  geom_text(data = Q4_Q3x, aes(x = Group, y = Avg, label = Avg), 
-            vjust = 1.5, color = "black", size = 4) + 
-  theme(legend.position = "none") +
-  labs(title = "Question 3x", subtitle = paste("Q4 (Summer 2020) Averages by Group - OA =", Q4_Q3x_ms)) 
-
-# Arrange the Q3x grids
-grid.arrange(Q1_Q3x_bar, Q2_Q3x_bar, ncol = 2)
-grid.arrange(Q3_Q3x_bar, Q4_Q3x_bar, ncol = 2)
-
++
 #
 # Quarterly summary grids by question
 #
@@ -1801,7 +1817,7 @@ grid.arrange(Q4_Q2B_bar, Q4_Q3x_bar, ncol = 2)
 
 #-------------------------------------------------------------------------------
 #
-# Full Year Summary stacked bar charts
+# MISC CODE - NO LONGER NEEDED Full Year Summary stacked bar charts
 #
 #-------------------------------------------------------------------------------
 
@@ -1809,7 +1825,7 @@ grid.arrange(Q4_Q2B_bar, Q4_Q3x_bar, ncol = 2)
 full_year_groups <- ggplot(data = fy_df, aes(x = Group, y = Avg, fill = Quarter), color = "blue") +
   geom_bar(stat="identity", position=position_dodge()) +
   geom_text(aes(label = Avg), angle = 90, color="black",
-            position = position_dodge(0.9), size=3.5) +
+            position = position_dodge(0.9), size = 3) +
   labs(title = "Full Year Average Scores by Group") +
   scale_fill_brewer(palette="Blues")
 
@@ -1826,7 +1842,7 @@ fy_questions <- rbind(fy_questions, fy_q4)
 full_year_questions <- ggplot(data = fy_questions, aes(x = Question, y = Avg, fill = Quarter, color = "blue")) +
   geom_bar(stat="identity", position=position_dodge()) +
   geom_text(aes(label = Avg), angle = 90, color="black",
-            position = position_dodge(0.9), size=3.5) +
+            position = position_dodge(0.9), size = 3) +
   labs(title = "Full Year Average Scores by Question") +
   scale_fill_brewer(palette="Blues")
 
