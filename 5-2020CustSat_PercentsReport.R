@@ -1198,8 +1198,8 @@ grid.arrange(Q3_Q1A_bar, Q4_Q1A_bar, ncol = 2)
 # Add quarters as the data becomes available
 Q1A_aq_df <- Q1_Q1A
 Q1A_aq_df <- rbind(Q1A_aq_df, Q2_Q1A)
-Q1A_aq_df <- rbind(Q1A_aq_df, Q3_Q1A)
-Q1A_aq_df <- rbind(Q1A_aq_df, Q4_Q1A)
+# Q1A_aq_df <- rbind(Q1A_aq_df, Q3_Q1A)
+# Q1A_aq_df <- rbind(Q1A_aq_df, Q4_Q1A)
 
 ggplot(data = Q1A_aq_df, aes(x = Group, y = Avg, fill = Quarter)) +
   geom_bar(stat = "identity", position = position_dodge()) +
@@ -1342,8 +1342,8 @@ grid.arrange(Q3_Q1B_bar, Q4_Q1B_bar, ncol = 2)
 # Add quarters as the data becomes available
 Q1B_aq_df <- Q1_Q1B
 Q1B_aq_df <- rbind(Q1B_aq_df, Q2_Q1B)
-Q1B_aq_df <- rbind(Q1B_aq_df, Q3_Q1B)
-Q1B_aq_df <- rbind(Q1B_aq_df, Q4_Q1B)
+# Q1B_aq_df <- rbind(Q1B_aq_df, Q3_Q1B)
+# Q1B_aq_df <- rbind(Q1B_aq_df, Q4_Q1B)
 
 ggplot(data = Q1B_aq_df, aes(x = Group, y = Avg, fill = Quarter)) +
   geom_bar(stat = "identity", position = position_dodge()) +
@@ -1489,8 +1489,8 @@ grid.arrange(Q3_Q1C_bar, Q4_Q1C_bar, ncol = 2)
 # Add quarters as the data becomes available
 Q1C_aq_df <- Q1_Q1C
 Q1C_aq_df <- rbind(Q1C_aq_df, Q2_Q1C)
-Q1C_aq_df <- rbind(Q1C_aq_df, Q3_Q1C)
-Q1C_aq_df <- rbind(Q1C_aq_df, Q4_Q1C)
+# Q1C_aq_df <- rbind(Q1C_aq_df, Q3_Q1C)
+# Q1C_aq_df <- rbind(Q1C_aq_df, Q4_Q1C)
 
 ggplot(data = Q1C_aq_df, aes(x = Group, y = Avg, fill = Quarter)) +
   geom_bar(stat = "identity", position = position_dodge()) +
@@ -1634,8 +1634,8 @@ grid.arrange(Q3_Q2A_bar, Q4_Q2A_bar, ncol = 2)
 # Add quarters as the data becomes available
 Q2A_aq_df <- Q1_Q2A
 Q2A_aq_df <- rbind(Q2A_aq_df, Q2_Q2A)
-Q2A_aq_df <- rbind(Q2A_aq_df, Q3_Q2A)
-Q2A_aq_df <- rbind(Q2A_aq_df, Q4_Q2A)
+# Q2A_aq_df <- rbind(Q2A_aq_df, Q3_Q2A)
+# Q2A_aq_df <- rbind(Q2A_aq_df, Q4_Q2A)
 
 ggplot(data = Q2A_aq_df, aes(x = Group, y = Avg, fill = Quarter)) +
   geom_bar(stat = "identity",position = position_dodge()) +
@@ -1777,8 +1777,8 @@ grid.arrange
 # Add quarters as the data becomes available
 Q2B_aq_df <- Q1_Q2B
 Q2B_aq_df <- rbind(Q2B_aq_df, Q2_Q2B)
-Q2B_aq_df <- rbind(Q2B_aq_df, Q3_Q2B)
-Q2B_aq_df <- rbind(Q2B_aq_df, Q4_Q2B)
+# Q2B_aq_df <- rbind(Q2B_aq_df, Q3_Q2B)
+# Q2B_aq_df <- rbind(Q2B_aq_df, Q4_Q2B)
 
 ggplot(data = Q2B_aq_df, aes(x = Group, y = Avg, fill = Quarter)) +
   geom_bar(stat = "identity",position = position_dodge()) +
@@ -1790,7 +1790,164 @@ ggplot(data = Q2B_aq_df, aes(x = Group, y = Avg, fill = Quarter)) +
   labs(title = "Response Averages for Question Q2B - Quarter-to-Quarter Comparison by Group") 
 
 
-+
+#
+# Question 3X
+#
+
+# Q1 Gather data
+qbq_q1_q3x_df <- transform(as.data.frame(full_year$Q1)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q1_Q3x <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
+
+Q1_Q3x[1:6,1] <- "Q1-F19"
+Q1_Q3x[1,  2] <- qbq_q1_q3x_df[6,  3]
+Q1_Q3x[1,  3] <- qbq_q1_q3x_df[6,  4]
+Q1_Q3x[2,  2] <- qbq_q1_q3x_df[6,  5]
+Q1_Q3x[2,  3] <- qbq_q1_q3x_df[6,  6]
+Q1_Q3x[3,  2] <- qbq_q1_q3x_df[6,  7]
+Q1_Q3x[3,  3] <- qbq_q1_q3x_df[6,  8]
+Q1_Q3x[4,  2] <- qbq_q1_q3x_df[6,  9]
+Q1_Q3x[4,  3] <- qbq_q1_q3x_df[6, 10]
+Q1_Q3x[5,  2] <- qbq_q1_q3x_df[6, 11]
+Q1_Q3x[5,  3] <- qbq_q1_q3x_df[6, 12]
+Q1_Q3x[6,  2] <- qbq_q1_q3x_df[6, 13]
+Q1_Q3x[6,  3] <- qbq_q1_q3x_df[6, 14]
+
+Q1_Q3x_ms <- round(mean(Q1_Q3x[3]), digits = 2)
+
+# Q1 Build plot
+Q1_Q3x_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
+           data = Q1_Q3x, stat = "identity") +
+  geom_text(data = Q1_Q3x, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Question Q3x", subtitle = paste("Q1 (Fall 2019) Averages by Group - OA =", Q1_Q3x_ms)) 
+
+Q1_Q3x_bar
+
+# Q2 Gather data
+qbq_q2_q3x_df <- transform(as.data.frame(full_year$Q2)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q2_Q3x <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
+
+Q2_Q3x[1:6,1] <- "Q2-W20"
+Q2_Q3x[1,  2] <- qbq_q2_q3x_df[6,  3]
+Q2_Q3x[1,  3] <- qbq_q2_q3x_df[6,  4]
+Q2_Q3x[2,  2] <- qbq_q2_q3x_df[6,  5]
+Q2_Q3x[2,  3] <- qbq_q2_q3x_df[6,  6]
+Q2_Q3x[3,  2] <- qbq_q2_q3x_df[6,  7]
+Q2_Q3x[3,  3] <- qbq_q2_q3x_df[6,  8]
+Q2_Q3x[4,  2] <- qbq_q2_q3x_df[6,  9]
+Q2_Q3x[4,  3] <- qbq_q2_q3x_df[6, 10]
+Q2_Q3x[5,  2] <- qbq_q2_q3x_df[6, 11]
+Q2_Q3x[5,  3] <- qbq_q2_q3x_df[6, 12]
+Q2_Q3x[6,  2] <- qbq_q2_q3x_df[6, 13]
+Q2_Q3x[6,  3] <- qbq_q2_q3x_df[6, 14]
+
+Q2_Q3x_ms <- round(mean(Q2_Q3x[3]), digits = 1)
+
+# Q2 Build plot
+Q2_Q3x_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
+           data = Q2_Q3x, stat = "identity") +
+  geom_text(data = Q2_Q3x, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Question Q3x", subtitle = paste("Q2 (Winter 2020) Averages by Group - OA =", Q2_Q3x_ms)) 
+
+# Q3 Gather data
+qbq_q3_q3x_df <- transform(as.data.frame(full_year$Q3)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q3_Q3x <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
+
+Q3_Q3x[1:6,1] <- "Q3-S20"
+Q3_Q3x[1,  2] <- qbq_q3_q3x_df[6,  3]
+Q3_Q3x[1,  3] <- qbq_q3_q3x_df[6,  4]
+Q3_Q3x[2,  2] <- qbq_q3_q3x_df[6,  5]
+Q3_Q3x[2,  3] <- qbq_q3_q3x_df[6,  6]
+Q3_Q3x[3,  2] <- qbq_q3_q3x_df[6,  7]
+Q3_Q3x[3,  3] <- qbq_q3_q3x_df[6,  8]
+Q3_Q3x[4,  2] <- qbq_q3_q3x_df[6,  9]
+Q3_Q3x[4,  3] <- qbq_q3_q3x_df[6, 10]
+Q3_Q3x[5,  2] <- qbq_q3_q3x_df[6, 11]
+Q3_Q3x[5,  3] <- qbq_q3_q3x_df[6, 12]
+Q3_Q3x[6,  2] <- qbq_q3_q3x_df[6, 13]
+Q3_Q3x[6,  3] <- qbq_q3_q3x_df[6, 14]
+
+Q3_Q3x_ms <- round(mean(Q3_Q3x[3]), digits = 1)
+
+# Q3 Build plot
+Q3_Q3x_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
+           data = Q3_Q3x, stat = "identity") +
+  geom_text(data = Q3_Q3x, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Question Q3x", subtitle = paste("Q3 (Spring 2020) Averages by Group - OA =", Q3_Q3x_ms)) 
+
+# Q4 Gather data
+qbq_q4_q3x_df <- transform(as.data.frame(full_year$Q4)[c(1,3, 2,4,6,8,10,12,14,16,18,20,22,24)])
+Q4_Q3x <- data.frame(Quarter = 1:6, Group = 1:6, Avg = 1:6)
+
+Q4_Q3x[1:6,1] <- "Q4-S20"
+Q4_Q3x[1,  2] <- qbq_q4_q3x_df[6,  3]
+Q4_Q3x[1,  3] <- qbq_q4_q3x_df[6,  4]
+Q4_Q3x[2,  2] <- qbq_q4_q3x_df[6,  5]
+Q4_Q3x[2,  3] <- qbq_q4_q3x_df[6,  6]
+Q4_Q3x[3,  2] <- qbq_q4_q3x_df[6,  7]
+Q4_Q3x[3,  3] <- qbq_q4_q3x_df[6,  8]
+Q4_Q3x[4,  2] <- qbq_q4_q3x_df[6,  9]
+Q4_Q3x[4,  3] <- qbq_q4_q3x_df[6, 10]
+Q4_Q3x[5,  2] <- qbq_q4_q3x_df[6, 11]
+Q4_Q3x[5,  3] <- qbq_q4_q3x_df[6, 12]
+Q4_Q3x[6,  2] <- qbq_q4_q3x_df[6, 13]
+Q4_Q3x[6,  3] <- qbq_q4_q3x_df[6, 14]
+
+Q4_Q3x_ms <- round(mean(Q4_Q3x[3]), digits = 1)
+
+# Q4 Build plot
+Q4_Q3x_bar <- ggplot() +
+  geom_bar(aes(x = Group, y = Avg, fill = "blue"),
+           data = Q4_Q3x, stat = "identity") +
+  geom_text(data = Q4_Q3x, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.5, color = "black", size = 4) + 
+  theme(legend.position = "none") +
+  labs(title = "Question Q3x", subtitle = paste("Q4 (Summer 2020) Averages by Group - OA =", Q4_Q3x_ms)) 
+
+# Arrange the Q3x grids
+grid.arrange(Q1_Q3x_bar, Q2_Q3x_bar, ncol = 2)
+grid.arrange(Q3_Q3x_bar, Q4_Q3x_bar, ncol = 2)
+
+#
+# Assemble grouped bar charts for quarter to quarter comparisons of Questions
+#
+
+# Add quarters as the data becomes available
+Q3x_aq_df <- Q1_Q3x
+Q3x_aq_df <- rbind(Q3x_aq_df, Q2_Q3x)
+# Q3x_aq_df <- rbind(Q3x_aq_df, Q3_Q3x)
+# Q3x_aq_df <- rbind(Q3x_aq_df, Q4_Q3x)
+
+ggplot(data = Q3x_aq_df, aes(x = Group, y = Avg, fill = Quarter)) +
+  geom_bar(stat = "identity",position = position_dodge()) +
+  geom_text(data = Q3x_aq_df, aes(x = Group, y = Avg, label = Avg), 
+            vjust = 1.6, color = "black",
+            position = position_dodge(0.9), size = 3) + 
+  scale_fill_brewer(palette="Blues") + ylab("Average Rating") +
+  theme_minimal() +
+  labs(title = "Response Averages for Question Q3x - Quarter-to-Quarter Comparison by Group") 
+
+#--------------------------------------------------------------------
+#
+# End
+#
+#--------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------------
+#
+# MISC CODE - NO LONGER NEEDED Full Year Summary stacked bar charts
+#
+#-------------------------------------------------------------------------------
+
 #
 # Quarterly summary grids by question
 #
@@ -1814,12 +1971,6 @@ grid.arrange(Q3_Q2B_bar, Q3_Q3x_bar, ncol = 2)
 grid.arrange(Q4_Q1A_bar, Q4_Q1B_bar, ncol = 2)
 grid.arrange(Q4_Q1C_bar, Q4_Q2A_bar, ncol = 2)
 grid.arrange(Q4_Q2B_bar, Q4_Q3x_bar, ncol = 2)
-
-#-------------------------------------------------------------------------------
-#
-# MISC CODE - NO LONGER NEEDED Full Year Summary stacked bar charts
-#
-#-------------------------------------------------------------------------------
 
 # Groiups Chart
 full_year_groups <- ggplot(data = fy_df, aes(x = Group, y = Avg, fill = Quarter), color = "blue") +
@@ -1846,10 +1997,5 @@ full_year_questions <- ggplot(data = fy_questions, aes(x = Question, y = Avg, fi
   labs(title = "Full Year Average Scores by Question") +
   scale_fill_brewer(palette="Blues")
 
-#--------------------------------------------------------------------
-#
-# End
-#
-#--------------------------------------------------------------------
 
 
