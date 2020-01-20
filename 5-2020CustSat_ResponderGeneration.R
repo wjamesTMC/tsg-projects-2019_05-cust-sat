@@ -112,7 +112,7 @@ dat[dat == "Contractor"] <- "TSG"
 # Random selection of 25% of the organization
 #
 
-set.seed(1112)
+# set.seed(1112)
 
 test_index  <- createDataPartition(y = dat$Department, times = 1, p = 0.25, list = FALSE)
 survey_list <- dat[test_index, ]
