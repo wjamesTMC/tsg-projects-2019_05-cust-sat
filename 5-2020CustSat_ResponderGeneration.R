@@ -12,7 +12,7 @@
 # Import libraries
 library(tidyverse)
 library(caret)
-library(googlesheets)
+library(googlesheets4)
 
 
 #
@@ -21,10 +21,10 @@ library(googlesheets)
 
 
 # Import and Open the data file / Establish the data set
-data_filename <- gs_title("2020 Survey All Users 19 11 08")
+data_filename <- gs_title("2020 Survey All Users 20 02 05_T")
 dat <- gs_read(data_filename, skip = 0, header = TRUE, stringsAsFactors = FALSE)
 dat <- as.data.frame(dat)
-dat <- dat %>% select(Department, Email, `First Name`, `Last Name`)
+dat <- dat %>% select(Dept, Email, `First Name`, `Last Name`)
 
 # Consolidate Groups
 dat[dat == "Office of the Clerk"]  <- "Clerk"
@@ -107,26 +107,69 @@ dat[dat == "Board Office"] <- "Board"
 dat[dat == "Treasurers Office"] <- "TRO"
 dat[dat == "Branch Activities"] <- "Church"
 dat[dat == "Contractor"] <- "TSG"
+dat[dat == "B&MPS / Clerk"] <- "BMPS"
+dat[dat == "Office of the Treasurer"] <- "TRO"
+dat[dat == "Clerk's Office"] <- "Clerk"
+dat[dat == "Practitioner Activities"] <- "Clerk"
 
+dept_list <- unique(dat$Dept)
+sort(dept_list)
+
+
+#-------------------------------------------------------------------------------
 #
-# Random selection of 25% of the organization
+# Determine the set seed value for minimum overlaps
+# 
+#-------------------------------------------------------------------------------
+
+# Get file for comparison
+inpFile_F19 <- gs_title("TSG_CSS_F19_T")
+F19_list <- gs_read(inpFile_F19, skip = 0, header = TRUE, stringsAsFactors = FALSE)
+
+# W20 list starts with the full list
+W20_list <- dat
+
+# Set number of times to test for best seed
+B <- 15000
+
+# Set initial values for tests
+min_dups  <- nrow(dat)
+best_seed <- 1
+
+for(i in 1:B) {
+  set.seed(i)
+  test_index  <- createDataPartition(y = dat$Dept, times = 1, p = 0.25, list = FALSE)
+  W20_list    <- dat[test_index, ]
+  dup_list    <- F19_list
+  dup_list    <- rbind(dup_list, W20_list)
+  dup_list    <- dup_list %>% mutate(dup = 0)
+  dups        <- duplicated(dup_list)
+  num_dups    <- length(dups[dups == TRUE])
+  if(num_dups <  min_dups) {
+    min_dups  <- num_dups
+    best_seed <- i
+  }
+}
+
+cat("Best seed value is:",best_seed)
+cat("This value gives:",min_dups,"duplicates")
+
+#  
+# Random selection of 25% sample
 #
 
-# set.seed(1112)
+set.seed(best_seed)
 
-test_index  <- createDataPartition(y = dat$Department, times = 1, p = 0.25, list = FALSE)
+test_index  <- createDataPartition(y = dat$Dept, times = 1, p = 0.25, list = FALSE)
 survey_list <- dat[test_index, ]
 
-# Write out the distribvution list
-output_file <- gs_title("TSG_CS_Nov2019")
+# Write out the distribution list
+output_file <- gs_title("TSG_CSS_W20_T")
 gs_edit_cells(output_file, ws = 1, input = survey_list, anchor = "A1", byrow = FALSE,
               col_names = NULL, trim = FALSE, verbose = TRUE)
 
-
-#--------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #
 # End
 #
-#--------------------------------------------------------------------
-
-
+#-------------------------------------------------------------------------------
