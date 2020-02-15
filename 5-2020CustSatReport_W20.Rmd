@@ -52,7 +52,7 @@ library(purrr)
 #
 
 # Import and Open the data file / Establish the data set
-data_filename <- gs_title("2019-2020 TSG Satisfaction Survey_T")
+data_filename <- gs_title("2019-2020 TSG Satisfaction Survey")
 dat <- gs_read(data_filename, stringsAsFactors = FALSE)
 
 #
