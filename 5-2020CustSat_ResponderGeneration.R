@@ -11,9 +11,23 @@
 
 # Import libraries
 library(tidyverse)
+library(dplyr)
+library(plyr)
+library(tidyr)
 library(caret)
-library(googlesheets4)
-
+library(extrafont)
+library(ggplot2)
+library(scales)
+library(googlesheets)
+library(scales)
+library(reshape2)
+library(grid)
+library(gridExtra)
+library(janitor)
+library(lattice)
+library(rmarkdown)
+library(kableExtra)
+library(purrr)
 
 #
 # File open, cleanup, and set up for the analysis
@@ -22,9 +36,11 @@ library(googlesheets4)
 
 # Import and Open the data file / Establish the data set
 data_filename <- gs_title("2020 Survey All Users 20 02 05_T")
+data_filename <- gs_title("2020 Survey Combined Recipients")
 dat <- gs_read(data_filename, skip = 0, header = TRUE, stringsAsFactors = FALSE)
 dat <- as.data.frame(dat)
-dat <- dat %>% select(Dept, Email, `First Name`, `Last Name`)
+dat[complete.cases(dat), ]
+# dat <- dat %>% select(Dept, Email, `First Name`, `Last Name`, 'Survey_date')
 
 # Consolidate Groups
 dat[dat == "Office of the Clerk"]  <- "Clerk"
@@ -113,7 +129,52 @@ dat[dat == "Clerk's Office"] <- "Clerk"
 dat[dat == "Practitioner Activities"] <- "Clerk"
 
 dept_list <- unique(dat$Dept)
-sort(dept_list)
+dept_list <- sort(dept_list)
+num_depts <- length(dept_list)
+
+#-------------------------------------------------------------------------------
+#
+# Determine the departmental makeup of responders
+# 
+#-------------------------------------------------------------------------------
+
+dept_df  <- data.frame(Department = 1:num_depts * 2, count = 1:num_depts * 2,   s_date = 1:num_depts * 2)
+# count_3S20 = 1:num_depts, count_4S20 = 1:num_depts)
+
+j = 1
+for(i in 1:num_depts) {
+  x <- dat %>% filter(Dept == unique(dat$Dept)[i])
+  
+  S1 <- x %>% filter(Survey_date == "1F19")
+  S2 <- x %>% filter(Survey_date == "2W20")
+  
+  dept_df[j, 1] <- unique(dat$Dept)[i]
+  dept_df[j, 2] <- nrow(S1)
+  dept_df[j, 3] <- "1F19"
+  
+  j <- j + 1
+  
+  dept_df[j, 1] <- unique(dat$Dept)[i]
+  dept_df[j, 2] <- nrow(S2)
+  dept_df[j, 3] <- "2W20"
+  
+  j <- j + 1
+}
+
+dept_df <- dept_df[complete.cases(dept_df), ]
+dept_df <- dept_df[order(dept_df$Department), ]
+sort_df <- dept_df[order(rev(dept_df$Department)),]
+
+# 
+# Horizontal bar chart for result
+#
+
+ggplot(data = sort_df, aes(x = Department, y = count, fill = factor(s_date))) +
+  geom_bar(position="dodge",stat="identity") +
+  coord_flip() + 
+  labs(title = "Number of Survey Invitations by Department by Quarter", subtitle = "Fall / Winter") +
+  labs(y = "Count of Invitees") + 
+  guides(fill = guide_legend(reverse=TRUE))
 
 
 #-------------------------------------------------------------------------------
