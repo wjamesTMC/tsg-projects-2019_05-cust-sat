@@ -1,6 +1,6 @@
 ---
 title: "Client Satisfaction Report"
-subtitle: "2019-2020 Survey Results"
+subtitle: "2019-2020 Survey Results - With Outliers"
 date: "March 2019 (Surveys 1 and 2)"
 output: html_document
 ---
@@ -52,7 +52,9 @@ library(purrr)
 #
 
 # Import and Open the data file / Establish the data set
-data_filename <- gs_title("2019-2020 TSG Satisfaction Survey_A")
+data_filename <- gs_title("2019-2020 TSG Satisfaction Survey")
+# data_filename <- "2019-2020 TSG Satisfaction Survey.csv"
+
 dat <- gs_read(data_filename, stringsAsFactors = FALSE)
 
 #
@@ -459,17 +461,7 @@ Summary of Lowest Responses
 *Responder: 46 | Responses: 36 | Total Score: 98 } Average Score: 2.7*  
 *Responder: 49 | Responses: 36 | Total Score: 42 | Average Score: 1.2*  
          
-These scores do not seem reasonable - while four other responders provided ratings for all of TSG groups, these two had unusually low scores. The average for the other four was 5.9 - lower than the overall  rating for all responders (8.3) but much higher than the average rating for these two (1.9). Perhaps the responders misunderstood how to respond, thought they were required to answer for every group, or perhaps the survey caught them at a particularly bad time. Because they are so out of line with everything we have seen, they probably should be discounted or remaoved entirely. The rest of this document presents the data with these two outliers removed. Charts taken from the full data set are available in a separate document.
-
-With the two outliers removed, we get a different picture of how TSG fared from quarter to quarter. In general, scores were similar with some variations. For example:
-
-* B&MPS improved slightly from the Fall (improving from 9 to 9.2 overall)
-* Account Managers and the Service Desk were essentially the same (down 0.1 - 0.2)
-* Other groups decreased between 0.6 and 1.0 points
-
-The results by question were somewhat more closely grouped, varying only between 0.2 to 0.6 points lower. Note that *all* questions scored lower than in the Fall. However, because some scores are so close, it is difficult to draw conclusions about trends or what change may have occurred in user perceptions of TSG.
-
-The data suggests that the OCIO team should look at the results and determine if there are reasons why some groups declined - or if this is simply the result of variations in the responders.
+These scores do not seem reasonable - while four other responders provided ratings for all of TSG groups, these two had unusually low scores. The average for the other four was 5.9 - lower than the overall  rating for all responders (8.3) but much higher than the average rating for these two (1.9). Perhaps the responders misunderstood how to respond, thought they were required to answer for every group, or perhaps the survey caught them at a particularly bad time. While this document presents the data with these two outliers *included*, a companion report has been produced with these *removed*.
 
 ```{r Graphics - Summaries, echo=FALSE}
 ################################################################################
