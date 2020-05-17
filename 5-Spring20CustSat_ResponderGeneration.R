@@ -35,7 +35,7 @@ library(purrr)
 #
 
 # Import and Open the data file / Establish the data set from full list of TMC
-data_filename <- gs_title("2020 Survey All Users 20 05 05")
+data_filename <- gs_title("2020 Survey All Users 20 05 15")
 dat <- gs_read(data_filename, skip = 0, header = TRUE, stringsAsFactors = FALSE)
 dat <- as.data.frame(dat)
 
@@ -138,7 +138,7 @@ participant_dat <- gs_read(data_filename, skip = 0, header = TRUE, stringsAsFact
 participant_dat <- as.data.frame(participant_dat)
 
 # Set number of times to test for best seed
-B <- 15000
+B <- 20000
 
 # Set initial values for tests
 min_dups  <- nrow(dat)
